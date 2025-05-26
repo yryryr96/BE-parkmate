@@ -1,0 +1,7 @@
+package com.parkmate.parking_service.parking_operating_information.application;
+
+import com.parkmate.parking_service.parking_operating_information.dto.ParkingOperatingInformationCreateRequestDto;
+
+public interface ParkingOperatingInformationService {
+    void register(ParkingOperatingInformationCreateRequestDto parkingOperatingInformationCreateRequestDto);
+}
