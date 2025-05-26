@@ -1,5 +1,7 @@
 package com.parkmate.parking_service.parkinglot.application;
 
+import com.parkmate.parking_service.common.exception.BaseException;
+import com.parkmate.parking_service.common.response.ResponseStatus;
 import com.parkmate.parking_service.parkinglot.dto.request.ParkingLotCreateRequestDto;
 import com.parkmate.parking_service.parkinglot.dto.request.ParkingLotDeleteRequestDto;
 import com.parkmate.parking_service.parkinglot.dto.request.ParkingLotUpdateRequestDto;
@@ -21,13 +23,14 @@ public class ParkingLotServiceImpl implements ParkingLotService {
         parkingLotRepository.save(parkingLotCreateRequestDto.toEntity());
     }
 
+    @Transactional
     @Override
     public void update(ParkingLotUpdateRequestDto parkingLotUpdateRequestDto) {
 
         parkingLotRepository.findByParkingLotUuidAndHostUuid(
                 parkingLotUpdateRequestDto.getParkingLotUuid(),
                 parkingLotUpdateRequestDto.getHostUuid()
-        ).orElseThrow(() -> new IllegalArgumentException("해당 주차장이 존재하지 않습니다."));
+        ).orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
 
         parkingLotRepository.save(parkingLotUpdateRequestDto.toEntity());
     }
