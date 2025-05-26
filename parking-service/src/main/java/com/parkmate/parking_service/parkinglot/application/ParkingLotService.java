@@ -8,7 +8,9 @@ import com.parkmate.parking_service.parkinglot.dto.response.ParkingLotResponseDt
 public interface ParkingLotService {
 
     void register(ParkingLotCreateRequestDto parkingLotCreateRequestDto);
+
     void update(ParkingLotUpdateRequestDto parkingLotUpdateRequestDto);
+
     void delete(ParkingLotDeleteRequestDto parkingLotDeleteRequestDto);
 
     ParkingLotResponseDto findByUuid(String parkingLotUuid);
