@@ -6,12 +6,13 @@ import com.parkmate.parking_service.parkinglot.dto.request.ParkingLotCreateReque
 import com.parkmate.parking_service.parkinglot.dto.request.ParkingLotDeleteRequestDto;
 import com.parkmate.parking_service.parkinglot.dto.request.ParkingLotUpdateRequestDto;
 import com.parkmate.parking_service.parkinglot.vo.request.ParkingLotCreateRequestVo;
+import com.parkmate.parking_service.parkinglot.vo.response.ParkingLotResponseVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/parking-lots")
+@RequestMapping("/api/v1/parkingLots")
 @RequiredArgsConstructor
 public class ParkingLotController {
 
@@ -44,6 +45,13 @@ public class ParkingLotController {
         return ApiResponse.of(
                 HttpStatus.NO_CONTENT,
                 "주차장 정보가 삭제되었습니다."
+        );
+    }
+
+    @GetMapping("/{parkingLotUuid}")
+    public ApiResponse<ParkingLotResponseVo> getParkingLotByUuid(@PathVariable String parkingLotUuid) {
+        return ApiResponse.ok(
+                parkingLotService.findByUuid(parkingLotUuid).toVo()
         );
     }
 }

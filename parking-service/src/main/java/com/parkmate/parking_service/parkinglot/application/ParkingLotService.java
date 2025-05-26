@@ -11,5 +11,5 @@ public interface ParkingLotService {
     void update(ParkingLotUpdateRequestDto parkingLotUpdateRequestDto);
     void delete(ParkingLotDeleteRequestDto parkingLotDeleteRequestDto);
 
-    ParkingLotResponseDto findById(String parkingLotUuid);
+    ParkingLotResponseDto findByUuid(String parkingLotUuid);
 }

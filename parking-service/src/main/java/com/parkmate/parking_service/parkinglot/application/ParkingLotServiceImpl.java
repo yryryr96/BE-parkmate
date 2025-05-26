@@ -36,6 +36,7 @@ public class ParkingLotServiceImpl implements ParkingLotService {
         parkingLotRepository.save(createUpdatedParkingLotEntity(entity, parkingLotUpdateRequestDto));
     }
 
+    @Transactional
     @Override
     public void delete(ParkingLotDeleteRequestDto parkingLotDeleteRequestDto) {
         ParkingLot entity = parkingLotRepository.findByParkingLotUuidAndHostUuid(
@@ -46,9 +47,13 @@ public class ParkingLotServiceImpl implements ParkingLotService {
         parkingLotRepository.delete(entity);
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public ParkingLotResponseDto findById(String parkingLotUuid) {
-        return null;
+    public ParkingLotResponseDto findByUuid(String parkingLotUuid) {
+        return ParkingLotResponseDto.from(
+                parkingLotRepository.findByParkingLotUuid(parkingLotUuid)
+                        .orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND))
+        );
     }
 
     private ParkingLot createUpdatedParkingLotEntity(ParkingLot entity,

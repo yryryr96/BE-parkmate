@@ -11,4 +11,6 @@ public interface ParkingLotRepository extends JpaRepository<ParkingLot, Long> {
             String parkingLotUuid,
             String hostUuid
     );
+
+    Optional<ParkingLot> findByParkingLotUuid(String parkingLotUuid);
 }
