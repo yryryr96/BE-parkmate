@@ -5,9 +5,11 @@ import com.parkmate.parking_service.parking_operation.application.ParkingOperati
 import com.parkmate.parking_service.parking_operation.dto.request.ParkingOperationCreateRequestDto;
 import com.parkmate.parking_service.parking_operation.dto.request.ParkingOperationGetRequestDto;
 import com.parkmate.parking_service.parking_operation.dto.request.ParkingOperationListGetRequestDto;
+import com.parkmate.parking_service.parking_operation.dto.request.ParkingOperationUpdateRequestDto;
 import com.parkmate.parking_service.parking_operation.dto.response.ParkingOperationResponseDto;
 import com.parkmate.parking_service.parking_operation.vo.ParkingOperationCreateRequestVo;
 import com.parkmate.parking_service.parking_operation.vo.ParkingOperationResponseVo;
+import com.parkmate.parking_service.parking_operation.vo.request.ParkingOperationUpdateRequestVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +39,23 @@ public class ParkingOperationController {
         );
     }
 
+    @PutMapping("/{parkingLotUuid}/operations/{operationUuid}")
+    public ApiResponse<String> updateParkingOperation(@PathVariable String parkingLotUuid,
+                                                      @PathVariable String operationUuid,
+                                                      @RequestBody ParkingOperationUpdateRequestVo parkingOperationCreateRequestVo) {
+
+        parkingOperationService.update(
+                ParkingOperationUpdateRequestDto.of(
+                        parkingLotUuid, operationUuid, parkingOperationCreateRequestVo
+                )
+        );
+
+        return ApiResponse.of(
+                HttpStatus.OK,
+                "운영시간 정보가 업데이트되었습니다."
+        );
+    }
+
     @GetMapping("/{parkingLotUuid}/operations")
     public ApiResponse<List<ParkingOperationResponseVo>> getParkingOperations(@PathVariable String parkingLotUuid,
                                                                               @RequestParam Integer year,
@@ -57,7 +76,7 @@ public class ParkingOperationController {
 
         return ApiResponse.ok(
                 parkingOperationService.getParkingOperation(
-                        ParkingOperationGetRequestDto.of(parkingLotUuid, operationUuid))
+                                ParkingOperationGetRequestDto.of(parkingLotUuid, operationUuid))
                         .toVo()
         );
     }

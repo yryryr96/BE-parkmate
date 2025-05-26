@@ -5,6 +5,7 @@ import com.parkmate.parking_service.common.response.ResponseStatus;
 import com.parkmate.parking_service.parking_operation.dto.request.ParkingOperationCreateRequestDto;
 import com.parkmate.parking_service.parking_operation.dto.request.ParkingOperationGetRequestDto;
 import com.parkmate.parking_service.parking_operation.dto.request.ParkingOperationListGetRequestDto;
+import com.parkmate.parking_service.parking_operation.dto.request.ParkingOperationUpdateRequestDto;
 import com.parkmate.parking_service.parking_operation.dto.response.ParkingOperationResponseDto;
 import com.parkmate.parking_service.parking_operation.entity.ParkingOperation;
 import com.parkmate.parking_service.parking_operation.infrastructure.ParkingOperationMongoRepository;
@@ -25,6 +26,20 @@ public class ParkingOperationServiceImpl implements ParkingOperationService {
     public void register(ParkingOperationCreateRequestDto parkingOperationCreateRequestDto) {
         parkingOperationMongoRepository.save(
                 parkingOperationCreateRequestDto.toEntity()
+        );
+    }
+
+    @Transactional
+    @Override
+    public void update(ParkingOperationUpdateRequestDto parkingOperationUpdateRequestDto) {
+
+        ParkingOperation parkingOperation = parkingOperationMongoRepository.findByParkingLotUuidAndParkingOperationUuid(
+                parkingOperationUpdateRequestDto.getParkingLotUuid(),
+                parkingOperationUpdateRequestDto.getParkingOperationUuid()
+        ).orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
+
+        parkingOperationMongoRepository.save(
+                createUpdatedParkingOperationEntity(parkingOperation, parkingOperationUpdateRequestDto)
         );
     }
 
@@ -50,5 +65,24 @@ public class ParkingOperationServiceImpl implements ParkingOperationService {
         ).orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
 
         return ParkingOperationResponseDto.from(parkingOperation);
+    }
+
+    private ParkingOperation createUpdatedParkingOperationEntity(
+            ParkingOperation entity,
+            ParkingOperationUpdateRequestDto parkingOperationUpdateRequestDto) {
+
+        return ParkingOperation.builder()
+                .parkingOperationUuid(entity.getParkingOperationUuid())
+                .parkingLotUuid(entity.getParkingLotUuid())
+                .parkingOperationUuid(entity.getParkingOperationUuid())
+                .operationDate(entity.getOperationDate())
+                .validStartTime(parkingOperationUpdateRequestDto.getValidStartTime())
+                .validEndTime(parkingOperationUpdateRequestDto.getValidEndTime())
+                .baseIntervalMinutes(parkingOperationUpdateRequestDto.getBaseIntervalMinutes())
+                .baseFee(parkingOperationUpdateRequestDto.getBaseFee())
+                .extraIntervalMinutes(parkingOperationUpdateRequestDto.getExtraIntervalMinutes())
+                .extraFee(parkingOperationUpdateRequestDto.getExtraFee())
+                .discountRate(parkingOperationUpdateRequestDto.getDiscountRate())
+                .build();
     }
 }
