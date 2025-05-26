@@ -24,6 +24,12 @@ public class ParkingLotServiceImpl implements ParkingLotService {
     @Override
     public void update(ParkingLotUpdateRequestDto parkingLotUpdateRequestDto) {
 
+        parkingLotRepository.findByParkingLotUuidAndHostUuid(
+                parkingLotUpdateRequestDto.getParkingLotUuid(),
+                parkingLotUpdateRequestDto.getHostUuid()
+        ).orElseThrow(() -> new IllegalArgumentException("해당 주차장이 존재하지 않습니다."));
+
+        parkingLotRepository.save(parkingLotUpdateRequestDto.toEntity());
     }
 
     @Override
