@@ -1,9 +1,11 @@
 package com.parkmate.parking_service.parking_operation.entity;
 
+import jakarta.persistence.Column;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -17,14 +19,41 @@ public class ParkingOperation {
 
     @Id
     private String parkingOperationUuid;
+
+    @Comment( "주차장 UUID")
+    @Column(nullable = false)
     private String parkingLotUuid;
+
+    @Comment("운영 날짜")
+    @Column(nullable = false)
     private LocalDate operationDate;
+
+    @Comment("유효 시작 시간")
+    @Column(nullable = false)
     private LocalDateTime validStartTime;
+
+    @Comment("유효 종료 시간")
+    @Column(nullable = false)
     private LocalDateTime validEndTime;
+
+    @Comment("기본 시간 간격 (분)")
+    @Column(nullable = false)
     private int baseIntervalMinutes;
+
+    @Comment("기본 요금 (원)")
+    @Column(nullable = false)
     private int baseFee;
+
+    @Comment("추가 시간 간격 (분)")
+    @Column(nullable = false)
     private int extraIntervalMinutes;
+
+    @Comment("추가 요금 (원)")
+    @Column(nullable = false)
     private int extraFee;
+
+    @Comment("할인율")
+    @Column(nullable = false)
     private double discountRate;
 
     @Builder

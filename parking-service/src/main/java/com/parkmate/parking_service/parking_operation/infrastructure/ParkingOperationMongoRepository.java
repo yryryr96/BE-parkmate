@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface ParkingOperationMongoRepository extends MongoRepository<ParkingOperation, String> {
 
@@ -12,5 +13,10 @@ public interface ParkingOperationMongoRepository extends MongoRepository<Parking
             String parkingLotUuid,
             LocalDate startDate,
             LocalDate endDate
+    );
+
+    Optional<ParkingOperation> findByParkingLotUuidAndParkingOperationUuid(
+            String parkingLotUuid,
+            String parkingOperationUuid
     );
 }
