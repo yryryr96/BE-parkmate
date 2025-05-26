@@ -1,7 +1,7 @@
 package com.parkmate.parking_service.common.exception;
 
+import com.parkmate.parking_service.common.response.ResponseStatus;
 import lombok.Getter;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Getter
 public class BaseException extends RuntimeException {

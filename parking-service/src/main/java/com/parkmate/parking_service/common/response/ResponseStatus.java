@@ -17,7 +17,12 @@ public enum ResponseStatus {
      * 4xx: 클라이언트 오류
      **/
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, false, 404, "리소스가 존재하지 않습니다."),
-    REQUEST_CONFLICT(HttpStatus.CONFLICT, false, 409, "POST 요청에 실패했습니다.")
+    REQUEST_CONFLICT(HttpStatus.CONFLICT, false, 409, "POST 요청에 실패했습니다."),
+
+    /**
+     * 5xx: 서버 오류
+     */
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, 500, "서버 내부 오류가 발생했습니다.")
     ;
 
     private final HttpStatus httpStatus;
