@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ParkingOperationResponseVo {
 
+    private String parkingOperationUuid;
     private String parkingLotUuid;
     private LocalDate operationDate;
     private LocalDateTime validStartTime;
@@ -22,7 +23,8 @@ public class ParkingOperationResponseVo {
     private double discountRate;
 
     @Builder
-    private ParkingOperationResponseVo(String parkingLotUuid,
+    private ParkingOperationResponseVo(String parkingOperationUuid,
+                                       String parkingLotUuid,
                                        LocalDate operationDate,
                                        LocalDateTime validStartTime,
                                        LocalDateTime validEndTime,
@@ -31,6 +33,7 @@ public class ParkingOperationResponseVo {
                                        int extraIntervalMinutes,
                                        int extraFee,
                                        double discountRate) {
+        this.parkingOperationUuid = parkingOperationUuid;
         this.parkingLotUuid = parkingLotUuid;
         this.operationDate = operationDate;
         this.validStartTime = validStartTime;

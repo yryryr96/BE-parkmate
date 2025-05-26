@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ParkingOperationResponseDto {
 
+    private String parkingOperationUuid;
     private String parkingLotUuid;
     private LocalDate operationDate;
     private LocalDateTime validStartTime;
@@ -24,7 +25,8 @@ public class ParkingOperationResponseDto {
     private double discountRate;
 
     @Builder
-    private ParkingOperationResponseDto(String parkingLotUuid,
+    private ParkingOperationResponseDto(String parkingOperationUuid,
+                                        String parkingLotUuid,
                                         LocalDate operationDate,
                                         LocalDateTime validStartTime,
                                         LocalDateTime validEndTime,
@@ -33,6 +35,7 @@ public class ParkingOperationResponseDto {
                                         int extraIntervalMinutes,
                                         int extraFee,
                                         double discountRate) {
+        this.parkingOperationUuid = parkingOperationUuid;
         this.parkingLotUuid = parkingLotUuid;
         this.operationDate = operationDate;
         this.validStartTime = validStartTime;
@@ -45,7 +48,9 @@ public class ParkingOperationResponseDto {
     }
 
     public static ParkingOperationResponseDto from(ParkingOperation parkingOperation) {
+
         return ParkingOperationResponseDto.builder()
+                .parkingOperationUuid(parkingOperation.getParkingOperationUuid())
                 .parkingLotUuid(parkingOperation.getParkingLotUuid())
                 .operationDate(parkingOperation.getOperationDate())
                 .validStartTime(parkingOperation.getValidStartTime())
@@ -60,6 +65,7 @@ public class ParkingOperationResponseDto {
 
     public ParkingOperationResponseVo toVo() {
         return ParkingOperationResponseVo.builder()
+                .parkingOperationUuid(this.parkingOperationUuid)
                 .parkingLotUuid(this.parkingLotUuid)
                 .operationDate(this.operationDate)
                 .validStartTime(this.validStartTime)

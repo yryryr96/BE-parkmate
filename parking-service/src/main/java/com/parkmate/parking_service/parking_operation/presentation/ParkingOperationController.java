@@ -1,6 +1,7 @@
 package com.parkmate.parking_service.parking_operation.presentation;
 
 //import com.parkmate.parking_service.common.response.ApiResponse;
+
 import com.parkmate.parking_service.parking_operation.application.ParkingOperationService;
 import com.parkmate.parking_service.parking_operation.dto.request.ParkingOperationCreateRequestDto;
 import com.parkmate.parking_service.parking_operation.dto.request.ParkingOperationGetRequestDto;
@@ -20,7 +21,7 @@ public class ParkingOperationController {
     private final ParkingOperationService parkingOperationService;
 
     @PostMapping("/{parkingLotUuid}/operations")
-    public String registerParkingOperatingInformation(
+    public String registerParkingOperation(
             @PathVariable String parkingLotUuid,
             @RequestBody ParkingOperationCreateRequestVo parkingOperationCreateRequestVo) {
 
@@ -37,9 +38,9 @@ public class ParkingOperationController {
     }
 
     @GetMapping("/{parkingLotUuid}/operations")
-    public List<ParkingOperationResponseVo> getParkingOperatingInformation(@PathVariable String parkingLotUuid,
-                                                                           @RequestParam(required = true) Integer year,
-                                                                           @RequestParam(required = true) Integer month) {
+    public List<ParkingOperationResponseVo> getParkingOperations(@PathVariable String parkingLotUuid,
+                                                                 @RequestParam Integer year,
+                                                                 @RequestParam Integer month) {
 
         return parkingOperationService.getParkingOperations(
                         ParkingOperationGetRequestDto.of(parkingLotUuid, year, month))
@@ -48,4 +49,5 @@ public class ParkingOperationController {
                 .toList();
     }
 
+//    @GetMapping("/{parkingLotUuid}/operations/{operationDate}")
 }
