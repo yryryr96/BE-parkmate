@@ -1,5 +1,6 @@
 package com.parkmate.parking_service.parking_operation.entity;
 
+import com.parkmate.parking_service.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Document(collection = "parking_operations")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ParkingOperation {
+public class ParkingOperation extends BaseEntity {
 
     @Id
     private String parkingOperationUuid;
