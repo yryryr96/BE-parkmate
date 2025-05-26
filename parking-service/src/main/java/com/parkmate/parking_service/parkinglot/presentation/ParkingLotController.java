@@ -41,7 +41,7 @@ public class ParkingLotController {
 
     @DeleteMapping("/{parkingLotUuid}")
     public ApiResponse<String> deleteParkingLot(@PathVariable String parkingLotUuid,
-                                                @RequestParam("houstUuid") String hostUuid) {
+                                                @RequestParam("hostUuid") String hostUuid) {
         parkingLotService.delete(ParkingLotDeleteRequestDto.of(parkingLotUuid, hostUuid));
         return ApiResponse.of(
                 HttpStatus.NO_CONTENT,
