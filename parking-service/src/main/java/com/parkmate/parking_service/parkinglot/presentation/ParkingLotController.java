@@ -6,6 +6,7 @@ import com.parkmate.parking_service.parkinglot.dto.request.ParkingLotCreateReque
 import com.parkmate.parking_service.parkinglot.dto.request.ParkingLotDeleteRequestDto;
 import com.parkmate.parking_service.parkinglot.dto.request.ParkingLotUpdateRequestDto;
 import com.parkmate.parking_service.parkinglot.vo.request.ParkingLotCreateRequestVo;
+import com.parkmate.parking_service.parkinglot.vo.request.ParkingLotUpdateRequestVo;
 import com.parkmate.parking_service.parkinglot.vo.response.ParkingLotResponseVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class ParkingLotController {
 
     @PostMapping("/{parkingLotUuid}")
     public ApiResponse<String> updateParkingLot(@PathVariable String parkingLotUuid,
-                                                @RequestBody ParkingLotCreateRequestVo parkingLotUpdateRequestVo) {
+                                                @RequestBody ParkingLotUpdateRequestVo parkingLotUpdateRequestVo) {
 
         parkingLotService.update(ParkingLotUpdateRequestDto.from(parkingLotUuid, parkingLotUpdateRequestVo));
         return ApiResponse.of(

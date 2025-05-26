@@ -2,6 +2,7 @@ package com.parkmate.parking_service.parkinglot.dto.request;
 
 import com.parkmate.parking_service.parkinglot.domain.ParkingLot;
 import com.parkmate.parking_service.parkinglot.vo.request.ParkingLotCreateRequestVo;
+import com.parkmate.parking_service.parkinglot.vo.request.ParkingLotUpdateRequestVo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,7 +40,7 @@ public class ParkingLotUpdateRequestDto {
     }
 
     public static ParkingLotUpdateRequestDto from(String parkingLotUuid,
-                                                  ParkingLotCreateRequestVo parkingLotUpdateRequestVo) {
+                                                  ParkingLotUpdateRequestVo parkingLotUpdateRequestVo) {
         return ParkingLotUpdateRequestDto.builder()
                 .parkingLotUuid(parkingLotUuid)
                 .hostUuid(parkingLotUpdateRequestVo.getHostUuid())
