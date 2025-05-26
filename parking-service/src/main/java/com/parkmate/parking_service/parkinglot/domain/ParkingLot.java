@@ -1,5 +1,6 @@
-package com.parkmate.parking_service.domain;
+package com.parkmate.parking_service.parkinglot.domain;
 
+import com.parkmate.parking_service.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,7 +11,7 @@ import org.hibernate.annotations.Comment;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ParkingLot {
+public class ParkingLot extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
