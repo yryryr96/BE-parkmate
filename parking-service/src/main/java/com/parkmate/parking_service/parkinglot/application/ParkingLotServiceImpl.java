@@ -38,7 +38,12 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 
     @Override
     public void delete(ParkingLotDeleteRequestDto parkingLotDeleteRequestDto) {
+        ParkingLot entity = parkingLotRepository.findByParkingLotUuidAndHostUuid(
+                parkingLotDeleteRequestDto.getParkingLotUuid(),
+                parkingLotDeleteRequestDto.getHostUuid()
+        ).orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
 
+        parkingLotRepository.delete(entity);
     }
 
     @Override

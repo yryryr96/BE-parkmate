@@ -3,6 +3,7 @@ package com.parkmate.parking_service.parkinglot.presentation;
 import com.parkmate.parking_service.common.response.ApiResponse;
 import com.parkmate.parking_service.parkinglot.application.ParkingLotService;
 import com.parkmate.parking_service.parkinglot.dto.request.ParkingLotCreateRequestDto;
+import com.parkmate.parking_service.parkinglot.dto.request.ParkingLotDeleteRequestDto;
 import com.parkmate.parking_service.parkinglot.dto.request.ParkingLotUpdateRequestDto;
 import com.parkmate.parking_service.parkinglot.vo.request.ParkingLotCreateRequestVo;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,16 @@ public class ParkingLotController {
         return ApiResponse.of(
                 HttpStatus.OK,
                 "주차장 정보가 업데이트되었습니다."
+        );
+    }
+
+    @DeleteMapping("/{parkingLotUuid}")
+    public ApiResponse<String> deleteParkingLot(@PathVariable String parkingLotUuid,
+                                                @RequestParam("houstUuid") String hostUuid) {
+        parkingLotService.delete(ParkingLotDeleteRequestDto.of(parkingLotUuid, hostUuid));
+        return ApiResponse.of(
+                HttpStatus.NO_CONTENT,
+                "주차장 정보가 삭제되었습니다."
         );
     }
 }
