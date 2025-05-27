@@ -1,9 +1,6 @@
 package com.parkmate.parkingservice.parkingspot.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,15 +17,20 @@ public class ParkingSpot {
     private Long id;
 
     @Comment("주차면 이름")
+    @Column(nullable = false, length = 100)
     private String name;
     
     @Comment("주차장 UUID")
+    @Column(nullable = false)
     private String parkingLotUuid;
     
+    @Enumerated(EnumType.STRING)
     @Comment("주차면 차량 타입")
+    @Column(nullable = false)
     private ParkingSpotType type;
     
     @Comment("전기차 충전 가능 여부")
+    @Column(nullable = false)
     private Boolean isEvChargingAvailable;
 
     @Builder
