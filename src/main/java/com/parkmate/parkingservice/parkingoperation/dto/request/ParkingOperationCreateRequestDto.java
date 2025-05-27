@@ -1,6 +1,6 @@
 package com.parkmate.parkingservice.parkingoperation.dto.request;
 
-import com.parkmate.parkingservice.parkingoperation.entity.ParkingOperation;
+import com.parkmate.parkingservice.parkingoperation.domain.ParkingOperation;
 import com.parkmate.parkingservice.parkingoperation.vo.ParkingOperationCreateRequestVo;
 import lombok.Builder;
 import lombok.Getter;

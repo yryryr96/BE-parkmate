@@ -7,7 +7,7 @@ import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperation
 import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationListGetRequestDto;
 import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationUpdateRequestDto;
 import com.parkmate.parkingservice.parkingoperation.dto.response.ParkingOperationResponseDto;
-import com.parkmate.parkingservice.parkingoperation.entity.ParkingOperation;
+import com.parkmate.parkingservice.parkingoperation.domain.ParkingOperation;
 import com.parkmate.parkingservice.parkingoperation.infrastructure.ParkingOperationMongoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

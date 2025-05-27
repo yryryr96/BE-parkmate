@@ -1,6 +1,6 @@
 package com.parkmate.parkingservice.parkingoperation.infrastructure;
 
-import com.parkmate.parkingservice.parkingoperation.entity.ParkingOperation;
+import com.parkmate.parkingservice.parkingoperation.domain.ParkingOperation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.time.LocalDate;
