@@ -51,17 +51,4 @@ public class ParkingLotUpdateRequestDto {
                 .extraInfo(parkingLotUpdateRequestVo.getExtraInfo())
                 .build();
     }
-
-    public ParkingLot toEntity() {
-        return ParkingLot.builder()
-                .parkingLotUuid(this.parkingLotUuid)
-                .hostUuid(this.hostUuid)
-                .name(this.name)
-                .phoneNumber(this.phoneNumber)
-                .capacity(this.capacity)
-                .registeredCapacity(this.registeredCapacity)
-                .isEvChargingAvailable(this.isEvChargingAvailable)
-                .extraInfo(this.extraInfo)
-                .build();
-    }
 }
