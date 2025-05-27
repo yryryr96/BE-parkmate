@@ -7,7 +7,7 @@ import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotCreateReques
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotDeleteRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotUpdateRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.response.ParkingLotResponseDto;
-import com.parkmate.parkingservice.parkinglot.infrastructure.mysql.ParkingLotRepository;
+import com.parkmate.parkingservice.parkinglot.infrastructure.ParkingLotRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,4 +1,4 @@
-package com.parkmate.parkingservice.parkinglot.infrastructure.mysql;
+package com.parkmate.parkingservice.parkinglot.infrastructure;
 
 import com.parkmate.parkingservice.parkinglot.domain.ParkingLot;
 import org.springframework.data.jpa.repository.JpaRepository;
