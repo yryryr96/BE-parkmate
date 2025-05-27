@@ -1,4 +1,4 @@
-package com.parkmate.parkingservice.parkingoperation.entity;
+package com.parkmate.parkingservice.parkingoperation.domain;
 
 import com.parkmate.parkingservice.common.entity.BaseEntity;
 import jakarta.persistence.Column;
