@@ -9,6 +9,7 @@ import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotRegisterRe
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotUpdateRequestDto;
 import com.parkmate.parkingservice.parkingspot.dto.response.ParkingSpotResponseDto;
 import com.parkmate.parkingservice.parkingspot.infrastructure.ParkingSpotRepository;
+import com.parkmate.parkingservice.parkingspotsequence.application.ParkingSpotSequenceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,11 +21,16 @@ import java.util.List;
 public class ParkingSpotServiceImpl implements ParkingSpotService {
 
     private final ParkingSpotRepository parkingSpotRepository;
+    private final ParkingSpotSequenceService parkingSpotSequenceService;
 
     @Transactional
     @Override
     public void register(ParkingSpotRegisterRequestDto parkingSpotRegisterRequestDto) {
 
+        Long sequence = parkingSpotSequenceService.getSequenceBy(parkingSpotRegisterRequestDto.getParkingLotUuid(),
+                parkingSpotRegisterRequestDto.getType());
+
+        System.out.println("sequence = " + sequence);
     }
 
     @Transactional

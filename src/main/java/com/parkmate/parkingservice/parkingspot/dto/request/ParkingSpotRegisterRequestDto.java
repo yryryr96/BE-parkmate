@@ -1,6 +1,7 @@
 package com.parkmate.parkingservice.parkingspot.dto.request;
 
 import com.parkmate.parkingservice.parkingspot.domain.ParkingSpotType;
+import com.parkmate.parkingservice.parkingspot.vo.request.ParkingSpotRegisterRequestVo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,5 +24,15 @@ public class ParkingSpotRegisterRequestDto {
         this.parkingLotUuid = parkingLotUuid;
         this.type = type;
         this.isEvChargingAvailable = isEvChargingAvailable;
+    }
+
+    public static ParkingSpotRegisterRequestDto of(String parkingLotUuid,
+                                                   ParkingSpotRegisterRequestVo parkingSpotRegisterRequestVo) {
+        return ParkingSpotRegisterRequestDto.builder()
+                .name(parkingSpotRegisterRequestVo.getName())
+                .parkingLotUuid(parkingLotUuid)
+                .type(parkingSpotRegisterRequestVo.getType())
+                .isEvChargingAvailable(parkingSpotRegisterRequestVo.getIsEvChargingAvailable())
+                .build();
     }
 }

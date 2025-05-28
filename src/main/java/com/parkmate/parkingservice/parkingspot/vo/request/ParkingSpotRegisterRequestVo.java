@@ -7,7 +7,6 @@ import lombok.Getter;
 public class ParkingSpotRegisterRequestVo {
 
     private String name;
-    private String parkingLotUuid;
     private ParkingSpotType type;
     private Boolean isEvChargingAvailable;
 }
