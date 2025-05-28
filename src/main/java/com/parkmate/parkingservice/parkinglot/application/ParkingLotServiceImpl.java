@@ -3,7 +3,7 @@ package com.parkmate.parkingservice.parkinglot.application;
 import com.parkmate.parkingservice.common.exception.BaseException;
 import com.parkmate.parkingservice.common.response.ResponseStatus;
 import com.parkmate.parkingservice.parkinglot.domain.ParkingLot;
-import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotCreateRequestDto;
+import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotRegisterRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotDeleteRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotUpdateRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.response.ParkingLotResponseDto;
@@ -20,8 +20,8 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 
     @Transactional
     @Override
-    public void register(ParkingLotCreateRequestDto parkingLotCreateRequestDto) {
-        parkingLotRepository.save(parkingLotCreateRequestDto.toEntity());
+    public void register(ParkingLotRegisterRequestDto parkingLotRegisterRequestDto) {
+        parkingLotRepository.save(parkingLotRegisterRequestDto.toEntity());
     }
 
     @Transactional

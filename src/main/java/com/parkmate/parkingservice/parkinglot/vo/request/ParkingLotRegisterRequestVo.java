@@ -4,7 +4,7 @@ import com.parkmate.parkingservice.parkinglot.domain.ParkingLotType;
 import lombok.Getter;
 
 @Getter
-public class ParkingLotCreateRequestVo {
+public class ParkingLotRegisterRequestVo {
 
     private String hostUuid;
     private ParkingLotType parkingLotType;
