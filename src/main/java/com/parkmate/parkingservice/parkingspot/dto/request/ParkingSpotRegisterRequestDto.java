@@ -16,9 +16,9 @@ public class ParkingSpotRegisterRequestDto {
 
     @Builder
     private ParkingSpotRegisterRequestDto(String name,
-                                         String parkingLotUuid,
-                                         ParkingSpotType type,
-                                         Boolean isEvChargingAvailable) {
+                                          String parkingLotUuid,
+                                          ParkingSpotType type,
+                                          Boolean isEvChargingAvailable) {
         this.name = name;
         this.parkingLotUuid = parkingLotUuid;
         this.type = type;
