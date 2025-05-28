@@ -2,7 +2,7 @@ package com.parkmate.parkingservice.parkingoperation.application;
 
 import com.parkmate.parkingservice.common.exception.BaseException;
 import com.parkmate.parkingservice.common.response.ResponseStatus;
-import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationCreateRequestDto;
+import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationRegisterRequestDto;
 import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationGetRequestDto;
 import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationListGetRequestDto;
 import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationUpdateRequestDto;
@@ -23,9 +23,9 @@ public class ParkingOperationServiceImpl implements ParkingOperationService {
 
     @Transactional
     @Override
-    public void register(ParkingOperationCreateRequestDto parkingOperationCreateRequestDto) {
+    public void register(ParkingOperationRegisterRequestDto parkingOperationRegisterRequestDto) {
         parkingOperationMongoRepository.save(
-                parkingOperationCreateRequestDto.toEntity()
+                parkingOperationRegisterRequestDto.toEntity()
         );
     }
 

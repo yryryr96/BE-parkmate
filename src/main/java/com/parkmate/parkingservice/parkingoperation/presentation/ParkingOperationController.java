@@ -2,12 +2,12 @@ package com.parkmate.parkingservice.parkingoperation.presentation;
 
 import com.parkmate.parkingservice.common.response.ApiResponse;
 import com.parkmate.parkingservice.parkingoperation.application.ParkingOperationService;
-import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationCreateRequestDto;
+import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationRegisterRequestDto;
 import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationGetRequestDto;
 import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationListGetRequestDto;
 import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationUpdateRequestDto;
 import com.parkmate.parkingservice.parkingoperation.dto.response.ParkingOperationResponseDto;
-import com.parkmate.parkingservice.parkingoperation.vo.ParkingOperationCreateRequestVo;
+import com.parkmate.parkingservice.parkingoperation.vo.ParkingOperationRegisterRequestVo;
 import com.parkmate.parkingservice.parkingoperation.vo.ParkingOperationResponseVo;
 import com.parkmate.parkingservice.parkingoperation.vo.request.ParkingOperationUpdateRequestVo;
 import lombok.RequiredArgsConstructor;
@@ -26,11 +26,11 @@ public class ParkingOperationController {
     @PostMapping("/{parkingLotUuid}/operations")
     public ApiResponse<String> registerParkingOperation(
             @PathVariable String parkingLotUuid,
-            @RequestBody ParkingOperationCreateRequestVo parkingOperationCreateRequestVo) {
+            @RequestBody ParkingOperationRegisterRequestVo parkingOperationRegisterRequestVo) {
 
         parkingOperationService.register(
-                ParkingOperationCreateRequestDto.of(
-                        parkingLotUuid, parkingOperationCreateRequestVo)
+                ParkingOperationRegisterRequestDto.of(
+                        parkingLotUuid, parkingOperationRegisterRequestVo)
         );
 
         return ApiResponse.of(

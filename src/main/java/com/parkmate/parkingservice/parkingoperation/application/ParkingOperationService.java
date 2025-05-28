@@ -1,6 +1,6 @@
 package com.parkmate.parkingservice.parkingoperation.application;
 
-import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationCreateRequestDto;
+import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationRegisterRequestDto;
 import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationGetRequestDto;
 import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationListGetRequestDto;
 import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationUpdateRequestDto;
@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ParkingOperationService {
 
-    void register(ParkingOperationCreateRequestDto parkingOperationCreateRequestDto);
+    void register(ParkingOperationRegisterRequestDto parkingOperationRegisterRequestDto);
 
     List<ParkingOperationResponseDto> getParkingOperationList(ParkingOperationListGetRequestDto parkingOperationListGetRequestDto);
 
