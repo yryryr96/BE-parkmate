@@ -32,9 +32,13 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
         );
     }
 
+    @Transactional
     @Override
     public void delete(ParkingSpotDeleteRequestDto parkingSpotDeleteRequestDto) {
-
+        parkingSpotRepository.deleteByIdAndParkingLotUuid(
+                parkingSpotDeleteRequestDto.getParkingSpotId(),
+                parkingSpotDeleteRequestDto.getParkingLotUuid()
+        );
     }
 
     @Override

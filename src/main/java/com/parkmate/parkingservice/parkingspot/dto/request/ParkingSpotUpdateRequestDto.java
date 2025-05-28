@@ -37,9 +37,9 @@ public class ParkingSpotUpdateRequestDto {
         this.evChargeTypes = evChargeTypes;
     }
 
-    public static ParkingSpotUpdateRequestDto from(String parkingLotUuid,
-                                                   Long parkingSpotId,
-                                                   ParkingSpotUpdateRequestVo parkingSpotUpdateRequestVo) {
+    public static ParkingSpotUpdateRequestDto of(String parkingLotUuid,
+                                                 Long parkingSpotId,
+                                                 ParkingSpotUpdateRequestVo parkingSpotUpdateRequestVo) {
 
         return ParkingSpotUpdateRequestDto.builder()
                 .parkingSpotId(parkingSpotId)
