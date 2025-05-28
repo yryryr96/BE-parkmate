@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -20,7 +19,7 @@ public class ParkingSpotUpdateRequestDto {
     private String name;
     private ParkingSpotType type;
     private Boolean isEvChargingAvailable;
-    private List<EvChargeType> evChargeTypes;
+    private EvChargeType evChargeType;
 
     @Builder
     private ParkingSpotUpdateRequestDto(Long parkingSpotId,
@@ -28,13 +27,13 @@ public class ParkingSpotUpdateRequestDto {
                                         String name,
                                         ParkingSpotType type,
                                         Boolean isEvChargingAvailable,
-                                        List<EvChargeType> evChargeTypes) {
+                                        EvChargeType evChargeType) {
         this.parkingSpotId = parkingSpotId;
         this.parkingLotUuid = parkingLotUuid;
         this.name = name;
         this.type = type;
         this.isEvChargingAvailable = isEvChargingAvailable;
-        this.evChargeTypes = evChargeTypes;
+        this.evChargeType = evChargeType;
     }
 
     public static ParkingSpotUpdateRequestDto of(String parkingLotUuid,
@@ -47,7 +46,7 @@ public class ParkingSpotUpdateRequestDto {
                 .name(parkingSpotUpdateRequestVo.getName())
                 .type(parkingSpotUpdateRequestVo.getType())
                 .isEvChargingAvailable(parkingSpotUpdateRequestVo.getIsEvChargingAvailable())
-                .evChargeTypes(parkingSpotUpdateRequestVo.getEvChargeTypes())
+                .evChargeType(parkingSpotUpdateRequestVo.getEvChargeType())
                 .build();
     }
 
@@ -58,7 +57,7 @@ public class ParkingSpotUpdateRequestDto {
                 .name(name)
                 .type(type)
                 .isEvChargingAvailable(isEvChargingAvailable)
-                .evChargeTypes(new HashSet<>(evChargeTypes))
+                .evChargeType(evChargeType)
                 .build();
     }
 }

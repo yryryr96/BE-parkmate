@@ -19,4 +19,9 @@ public interface ParkingOperationMongoRepository extends MongoRepository<Parking
             String parkingLotUuid,
             String parkingOperationUuid
     );
+
+    void deleteByParkingLotUuidAndParkingOperationUuid(
+            String parkingLotUuid,
+            String parkingOperationUuid
+    );
 }

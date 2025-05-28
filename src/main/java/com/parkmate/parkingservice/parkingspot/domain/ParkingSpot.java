@@ -7,9 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,14 +33,10 @@ public class ParkingSpot {
     @Column(nullable = false)
     private Boolean isEvChargingAvailable;
 
-    @ElementCollection(targetClass = EvChargeType.class)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(
-            name = "parking_spot_charging_type",
-            joinColumns = @JoinColumn(name = "id")
-    )
-    @Column(name = "ev_charge_type")
-    private Set<EvChargeType> EvChargeTypes = new HashSet<>();
+    @Comment("전기차 충전 타입")
+    @Column(nullable = true)
+    private EvChargeType evChargeType;
 
     @Builder
     private ParkingSpot(Long id,
@@ -51,12 +44,12 @@ public class ParkingSpot {
                        String parkingLotUuid,
                        ParkingSpotType type,
                        Boolean isEvChargingAvailable,
-                       Set<EvChargeType> evChargeTypes) {
+                       EvChargeType evChargeType) {
         this.id = id;
         this.name = name;
         this.parkingLotUuid = parkingLotUuid;
         this.type = type;
         this.isEvChargingAvailable = isEvChargingAvailable;
-        EvChargeTypes = evChargeTypes;
+        this.evChargeType = evChargeType;
     }
 }

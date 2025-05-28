@@ -1,5 +1,8 @@
 package com.parkmate.parkingservice.parkingspot.application;
 
+import com.parkmate.parkingservice.common.exception.BaseException;
+import com.parkmate.parkingservice.common.response.ResponseStatus;
+import com.parkmate.parkingservice.parkingspot.domain.ParkingSpot;
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotDeleteRequestDto;
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotGetRequestDto;
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotRegisterRequestDto;
@@ -41,13 +44,24 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
         );
     }
 
+    @Transactional(readOnly = true)
     @Override
     public ParkingSpotResponseDto getParkingSpot(ParkingSpotGetRequestDto parkingSpotGetRequestDto) {
-        return null;
+
+        ParkingSpot entity = parkingSpotRepository.findByIdAndParkingLotUuid(
+                parkingSpotGetRequestDto.getParkingSpotId(),
+                parkingSpotGetRequestDto.getParkingLotUuid()
+        ).orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
+
+        return ParkingSpotResponseDto.from(entity);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<ParkingSpotResponseDto> getParkingSpots(String parkingLotUuid) {
-        return List.of();
+        return parkingSpotRepository.findAllByParkingLotUuid(parkingLotUuid)
+                .stream()
+                .map(ParkingSpotResponseDto::from)
+                .toList();
     }
 }

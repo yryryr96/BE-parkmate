@@ -2,9 +2,9 @@ package com.parkmate.parkingservice.parkingoperation.presentation;
 
 import com.parkmate.parkingservice.common.response.ApiResponse;
 import com.parkmate.parkingservice.parkingoperation.application.ParkingOperationService;
-import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationRegisterRequestDto;
 import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationGetRequestDto;
 import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationListGetRequestDto;
+import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationRegisterRequestDto;
 import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationUpdateRequestDto;
 import com.parkmate.parkingservice.parkingoperation.dto.response.ParkingOperationResponseDto;
 import com.parkmate.parkingservice.parkingoperation.vo.ParkingOperationRegisterRequestVo;
@@ -26,11 +26,11 @@ public class ParkingOperationController {
     @PostMapping("/{parkingLotUuid}/operations")
     public ApiResponse<String> registerParkingOperation(
             @PathVariable String parkingLotUuid,
-            @RequestBody ParkingOperationRegisterRequestVo parkingOperationRegisterRequestVo) {
+            @RequestBody ParkingOperationRegisterRequestVo parkingOperationCreateRequestVo) {
 
         parkingOperationService.register(
                 ParkingOperationRegisterRequestDto.of(
-                        parkingLotUuid, parkingOperationRegisterRequestVo)
+                        parkingLotUuid, parkingOperationCreateRequestVo)
         );
 
         return ApiResponse.of(
