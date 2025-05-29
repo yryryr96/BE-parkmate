@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -18,19 +18,19 @@ public class ParkingSpotResponseDto {
     private String name;
     private ParkingSpotType type;
     private Boolean isEvChargingAvailable;
-    private EvChargeType evChargeType;
+    private Set<EvChargeType> evChargeTypes;
 
     @Builder
     private ParkingSpotResponseDto(String parkingLotUuid,
                                    String name,
                                    ParkingSpotType type,
                                    Boolean isEvChargingAvailable,
-                                   EvChargeType evChargeType) {
+                                   Set<EvChargeType> evChargeTypes) {
         this.parkingLotUuid = parkingLotUuid;
         this.name = name;
         this.type = type;
         this.isEvChargingAvailable = isEvChargingAvailable;
-        this.evChargeType = evChargeType;
+        this.evChargeTypes = evChargeTypes;
     }
 
     public static ParkingSpotResponseDto from(ParkingSpot parkingSpot) {
@@ -39,7 +39,7 @@ public class ParkingSpotResponseDto {
                 .name(parkingSpot.getName())
                 .type(parkingSpot.getType())
                 .isEvChargingAvailable(parkingSpot.getIsEvChargingAvailable())
-                .evChargeType(parkingSpot.getEvChargeType())
+                .evChargeTypes(parkingSpot.getEvChargeTypes())
                 .build();
     }
 
@@ -49,7 +49,7 @@ public class ParkingSpotResponseDto {
                 .name(name)
                 .type(type)
                 .isEvChargingAvailable(isEvChargingAvailable)
-                .evChargeType(evChargeType)
+                .evChargeTypes(evChargeTypes)
                 .build();
     }
 }

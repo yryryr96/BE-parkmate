@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -19,7 +20,7 @@ public class ParkingSpotUpdateRequestDto {
     private String name;
     private ParkingSpotType type;
     private Boolean isEvChargingAvailable;
-    private EvChargeType evChargeType;
+    private Set<EvChargeType> evChargeTypes;
 
     @Builder
     private ParkingSpotUpdateRequestDto(Long parkingSpotId,
@@ -27,13 +28,13 @@ public class ParkingSpotUpdateRequestDto {
                                         String name,
                                         ParkingSpotType type,
                                         Boolean isEvChargingAvailable,
-                                        EvChargeType evChargeType) {
+                                        Set<EvChargeType> evChargeTypes) {
         this.parkingSpotId = parkingSpotId;
         this.parkingLotUuid = parkingLotUuid;
         this.name = name;
         this.type = type;
         this.isEvChargingAvailable = isEvChargingAvailable;
-        this.evChargeType = evChargeType;
+        this.evChargeTypes = evChargeTypes;
     }
 
     public static ParkingSpotUpdateRequestDto of(String parkingLotUuid,
@@ -46,7 +47,7 @@ public class ParkingSpotUpdateRequestDto {
                 .name(parkingSpotUpdateRequestVo.getName())
                 .type(parkingSpotUpdateRequestVo.getType())
                 .isEvChargingAvailable(parkingSpotUpdateRequestVo.getIsEvChargingAvailable())
-                .evChargeType(parkingSpotUpdateRequestVo.getEvChargeType())
+                .evChargeTypes(parkingSpotUpdateRequestVo.getEvChargeTypes())
                 .build();
     }
 
@@ -57,7 +58,7 @@ public class ParkingSpotUpdateRequestDto {
                 .name(name)
                 .type(type)
                 .isEvChargingAvailable(isEvChargingAvailable)
-                .evChargeType(evChargeType)
+                .evChargeTypes(evChargeTypes)
                 .build();
     }
 }

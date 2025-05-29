@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
+import java.util.Set;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -14,6 +16,7 @@ public class ParkingSpot {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "parking_spot_id")
     private Long id;
 
     @Comment("주차면 이름")
@@ -33,10 +36,14 @@ public class ParkingSpot {
     @Column(nullable = false)
     private Boolean isEvChargingAvailable;
 
+    @ElementCollection(targetClass = EvChargeType.class)
     @Enumerated(EnumType.STRING)
+    @CollectionTable(
+            name = "parking_spot_charging_type",
+            joinColumns = @JoinColumn(name = "parking_spot_id")
+    )
     @Comment("전기차 충전 타입")
-    @Column(nullable = true)
-    private EvChargeType evChargeType;
+    private Set<EvChargeType> evChargeTypes;
 
     @Builder
     private ParkingSpot(Long id,
@@ -44,12 +51,12 @@ public class ParkingSpot {
                        String parkingLotUuid,
                        ParkingSpotType type,
                        Boolean isEvChargingAvailable,
-                       EvChargeType evChargeType) {
+                        Set<EvChargeType> evChargeTypes) {
         this.id = id;
         this.name = name;
         this.parkingLotUuid = parkingLotUuid;
         this.type = type;
         this.isEvChargingAvailable = isEvChargingAvailable;
-        this.evChargeType = evChargeType;
+        this.evChargeTypes = evChargeTypes;
     }
 }

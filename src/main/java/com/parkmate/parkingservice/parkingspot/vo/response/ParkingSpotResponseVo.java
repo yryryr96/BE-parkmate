@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Getter
 @NoArgsConstructor
 public class ParkingSpotResponseVo {
@@ -14,18 +16,18 @@ public class ParkingSpotResponseVo {
     private String name;
     private ParkingSpotType type;
     private Boolean isEvChargingAvailable;
-    private EvChargeType evChargeType;
+    private Set<EvChargeType> evChargeTypes;
 
     @Builder
     private ParkingSpotResponseVo(String parkingLotUuid,
                                   String name,
                                   ParkingSpotType type,
                                   Boolean isEvChargingAvailable,
-                                  EvChargeType evChargeType) {
+                                  Set<EvChargeType> evChargeTypes) {
         this.parkingLotUuid = parkingLotUuid;
         this.name = name;
         this.type = type;
         this.isEvChargingAvailable = isEvChargingAvailable;
-        this.evChargeType = evChargeType;
+        this.evChargeTypes = evChargeTypes;
     }
 }
