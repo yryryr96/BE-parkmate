@@ -1,6 +1,7 @@
 package com.parkmate.parkingservice.parkingspotsequence.application;
 
 import com.parkmate.parkingservice.parkingspot.domain.ParkingSpotType;
+import com.parkmate.parkingservice.parkingspotsequence.domain.ParkingSpotSequence;
 import com.parkmate.parkingservice.parkingspotsequence.infrastructure.ParkingSpotSequenceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,12 +15,32 @@ public class ParkingSpotSequenceServiceImpl implements ParkingSpotSequenceServic
 
     @Transactional(readOnly = true)
     @Override
-    public Long getSequenceBy(String parkingLotUuid,
-                              ParkingSpotType parkingSpotType) {
+    public Long getSpotSequence(String parkingLotUuid,
+                                ParkingSpotType parkingSpotType) {
 
-        return parkingSpotSequenceRepository.findSequenceByParkingLotUuidAndParkingSpotType(
+        return parkingSpotSequenceRepository.getRegularSpotSequence(
+                        parkingLotUuid,
+                        parkingSpotType)
+                .orElse(1L);
+    }
+
+    @Transactional
+    @Override
+    public void update(String parkingLotUuid,
+                       ParkingSpotType parkingSpotType,
+                       Long sequence) {
+
+        parkingSpotSequenceRepository.findByParkingLotUuidAndParkingSpotType(
                 parkingLotUuid,
                 parkingSpotType
-        );
+        ).ifPresentOrElse(
+                pss -> { pss.updateSequence(sequence); },
+                () -> parkingSpotSequenceRepository.save(
+                        ParkingSpotSequence.builder()
+                                .parkingLotUuid(parkingLotUuid)
+                                .parkingSpotType(parkingSpotType)
+                                .sequence(sequence)
+                                .build()
+                ));
     }
 }

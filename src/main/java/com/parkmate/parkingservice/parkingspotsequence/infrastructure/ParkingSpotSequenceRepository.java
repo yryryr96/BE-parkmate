@@ -5,13 +5,20 @@ import com.parkmate.parkingservice.parkingspotsequence.domain.ParkingSpotSequenc
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
+
 public interface ParkingSpotSequenceRepository extends JpaRepository<ParkingSpotSequence, Long> {
 
     @Query(value = "SELECT pss.sequence " +
             "FROM ParkingSpotSequence pss " +
             "WHERE pss.parkingLotUuid = :parkingLotUuid AND " +
             "pss.parkingSpotType = :parkingSpotType")
-    Long findSequenceByParkingLotUuidAndParkingSpotType(
+    Optional<Long> getRegularSpotSequence(
+            String parkingLotUuid,
+            ParkingSpotType parkingSpotType
+    );
+
+    Optional<ParkingSpotSequence> findByParkingLotUuidAndParkingSpotType(
             String parkingLotUuid,
             ParkingSpotType parkingSpotType
     );

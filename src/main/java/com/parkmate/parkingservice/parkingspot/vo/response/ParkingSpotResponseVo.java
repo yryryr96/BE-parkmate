@@ -15,19 +15,16 @@ public class ParkingSpotResponseVo {
     private String parkingLotUuid;
     private String name;
     private ParkingSpotType type;
-    private Boolean isEvChargingAvailable;
     private Set<EvChargeType> evChargeTypes;
 
     @Builder
     private ParkingSpotResponseVo(String parkingLotUuid,
                                   String name,
                                   ParkingSpotType type,
-                                  Boolean isEvChargingAvailable,
                                   Set<EvChargeType> evChargeTypes) {
         this.parkingLotUuid = parkingLotUuid;
         this.name = name;
         this.type = type;
-        this.isEvChargingAvailable = isEvChargingAvailable;
         this.evChargeTypes = evChargeTypes;
     }
 }

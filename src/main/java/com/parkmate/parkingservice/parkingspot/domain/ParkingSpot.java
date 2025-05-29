@@ -32,10 +32,6 @@ public class ParkingSpot {
     @Column(nullable = false)
     private ParkingSpotType type;
 
-    @Comment("전기차 충전 가능 여부")
-    @Column(nullable = false)
-    private Boolean isEvChargingAvailable;
-
     @ElementCollection(targetClass = EvChargeType.class)
     @Enumerated(EnumType.STRING)
     @CollectionTable(
@@ -47,16 +43,14 @@ public class ParkingSpot {
 
     @Builder
     private ParkingSpot(Long id,
-                       String name,
-                       String parkingLotUuid,
-                       ParkingSpotType type,
-                       Boolean isEvChargingAvailable,
+                        String name,
+                        String parkingLotUuid,
+                        ParkingSpotType type,
                         Set<EvChargeType> evChargeTypes) {
         this.id = id;
         this.name = name;
         this.parkingLotUuid = parkingLotUuid;
         this.type = type;
-        this.isEvChargingAvailable = isEvChargingAvailable;
         this.evChargeTypes = evChargeTypes;
     }
 }

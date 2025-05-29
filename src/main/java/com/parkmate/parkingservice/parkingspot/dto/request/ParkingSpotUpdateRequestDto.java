@@ -19,7 +19,6 @@ public class ParkingSpotUpdateRequestDto {
     private String parkingLotUuid;
     private String name;
     private ParkingSpotType type;
-    private Boolean isEvChargingAvailable;
     private Set<EvChargeType> evChargeTypes;
 
     @Builder
@@ -27,13 +26,11 @@ public class ParkingSpotUpdateRequestDto {
                                         String parkingLotUuid,
                                         String name,
                                         ParkingSpotType type,
-                                        Boolean isEvChargingAvailable,
                                         Set<EvChargeType> evChargeTypes) {
         this.parkingSpotId = parkingSpotId;
         this.parkingLotUuid = parkingLotUuid;
         this.name = name;
         this.type = type;
-        this.isEvChargingAvailable = isEvChargingAvailable;
         this.evChargeTypes = evChargeTypes;
     }
 
@@ -46,7 +43,6 @@ public class ParkingSpotUpdateRequestDto {
                 .parkingLotUuid(parkingLotUuid)
                 .name(parkingSpotUpdateRequestVo.getName())
                 .type(parkingSpotUpdateRequestVo.getType())
-                .isEvChargingAvailable(parkingSpotUpdateRequestVo.getIsEvChargingAvailable())
                 .evChargeTypes(parkingSpotUpdateRequestVo.getEvChargeTypes())
                 .build();
     }
@@ -57,7 +53,6 @@ public class ParkingSpotUpdateRequestDto {
                 .parkingLotUuid(parkingLotUuid)
                 .name(name)
                 .type(type)
-                .isEvChargingAvailable(isEvChargingAvailable)
                 .evChargeTypes(evChargeTypes)
                 .build();
     }

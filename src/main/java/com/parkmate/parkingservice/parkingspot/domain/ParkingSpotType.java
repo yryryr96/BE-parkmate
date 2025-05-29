@@ -8,7 +8,8 @@ public enum ParkingSpotType {
     COMPACT("소형차"),
     SMALL("경차"),
     STANDARD("중형차"),
-    LARGE("대형차")
+    LARGE("대형차"),
+    EV("전기차")
     ;
 
     private final String description;

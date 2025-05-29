@@ -4,12 +4,11 @@ import com.parkmate.parkingservice.parkingspot.domain.EvChargeType;
 import com.parkmate.parkingservice.parkingspot.domain.ParkingSpotType;
 import lombok.Getter;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
-public class ParkingSpotUpdateRequestVo {
+public class ChargeableSpotRegisterVo {
 
-    private String name;
-    private ParkingSpotType type;
-    private Set<EvChargeType> evChargeTypes;
+    private ParkingSpotType parkingSpotType;
+    private List<EvChargeType> evChargeTypes;
 }

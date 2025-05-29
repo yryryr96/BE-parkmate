@@ -3,17 +3,22 @@ package com.parkmate.parkingservice.parkingspot.application;
 import com.parkmate.parkingservice.common.exception.BaseException;
 import com.parkmate.parkingservice.common.response.ResponseStatus;
 import com.parkmate.parkingservice.parkingspot.domain.ParkingSpot;
+import com.parkmate.parkingservice.parkingspot.domain.ParkingSpotType;
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotDeleteRequestDto;
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotGetRequestDto;
-import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotRegisterRequestDto;
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotUpdateRequestDto;
 import com.parkmate.parkingservice.parkingspot.dto.response.ParkingSpotResponseDto;
 import com.parkmate.parkingservice.parkingspot.infrastructure.ParkingSpotRepository;
+import com.parkmate.parkingservice.parkingspot.vo.request.ChargeableSpotRegisterVo;
+import com.parkmate.parkingservice.parkingspot.vo.request.NonChargeableSpotRegisterVo;
+import com.parkmate.parkingservice.parkingspot.vo.request.ParkingSpotRegisterRequestVo;
 import com.parkmate.parkingservice.parkingspotsequence.application.ParkingSpotSequenceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -23,14 +28,71 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
     private final ParkingSpotRepository parkingSpotRepository;
     private final ParkingSpotSequenceService parkingSpotSequenceService;
 
+    private static final String EV_SPOT_NAME_PREFIX = "EV-";
+    private static final String REGULAR_SPOT_NAME_PREFIX = "REG-";
+
     @Transactional
     @Override
-    public void register(ParkingSpotRegisterRequestDto parkingSpotRegisterRequestDto) {
+    public void register(String parkingLotUuid,
+                         ParkingSpotRegisterRequestVo parkingSpotRegisterRequestVo) {
 
-        Long sequence = parkingSpotSequenceService.getSequenceBy(parkingSpotRegisterRequestDto.getParkingLotUuid(),
-                parkingSpotRegisterRequestDto.getType());
+        List<ChargeableSpotRegisterVo> chargeable = parkingSpotRegisterRequestVo.getChargeable();
+        List<NonChargeableSpotRegisterVo> nonChargeable = parkingSpotRegisterRequestVo.getNonChargeable();
 
-        System.out.println("sequence = " + sequence);
+        saveEvParkingSpots(parkingLotUuid, chargeable);
+        saveRegularParkingSpots(parkingLotUuid, nonChargeable);
+    }
+
+    private void saveRegularParkingSpots(String parkingLotUuid,
+                                         List<NonChargeableSpotRegisterVo> nonChargeable) {
+
+        List<ParkingSpot> parkingSpots = new ArrayList<>();
+        for (NonChargeableSpotRegisterVo nonChargeableSpotRegisterVo : nonChargeable) {
+
+            ParkingSpotType parkingSpotType = nonChargeableSpotRegisterVo.getParkingSpotType();
+
+            Long sequence = parkingSpotSequenceService.getSpotSequence(parkingLotUuid, parkingSpotType);
+            for (int c = 0; c < nonChargeableSpotRegisterVo.getCount(); c++) {
+                ParkingSpot parkingSpot = ParkingSpot.builder()
+                        .parkingLotUuid(parkingLotUuid)
+                        .name(REGULAR_SPOT_NAME_PREFIX + parkingSpotType + sequence)
+                        .type(parkingSpotType)
+                        .evChargeTypes(null)
+                        .build();
+
+                parkingSpots.add(parkingSpot);
+                sequence++;
+            }
+
+            parkingSpotSequenceService.update(parkingLotUuid, parkingSpotType, sequence);
+        }
+
+        parkingSpotRepository.saveAll(parkingSpots);
+    }
+
+    private void saveEvParkingSpots(String parkingLotUuid,
+                                    List<ChargeableSpotRegisterVo> chargeable) {
+
+        ParkingSpotType parkingSpotType = ParkingSpotType.EV;
+        Long sequence = parkingSpotSequenceService.getSpotSequence(parkingLotUuid, parkingSpotType);
+        List<ParkingSpot> parkingSpots = new ArrayList<>();
+
+        for (ChargeableSpotRegisterVo chargeableSpotRegisterVo : chargeable) {
+            ParkingSpot parkingSpot = ParkingSpot.builder()
+                    .parkingLotUuid(parkingLotUuid)
+                    .name(EV_SPOT_NAME_PREFIX + sequence)
+                    .type(parkingSpotType)
+                    .evChargeTypes(
+                            new HashSet<>(chargeableSpotRegisterVo.getEvChargeTypes())
+                    )
+                    .build();
+
+            parkingSpots.add(parkingSpot);
+            sequence++;
+        }
+
+        parkingSpotRepository.saveAll(parkingSpots);
+        parkingSpotSequenceService.update(parkingLotUuid, parkingSpotType, sequence);
     }
 
     @Transactional
