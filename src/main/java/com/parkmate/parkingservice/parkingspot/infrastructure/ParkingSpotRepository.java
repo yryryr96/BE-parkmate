@@ -8,9 +8,8 @@ import java.util.Optional;
 
 public interface ParkingSpotRepository extends JpaRepository<ParkingSpot, Long> {
 
-    void deleteByIdAndParkingLotUuid(
-            Long parkingSpotId,
-            String parkingLotUuid
+    void deleteByIdAndParkingLotUuid(Long parkingSpotId,
+                                     String parkingLotUuid
     );
 
     Optional<ParkingSpot> findByIdAndParkingLotUuid(Long parkingSpotId,

@@ -13,13 +13,11 @@ public interface ParkingSpotSequenceRepository extends JpaRepository<ParkingSpot
             "FROM ParkingSpotSequence pss " +
             "WHERE pss.parkingLotUuid = :parkingLotUuid AND " +
             "pss.parkingSpotType = :parkingSpotType")
-    Optional<Long> getRegularSpotSequence(
-            String parkingLotUuid,
-            ParkingSpotType parkingSpotType
+    Optional<Long> getRegularSpotSequence(String parkingLotUuid,
+                                          ParkingSpotType parkingSpotType
     );
 
-    Optional<ParkingSpotSequence> findByParkingLotUuidAndParkingSpotType(
-            String parkingLotUuid,
-            ParkingSpotType parkingSpotType
+    Optional<ParkingSpotSequence> findByParkingLotUuidAndParkingSpotType(String parkingLotUuid,
+                                                                         ParkingSpotType parkingSpotType
     );
 }

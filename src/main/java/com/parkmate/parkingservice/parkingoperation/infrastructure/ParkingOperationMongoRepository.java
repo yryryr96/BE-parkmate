@@ -9,15 +9,13 @@ import java.util.Optional;
 
 public interface ParkingOperationMongoRepository extends MongoRepository<ParkingOperation, String> {
 
-    List<ParkingOperation> findAllByParkingLotUuidAndOperationDateBetween(
-            String parkingLotUuid,
-            LocalDate startDate,
-            LocalDate endDate
+    List<ParkingOperation> findAllByParkingLotUuidAndOperationDateBetween(String parkingLotUuid,
+                                                                          LocalDate startDate,
+                                                                          LocalDate endDate
     );
 
-    Optional<ParkingOperation> findByParkingLotUuidAndParkingOperationUuid(
-            String parkingLotUuid,
-            String parkingOperationUuid
+    Optional<ParkingOperation> findByParkingLotUuidAndParkingOperationUuid(String parkingLotUuid,
+                                                                           String parkingOperationUuid
     );
 
     void deleteByParkingLotUuidAndParkingOperationUuid(

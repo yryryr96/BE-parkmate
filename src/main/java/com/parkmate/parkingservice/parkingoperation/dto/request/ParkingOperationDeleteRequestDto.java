@@ -5,11 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+//@NoArgsConstructor
 public class ParkingOperationDeleteRequestDto {
 
-    private String parkingOperationUuid;
-    private String parkingLotUuid;
+    private final String parkingOperationUuid;
+    private final String parkingLotUuid;
 
     @Builder
     private ParkingOperationDeleteRequestDto(String parkingOperationUuid,
