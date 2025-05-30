@@ -64,7 +64,7 @@ public class ReservationServiceImpl implements ReservationService {
     private boolean canModified(Reservation reservation) {
 
         LocalDateTime now = LocalDateTime.now();
-        return reservation.getEntryTime().minusMinutes(MODIFY_TIME_LIMIT_MINUTES).isAfter(now);
+        return now.isBefore(reservation.getEntryTime().minusMinutes(MODIFY_TIME_LIMIT_MINUTES));
     }
 
     @Transactional(readOnly = true)
