@@ -1,5 +1,8 @@
 package com.parkmate.reservationservice.reservation.application;
 
+import com.parkmate.reservationservice.common.exception.BaseException;
+import com.parkmate.reservationservice.common.response.ResponseStatus;
+import com.parkmate.reservationservice.reservation.domain.Reservation;
 import com.parkmate.reservationservice.reservation.dto.request.ReservationCancelRequestDto;
 import com.parkmate.reservationservice.reservation.dto.request.ReservationGetRequestDto;
 import com.parkmate.reservationservice.reservation.dto.request.ReservationModifyRequestDto;
@@ -24,9 +27,15 @@ public class ReservationServiceImpl implements ReservationService {
         reservationRepository.save(reservationRequestDto.toEntity());
     }
 
+    @Transactional
     @Override
     public void cancel(ReservationCancelRequestDto reservationCancelRequestDto) {
 
+        Reservation reservation = reservationRepository.findByReservationCodeAndUserUuid(reservationCancelRequestDto.getReservationCode(),
+                        reservationCancelRequestDto.getUserUuid())
+                .orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
+
+        reservation.cancel();
     }
 
     @Override

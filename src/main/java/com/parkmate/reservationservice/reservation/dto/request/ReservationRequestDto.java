@@ -3,6 +3,7 @@ package com.parkmate.reservationservice.reservation.dto.request;
 import com.parkmate.reservationservice.common.generator.ReservationCodeGenerator;
 import com.parkmate.reservationservice.reservation.domain.PaymentType;
 import com.parkmate.reservationservice.reservation.domain.Reservation;
+import com.parkmate.reservationservice.reservation.domain.ReservationStatus;
 import com.parkmate.reservationservice.reservation.vo.request.ReservationRequestVo;
 import lombok.Builder;
 import lombok.Getter;
@@ -65,6 +66,7 @@ public class ReservationRequestDto {
                 .entryTime(this.entryTime)
                 .exitTime(this.exitTime)
                 .amount(this.amount)
+                .status(ReservationStatus.WAITING)
                 .paymentType(this.paymentType)
                 .build();
     }

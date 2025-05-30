@@ -51,10 +51,12 @@ public class Reservation extends BaseEntity {
     @Column(nullable = false)
     private double amount;
 
+    @Enumerated(EnumType.STRING)
     @Comment("예약 상태")
     @Column(nullable = false)
     private ReservationStatus status;
 
+    @Enumerated(EnumType.STRING)
     @Comment("결제 유형")
     @Column(nullable = false)
     private PaymentType paymentType;
@@ -82,5 +84,9 @@ public class Reservation extends BaseEntity {
         this.amount = amount;
         this.status = status;
         this.paymentType = paymentType;
+    }
+
+    public void cancel() {
+        this.status = ReservationStatus.CANCELLED;
     }
 }
