@@ -18,6 +18,7 @@ public enum ResponseStatus {
      **/
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, false, 404, "리소스가 존재하지 않습니다."),
     REQUEST_CONFLICT(HttpStatus.CONFLICT, false, 409, "POST 요청에 실패했습니다."),
+    MODIFY_TIME_LIMIT_EXCEEDED(HttpStatus.UNPROCESSABLE_ENTITY, false, 422, "수정 가능한 시간이 초과되었습니다. 예약은 입장 1시간 전까지 수정 가능합니다."),
 
     /**
      * 5xx: 서버 오류

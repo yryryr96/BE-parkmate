@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -20,6 +21,8 @@ import java.util.List;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
+
+    private static final int MODIFY_TIME_LIMIT_MINUTES = 60;
 
     @Transactional
     @Override
@@ -41,14 +44,27 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     @Override
     public void modify(ReservationModifyRequestDto reservationModifyRequestDto) {
+
         Reservation reservation = reservationRepository.findByReservationCodeAndUserUuid(
                         reservationModifyRequestDto.getReservationCode(),
                         reservationModifyRequestDto.getUserUuid())
                 .orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
 
-        reservation.modify(reservationModifyRequestDto.getNewEntryTime(),
-                reservationModifyRequestDto.getNewExitTime()
-        );
+        if (canModified(reservation)) {
+            reservation.modify(reservationModifyRequestDto.getNewEntryTime(),
+                    reservationModifyRequestDto.getNewExitTime()
+            );
+
+            return;
+        }
+
+        throw new BaseException(ResponseStatus.MODIFY_TIME_LIMIT_EXCEEDED);
+    }
+
+    private boolean canModified(Reservation reservation) {
+
+        LocalDateTime now = LocalDateTime.now();
+        return reservation.getEntryTime().minusMinutes(MODIFY_TIME_LIMIT_MINUTES).isAfter(now);
     }
 
     @Transactional(readOnly = true)
