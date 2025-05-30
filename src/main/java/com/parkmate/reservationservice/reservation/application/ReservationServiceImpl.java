@@ -38,18 +38,36 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.cancel();
     }
 
+    @Transactional
     @Override
     public void modify(ReservationModifyRequestDto reservationModifyRequestDto) {
+        Reservation reservation = reservationRepository.findByReservationCodeAndUserUuid(
+                        reservationModifyRequestDto.getReservationCode(),
+                        reservationModifyRequestDto.getUserUuid())
+                .orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
 
+        reservation.modify(reservationModifyRequestDto.getNewEntryTime(),
+                reservationModifyRequestDto.getNewExitTime()
+        );
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<ReservationResponseDto> getReservations(String userUuid) {
-        return null;
+
+        return reservationRepository.findAllByUserUuid(userUuid)
+                .stream()
+                .map(ReservationResponseDto::from)
+                .toList();
     }
 
     @Override
     public ReservationResponseDto getReservation(ReservationGetRequestDto reservationGetRequestDto) {
-        return null;
+        Reservation reservation = reservationRepository.findByReservationCodeAndUserUuid(
+                        reservationGetRequestDto.getReservationCode(),
+                        reservationGetRequestDto.getUserUuid())
+                .orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
+
+        return ReservationResponseDto.from(reservation);
     }
 }

@@ -89,4 +89,9 @@ public class Reservation extends BaseEntity {
     public void cancel() {
         this.status = ReservationStatus.CANCELLED;
     }
+
+    public void modify(LocalDateTime newEntryTime, LocalDateTime newExitTime) {
+        this.entryTime = newEntryTime;
+        this.exitTime = newExitTime;
+    }
 }
