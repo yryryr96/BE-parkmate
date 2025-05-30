@@ -10,6 +10,7 @@ import com.parkmate.reservationservice.reservation.dto.response.ReservationRespo
 import com.parkmate.reservationservice.reservation.vo.request.ReservationCancelRequestVo;
 import com.parkmate.reservationservice.reservation.vo.request.ReservationModifyRequestVo;
 import com.parkmate.reservationservice.reservation.vo.request.ReservationRequestVo;
+import com.parkmate.reservationservice.reservation.vo.response.ReservationResponseVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,10 +53,10 @@ public class ReservationController {
     }
 
     @GetMapping("/{reservationCode}")
-    public ApiResponse<ReservationResponseDto> getReservation(@PathVariable String reservationCode,
-                                                              @RequestParam String userUuid) {
-        ReservationResponseDto reservation = reservationService.getReservation(
-                ReservationGetRequestDto.of(reservationCode, userUuid));
+    public ApiResponse<ReservationResponseVo> getReservation(@PathVariable String reservationCode,
+                                                             @RequestParam String userUuid) {
+        ReservationResponseVo reservation = reservationService.getReservation(
+                ReservationGetRequestDto.of(reservationCode, userUuid)).toVo();
         return ApiResponse.ok(reservation);
     }
 }
