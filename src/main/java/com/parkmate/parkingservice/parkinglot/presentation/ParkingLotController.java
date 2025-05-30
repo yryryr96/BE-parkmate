@@ -2,10 +2,10 @@ package com.parkmate.parkingservice.parkinglot.presentation;
 
 import com.parkmate.parkingservice.common.response.ApiResponse;
 import com.parkmate.parkingservice.parkinglot.application.ParkingLotService;
-import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotCreateRequestDto;
+import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotRegisterRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotDeleteRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotUpdateRequestDto;
-import com.parkmate.parkingservice.parkinglot.vo.request.ParkingLotCreateRequestVo;
+import com.parkmate.parkingservice.parkinglot.vo.request.ParkingLotRegisterRequestVo;
 import com.parkmate.parkingservice.parkinglot.vo.request.ParkingLotUpdateRequestVo;
 import com.parkmate.parkingservice.parkinglot.vo.response.ParkingLotResponseVo;
 import lombok.RequiredArgsConstructor;
@@ -20,15 +20,15 @@ public class ParkingLotController {
     private final ParkingLotService parkingLotService;
 
     @PostMapping
-    public ApiResponse<String> registerParkingLot(@RequestBody ParkingLotCreateRequestVo parkingLotCreateRequestVo) {
-        parkingLotService.register(ParkingLotCreateRequestDto.from(parkingLotCreateRequestVo));
+    public ApiResponse<String> registerParkingLot(@RequestBody ParkingLotRegisterRequestVo parkingLotRegisterRequestVo) {
+        parkingLotService.register(ParkingLotRegisterRequestDto.from(parkingLotRegisterRequestVo));
         return ApiResponse.of(
                 HttpStatus.CREATED,
                 "주차장 등록이 완료되었습니다."
         );
     }
 
-    @PostMapping("/{parkingLotUuid}")
+    @PutMapping("/{parkingLotUuid}")
     public ApiResponse<String> updateParkingLot(@PathVariable String parkingLotUuid,
                                                 @RequestBody ParkingLotUpdateRequestVo parkingLotUpdateRequestVo) {
 

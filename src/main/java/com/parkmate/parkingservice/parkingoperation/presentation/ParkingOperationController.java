@@ -2,9 +2,12 @@ package com.parkmate.parkingservice.parkingoperation.presentation;
 
 import com.parkmate.parkingservice.common.response.ApiResponse;
 import com.parkmate.parkingservice.parkingoperation.application.ParkingOperationService;
-import com.parkmate.parkingservice.parkingoperation.dto.request.*;
+import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationGetRequestDto;
+import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationListGetRequestDto;
+import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationRegisterRequestDto;
+import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationUpdateRequestDto;
 import com.parkmate.parkingservice.parkingoperation.dto.response.ParkingOperationResponseDto;
-import com.parkmate.parkingservice.parkingoperation.vo.ParkingOperationCreateRequestVo;
+import com.parkmate.parkingservice.parkingoperation.vo.ParkingOperationRegisterRequestVo;
 import com.parkmate.parkingservice.parkingoperation.vo.ParkingOperationResponseVo;
 import com.parkmate.parkingservice.parkingoperation.vo.request.ParkingOperationUpdateRequestVo;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +26,10 @@ public class ParkingOperationController {
     @PostMapping("/{parkingLotUuid}/operations")
     public ApiResponse<String> registerParkingOperation(
             @PathVariable String parkingLotUuid,
-            @RequestBody ParkingOperationCreateRequestVo parkingOperationCreateRequestVo) {
+            @RequestBody ParkingOperationRegisterRequestVo parkingOperationCreateRequestVo) {
 
         parkingOperationService.register(
-                ParkingOperationCreateRequestDto.of(
+                ParkingOperationRegisterRequestDto.of(
                         parkingLotUuid, parkingOperationCreateRequestVo)
         );
 
@@ -50,20 +53,6 @@ public class ParkingOperationController {
         return ApiResponse.of(
                 HttpStatus.OK,
                 "운영시간 정보가 업데이트되었습니다."
-        );
-    }
-
-    @DeleteMapping("/{parkingLotUuid}/operations/{parkingOperationUuid}")
-    public ApiResponse<String> deleteParkingOperation(@PathVariable String parkingLotUuid,
-                                                      @PathVariable String parkingOperationUuid) {
-
-        parkingOperationService.delete(
-                ParkingOperationDeleteRequestDto.of(parkingLotUuid, parkingOperationUuid)
-        );
-
-        return ApiResponse.of(
-                HttpStatus.NO_CONTENT,
-                "운영시간 정보가 삭제되었습니다."
         );
     }
 

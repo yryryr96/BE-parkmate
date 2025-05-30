@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
-public class ParkingOperationCreateRequestVo {
+public class ParkingOperationRegisterRequestVo {
 
     private LocalDate operationDate;
     private LocalDateTime validStartTime;
