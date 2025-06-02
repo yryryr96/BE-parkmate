@@ -13,7 +13,7 @@ public class ReservationNotificationProducer {
 
     private final KafkaTemplate<String, ReservationEvent> kafkaTemplate;
 
-    private static final String TOPIC = "notification.created";
+    private static final String TOPIC = "reservation.created";
 
     public void send(ReservationEvent reservationEvent) {
 
