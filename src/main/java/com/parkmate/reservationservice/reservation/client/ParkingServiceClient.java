@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "parking-service", url = "${parking.service.url}")
 public interface ParkingServiceClient {
 
-    @GetMapping("/api/v1/parkingLots/{parkingLotUuid}")
+    @GetMapping("/api/v1/parkingLots/{parkingLotUuid}/host")
     ParkingLotClientResponse getHostUuidByParkingLotUuid(@PathVariable String parkingLotUuid);
 }

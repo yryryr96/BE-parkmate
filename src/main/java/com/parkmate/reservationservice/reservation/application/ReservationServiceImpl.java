@@ -2,6 +2,7 @@ package com.parkmate.reservationservice.reservation.application;
 
 import com.parkmate.reservationservice.common.exception.BaseException;
 import com.parkmate.reservationservice.common.response.ResponseStatus;
+import com.parkmate.reservationservice.reservation.client.response.ParkingLotClientResponse;
 import com.parkmate.reservationservice.reservation.event.ReservationEvent;
 import com.parkmate.reservationservice.reservation.producer.ReservationNotificationProducer;
 import com.parkmate.reservationservice.reservation.client.ParkingServiceClient;
@@ -32,9 +33,9 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     @Override
     public void reserve(ReservationRequestDto reservationRequestDto) {
+
         Reservation reservation = reservationRepository.save(reservationRequestDto.toEntity());
         String hostUuid = parkingServiceClient.getHostUuidByParkingLotUuid(reservation.getParkingLotUuid()).getHostUuid();
-
         reservationNotificationProducer.send(ReservationEvent.from(hostUuid));
     }
 
@@ -85,6 +86,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public ReservationResponseDto getReservation(ReservationGetRequestDto reservationGetRequestDto) {
         Reservation reservation = reservationRepository.findByReservationCodeAndUserUuid(
