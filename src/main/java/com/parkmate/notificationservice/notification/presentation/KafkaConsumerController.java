@@ -16,7 +16,7 @@ public class KafkaConsumerController {
     private final NotificationService notificationService;
 
     @KafkaListener(topics = {"notification.created"}, groupId = "notification-service", containerFactory = "notificationEventListener")
-    public void consumeReservationCompleteEvent(NotificationEvent notificationEvent) {
+    public void consumeNotificationEvent(NotificationEvent notificationEvent) {
         log.info("Received message from reservation.complete topic: {}", notificationEvent);
         notificationService.createNotification(NotificationEventDto.from(notificationEvent));
     }
