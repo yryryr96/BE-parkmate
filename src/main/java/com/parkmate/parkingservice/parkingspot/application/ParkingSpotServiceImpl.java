@@ -6,6 +6,7 @@ import com.parkmate.parkingservice.parkingspot.domain.ParkingSpot;
 import com.parkmate.parkingservice.parkingspot.domain.ParkingSpotType;
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotDeleteRequestDto;
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotGetRequestDto;
+import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotRegisterRequestDto;
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotUpdateRequestDto;
 import com.parkmate.parkingservice.parkingspot.dto.response.ParkingSpotResponseDto;
 import com.parkmate.parkingservice.parkingspot.infrastructure.ParkingSpotRepository;
@@ -33,12 +34,11 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
 
     @Transactional
     @Override
-    public void register(String parkingLotUuid,
-                         ParkingSpotRegisterRequestVo parkingSpotRegisterRequestVo) {
+    public void register(ParkingSpotRegisterRequestDto parkingSpotRegisterRequestDto) {
 
-        List<ChargeableSpotRegisterVo> chargeable = parkingSpotRegisterRequestVo.getChargeable();
-        List<NonChargeableSpotRegisterVo> nonChargeable = parkingSpotRegisterRequestVo.getNonChargeable();
-
+        List<ChargeableSpotRegisterVo> chargeable = parkingSpotRegisterRequestDto.getChargeable();
+        List<NonChargeableSpotRegisterVo> nonChargeable = parkingSpotRegisterRequestDto.getNonChargeable();
+        String parkingLotUuid = parkingSpotRegisterRequestDto.getParkingLotUuid();
         saveEvParkingSpots(parkingLotUuid, chargeable);
         saveRegularParkingSpots(parkingLotUuid, nonChargeable);
     }

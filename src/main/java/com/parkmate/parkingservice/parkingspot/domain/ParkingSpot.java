@@ -24,7 +24,7 @@ public class ParkingSpot {
     private String name;
 
     @Comment("주차장 UUID")
-    @Column(nullable = false)
+    @Column(nullable = false, length = 36)
     private String parkingLotUuid;
 
     @Enumerated(EnumType.STRING)
