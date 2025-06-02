@@ -18,11 +18,11 @@ public class ParkingLot extends BaseEntity {
     private Long id;
 
     @Comment("주차장 UUID")
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 36)
     private String parkingLotUuid;
 
     @Comment("호스트 UUID")
-    @Column(nullable = false)
+    @Column(nullable = false, length = 36)
     private String hostUuid;
 
     @Enumerated(EnumType.STRING)
