@@ -4,5 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class ParkingLotClientResponse {
+
     private String hostUuid;
 }
