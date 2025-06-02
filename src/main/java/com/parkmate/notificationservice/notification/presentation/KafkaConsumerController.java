@@ -8,14 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
-@Slf4j
 @Component
+@Slf4j
+@RequiredArgsConstructor
 public class KafkaConsumerController {
 
     private final NotificationService notificationService;
 
-    @KafkaListener(topics = "reservation.complete", groupId = "notification-service", containerFactory = "reservationCompleteEventListener")
+    @KafkaListener(topics = {"notification.created"}, groupId = "notification-service", containerFactory = "notificationEventListener")
     public void consumeReservationCompleteEvent(NotificationEvent notificationEvent) {
         log.info("Received message from reservation.complete topic: {}", notificationEvent);
         notificationService.createNotification(NotificationEventDto.from(notificationEvent));

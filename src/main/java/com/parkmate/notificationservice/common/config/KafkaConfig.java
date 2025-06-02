@@ -37,7 +37,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, NotificationEvent> reservationCompleteEventConsumerFactory() {
+    public ConsumerFactory<String, NotificationEvent> notificationEventConsumerFactory() {
         return new DefaultKafkaConsumerFactory<>(
                 notificationConsumerConfigs(),
                 new StringDeserializer(),
@@ -46,9 +46,9 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, NotificationEvent> reservationCompleteEventListener() {
+    public ConcurrentKafkaListenerContainerFactory<String, NotificationEvent> notificationEventListener() {
         ConcurrentKafkaListenerContainerFactory<String, NotificationEvent> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(reservationCompleteEventConsumerFactory());
+        factory.setConsumerFactory(notificationEventConsumerFactory());
 
         return factory;
     }
