@@ -20,8 +20,8 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 
     @Transactional
     @Override
-    public void register(ParkingLotRegisterRequestDto parkingLotRegisterRequestDto) {
-        parkingLotRepository.save(parkingLotRegisterRequestDto.toEntity());
+    public ParkingLot register(ParkingLotRegisterRequestDto parkingLotRegisterRequestDto) {
+        return parkingLotRepository.save(parkingLotRegisterRequestDto.toEntity());
     }
 
     @Transactional

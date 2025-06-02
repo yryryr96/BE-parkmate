@@ -36,6 +36,10 @@ public class ApiResponse<T> {
         return of(HttpStatus.OK, message, data);
     }
 
+    public static <T> ApiResponse<T> created(T data) {
+        return of(HttpStatus.CREATED, data);
+    }
+
     public static <T> ApiResponse<T> error(ResponseStatus status) {
         return of(status.getHttpStatus(), status.getMessage(), null);
     }
