@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ParkingOperationDeleteRequestDto {
 
-    private String parkingOperationUuid;
     private String parkingLotUuid;
+    private String parkingOperationUuid;
 
     @Builder
-    private ParkingOperationDeleteRequestDto(String parkingOperationUuid,
-                                             String parkingLotUuid) {
-        this.parkingOperationUuid = parkingOperationUuid;
+    private ParkingOperationDeleteRequestDto(String parkingLotUuid,
+                                            String parkingOperationUuid) {
         this.parkingLotUuid = parkingLotUuid;
+        this.parkingOperationUuid = parkingOperationUuid;
     }
 
     public static ParkingOperationDeleteRequestDto of(String parkingLotUuid,

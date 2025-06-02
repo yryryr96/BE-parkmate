@@ -2,10 +2,7 @@ package com.parkmate.parkingservice.parkingoperation.presentation;
 
 import com.parkmate.parkingservice.common.response.ApiResponse;
 import com.parkmate.parkingservice.parkingoperation.application.ParkingOperationService;
-import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationGetRequestDto;
-import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationListGetRequestDto;
-import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationRegisterRequestDto;
-import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationUpdateRequestDto;
+import com.parkmate.parkingservice.parkingoperation.dto.request.*;
 import com.parkmate.parkingservice.parkingoperation.dto.response.ParkingOperationResponseDto;
 import com.parkmate.parkingservice.parkingoperation.vo.ParkingOperationRegisterRequestVo;
 import com.parkmate.parkingservice.parkingoperation.vo.ParkingOperationResponseVo;
@@ -24,19 +21,16 @@ public class ParkingOperationController {
     private final ParkingOperationService parkingOperationService;
 
     @PostMapping("/{parkingLotUuid}/operations")
-    public ApiResponse<String> registerParkingOperation(
-            @PathVariable String parkingLotUuid,
-            @RequestBody ParkingOperationRegisterRequestVo parkingOperationCreateRequestVo) {
+    public ApiResponse<String> registerParkingOperation(@PathVariable String parkingLotUuid,
+                                                        @RequestBody ParkingOperationRegisterRequestVo parkingOperationCreateRequestVo) {
 
         parkingOperationService.register(
                 ParkingOperationRegisterRequestDto.of(
-                        parkingLotUuid, parkingOperationCreateRequestVo)
+                        parkingLotUuid,
+                        parkingOperationCreateRequestVo)
         );
 
-        return ApiResponse.of(
-                HttpStatus.CREATED,
-                "운영시간 정보가 등록되었습니다."
-        );
+        return ApiResponse.created("운영시간 정보가 등록되었습니다.");
     }
 
     @PutMapping("/{parkingLotUuid}/operations/{operationUuid}")
@@ -46,13 +40,24 @@ public class ParkingOperationController {
 
         parkingOperationService.update(
                 ParkingOperationUpdateRequestDto.of(
-                        parkingLotUuid, operationUuid, parkingOperationCreateRequestVo
+                        parkingLotUuid,
+                        operationUuid,
+                        parkingOperationCreateRequestVo
                 )
         );
 
+        return ApiResponse.ok("운영시간 정보가 업데이트되었습니다.");
+    }
+
+    @DeleteMapping("/{parkingLotUuid}/operations/{operationUuid}")
+    public ApiResponse<String> deleteParkingOperation(@PathVariable String parkingLotUuid,
+                                                      @PathVariable String operationUuid) {
+
+        parkingOperationService.delete(ParkingOperationDeleteRequestDto.of(parkingLotUuid, operationUuid));
+
         return ApiResponse.of(
-                HttpStatus.OK,
-                "운영시간 정보가 업데이트되었습니다."
+                HttpStatus.NO_CONTENT,
+                "운영시간 정보가 삭제되었습니다."
         );
     }
 
@@ -63,7 +68,9 @@ public class ParkingOperationController {
 
         return ApiResponse.ok(
                 parkingOperationService.getParkingOperationList(
-                                ParkingOperationListGetRequestDto.of(parkingLotUuid, year, month))
+                                ParkingOperationListGetRequestDto.of(parkingLotUuid,
+                                        year,
+                                        month))
                         .stream()
                         .map(ParkingOperationResponseDto::toVo)
                         .toList()
@@ -76,7 +83,8 @@ public class ParkingOperationController {
 
         return ApiResponse.ok(
                 parkingOperationService.getParkingOperation(
-                                ParkingOperationGetRequestDto.of(parkingLotUuid, operationUuid))
+                                ParkingOperationGetRequestDto.of(parkingLotUuid,
+                                        operationUuid))
                         .toVo()
         );
     }

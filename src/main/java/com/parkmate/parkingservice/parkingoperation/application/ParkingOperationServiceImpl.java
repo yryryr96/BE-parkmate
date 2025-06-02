@@ -3,10 +3,7 @@ package com.parkmate.parkingservice.parkingoperation.application;
 import com.parkmate.parkingservice.common.exception.BaseException;
 import com.parkmate.parkingservice.common.response.ResponseStatus;
 import com.parkmate.parkingservice.parkingoperation.domain.ParkingOperation;
-import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationGetRequestDto;
-import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationListGetRequestDto;
-import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationRegisterRequestDto;
-import com.parkmate.parkingservice.parkingoperation.dto.request.ParkingOperationUpdateRequestDto;
+import com.parkmate.parkingservice.parkingoperation.dto.request.*;
 import com.parkmate.parkingservice.parkingoperation.dto.response.ParkingOperationResponseDto;
 import com.parkmate.parkingservice.parkingoperation.infrastructure.ParkingOperationMongoRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +37,16 @@ public class ParkingOperationServiceImpl implements ParkingOperationService {
 
         parkingOperationMongoRepository.save(
                 createUpdatedParkingOperationEntity(parkingOperation, parkingOperationUpdateRequestDto)
+        );
+    }
+
+    @Transactional
+    @Override
+    public void delete(ParkingOperationDeleteRequestDto parkingOperationDeleteRequestDto) {
+
+        parkingOperationMongoRepository.deleteByParkingLotUuidAndParkingOperationUuid(
+                parkingOperationDeleteRequestDto.getParkingLotUuid(),
+                parkingOperationDeleteRequestDto.getParkingOperationUuid()
         );
     }
 
