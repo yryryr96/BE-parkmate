@@ -3,6 +3,7 @@ package com.parkmate.parkingservice.parkinglot.application;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotRegisterRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotDeleteRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotUpdateRequestDto;
+import com.parkmate.parkingservice.parkinglot.dto.response.ParkingLotHostUuidResponseDto;
 import com.parkmate.parkingservice.parkinglot.dto.response.ParkingLotResponseDto;
 
 public interface ParkingLotService {
@@ -14,4 +15,6 @@ public interface ParkingLotService {
     void delete(ParkingLotDeleteRequestDto parkingLotDeleteRequestDto);
 
     ParkingLotResponseDto findByUuid(String parkingLotUuid);
+
+    ParkingLotHostUuidResponseDto getHostUuidByParkingLotUuid(String parkingLotUuid);
 }
