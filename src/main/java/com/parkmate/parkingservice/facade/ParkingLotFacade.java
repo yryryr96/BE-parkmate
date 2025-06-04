@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ParkingLotFacade {
@@ -23,8 +25,14 @@ public class ParkingLotFacade {
         ParkingLot parkingLot = parkingLotService.register(parkingLotRegisterRequest.getParkingLot());
         String parkingLotUuid = parkingLot.getParkingLotUuid();
 
-        parkingSpotService.register(parkingLotRegisterRequest.getParkingSpot().withParkingLotUuid(parkingLotUuid));
+        Optional.ofNullable(parkingLotRegisterRequest.getParkingSpot())
+                .ifPresent(parkingSpot ->
+                        parkingSpotService.register(parkingSpot.withParkingLotUuid(parkingLotUuid))
+                );
 
-        parkingLotImageMappingService.registerParkingLotImages(parkingLotRegisterRequest.getParkingLotImage().withParkingLotUuid(parkingLotUuid));
+        Optional.ofNullable(parkingLotRegisterRequest.getParkingLotImage())
+                .ifPresent(parkingLotImage ->
+                        parkingLotImageMappingService.registerParkingLotImages(parkingLotImage.withParkingLotUuid(parkingLotUuid))
+                );
     }
 }

@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,8 +40,12 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
         List<ChargeableSpotRegisterVo> chargeable = parkingSpotRegisterRequestDto.getChargeable();
         List<NonChargeableSpotRegisterVo> nonChargeable = parkingSpotRegisterRequestDto.getNonChargeable();
         String parkingLotUuid = parkingSpotRegisterRequestDto.getParkingLotUuid();
-        saveEvParkingSpots(parkingLotUuid, chargeable);
-        saveRegularParkingSpots(parkingLotUuid, nonChargeable);
+
+        Optional.ofNullable(chargeable)
+                .ifPresent(c -> saveEvParkingSpots(parkingLotUuid, c));
+
+        Optional.ofNullable(nonChargeable)
+                .ifPresent(n -> saveRegularParkingSpots(parkingLotUuid, n));
     }
 
     private void saveRegularParkingSpots(String parkingLotUuid,
