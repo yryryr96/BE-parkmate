@@ -4,15 +4,17 @@ import com.parkmate.parkingservice.common.response.ApiResponse;
 import com.parkmate.parkingservice.facade.ParkingLotFacade;
 import com.parkmate.parkingservice.facade.dto.ParkingLotRegisterRequest;
 import com.parkmate.parkingservice.parkinglot.application.ParkingLotService;
-import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotRegisterRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotDeleteRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotUpdateRequestDto;
-import com.parkmate.parkingservice.parkinglot.vo.request.ParkingLotRegisterRequestVo;
+import com.parkmate.parkingservice.parkinglot.dto.response.ParkingLotGeoResponseDto;
 import com.parkmate.parkingservice.parkinglot.vo.request.ParkingLotUpdateRequestVo;
+import com.parkmate.parkingservice.parkinglot.vo.response.ParkingLotGeoResponseVo;
 import com.parkmate.parkingservice.parkinglot.vo.response.ParkingLotResponseVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/parkingLots")
@@ -56,4 +58,34 @@ public class ParkingLotController {
                 parkingLotService.findByUuid(parkingLotUuid).toVo()
         );
     }
+
+    @GetMapping("/nearby/redis")
+    public ApiResponse<List<ParkingLotGeoResponseVo>> getNearbyParkingLots(
+            @RequestParam double latitude,
+            @RequestParam double longitude,
+            @RequestParam double radius) {
+
+        return ApiResponse.ok(
+                parkingLotFacade.getNearbyParkingLotsRedis(latitude, longitude, radius)
+                        .stream()
+                        .map(ParkingLotGeoResponseDto::toVo)
+                        .toList()
+        );
+    }
+
+    @GetMapping("/nearby/mysql")
+    public ApiResponse<List<ParkingLotGeoResponseVo>> getNearbyParkingLots(
+            @RequestParam double latitude,
+            @RequestParam double longitude,
+            @RequestParam double radius,
+            @RequestParam(required = false) boolean useRedis) {
+
+        return ApiResponse.ok(
+                parkingLotFacade.getNearbyParkingLotsMysql(latitude, longitude, radius)
+                        .stream()
+                        .map(ParkingLotGeoResponseDto::toVo)
+                        .toList()
+        );
+    }
+
 }
