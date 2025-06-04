@@ -28,7 +28,7 @@ public class GeoServiceImpl implements GeoService {
 
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
-        List<ParkingLot> parkinglots = parkingLotRepository.findAll();
+//        List<ParkingLot> parkinglots = parkingLotRepository.findAll();
 //        parkinglots.forEach(parkingLot -> {
 //            geoOperations.add(GEO_KEY,
 //                    new Point(parkingLot.getLongitude(), parkingLot.getLatitude()),
@@ -36,7 +36,7 @@ public class GeoServiceImpl implements GeoService {
 //            );
 //        });
 
-        parkinglots.forEach(parkingLotGeoLocationRepository::insert);
+//        parkinglots.forEach(parkingLotGeoLocationRepository::insert);
     }
 
     @Override

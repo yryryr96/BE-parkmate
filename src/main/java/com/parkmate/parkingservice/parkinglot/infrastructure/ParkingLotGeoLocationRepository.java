@@ -13,16 +13,23 @@ import java.util.List;
 public interface ParkingLotGeoLocationRepository extends JpaRepository<ParkingLotGeoLocation, Long> {
 
     @Query(value = """
-        SELECT pl.id AS id,
-    ST_Y(pl.location) AS latitude,
-    ST_X(pl.location) AS longitude,
-               ST_Distance_Sphere(point(:longitude, :latitude), pl.location) AS distance
-        FROM parking_lot_geo_location pl
-        WHERE ST_Distance_Sphere(point(:longitude, :latitude), pl.location) <= :radius
-        """, nativeQuery = true)
+    SELECT pl.parking_lot_uuid AS parkingLotUuid,
+           ST_Y(pl.location) AS latitude,
+           ST_X(pl.location) AS longitude,
+           ST_Distance_Sphere(
+               pl.location,
+               ST_SRID(Point(:longitude, :latitude), 4326)
+           ) AS distance
+    FROM parking_lot_geo_location pl
+    WHERE ST_Distance_Sphere(
+              pl.location,
+              ST_SRID(Point(:longitude, :latitude), 4326)
+          ) <= :radius
+    """, nativeQuery = true)
     List<ParkingLotGeoResponseDto> findNearbyParkingLots(double latitude,
                                                          double longitude,
                                                          double radius);
+
 
     @Modifying
     @Transactional
