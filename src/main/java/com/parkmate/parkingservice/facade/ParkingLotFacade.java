@@ -1,11 +1,10 @@
 package com.parkmate.parkingservice.facade;
 
 import com.parkmate.parkingservice.facade.dto.ParkingLotRegisterRequest;
-import com.parkmate.parkingservice.parkinglot.application.ParkingLotGeoLocationServiceImpl;
+import com.parkmate.parkingservice.parkinglot.application.GeoServiceImplByMysql;
 import com.parkmate.parkingservice.parkinglot.application.ParkingLotService;
 import com.parkmate.parkingservice.parkinglot.application.GeoService;
 import com.parkmate.parkingservice.parkinglot.domain.ParkingLot;
-import com.parkmate.parkingservice.parkinglot.domain.ParkingLotGeoLocation;
 import com.parkmate.parkingservice.parkinglot.dto.response.ParkingLotGeoResponseDto;
 import com.parkmate.parkingservice.parkinglotimagemapping.application.ParkingLotImageMappingService;
 import com.parkmate.parkingservice.parkingspot.application.ParkingSpotService;
@@ -24,7 +23,6 @@ public class ParkingLotFacade {
     private final ParkingSpotService parkingSpotService;
     private final ParkingLotImageMappingService parkingLotImageMappingService;
     private final GeoService geoService;
-    private final ParkingLotGeoLocationServiceImpl parkingLotGeoLocationService;
 
     @Transactional
     public void registerParkingLot(ParkingLotRegisterRequest parkingLotRegisterRequest) {
@@ -49,17 +47,10 @@ public class ParkingLotFacade {
         );
     }
 
-    public List<ParkingLotGeoResponseDto> getNearbyParkingLotsRedis(double latitude,
-                                                                    double longitude,
-                                                                    double radius) {
-
-        return geoService.getNearbyParkingLots(latitude, longitude, radius);
-    }
-
     public List<ParkingLotGeoResponseDto> getNearbyParkingLotsMysql(double latitude,
                                                                 double longitude,
                                                                 double radius) {
 
-        return parkingLotGeoLocationService.getNearbyParkingLots(latitude, longitude, radius);
+        return geoService.getNearbyParkingLots(latitude, longitude, radius);
     }
 }

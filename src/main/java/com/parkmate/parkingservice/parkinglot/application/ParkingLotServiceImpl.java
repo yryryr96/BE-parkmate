@@ -68,7 +68,6 @@ public class ParkingLotServiceImpl implements ParkingLotService {
                 .registeredCapacity(parkingLotUpdateRequestDto.getRegisteredCapacity())
                 .isEvChargingAvailable(parkingLotUpdateRequestDto.getIsEvChargingAvailable())
                 .extraInfo(parkingLotUpdateRequestDto.getExtraInfo())
-                .zoneCode(entity.getZoneCode())
                 .mainAddress(entity.getMainAddress())
                 .detailAddress(entity.getDetailAddress())
                 .latitude(entity.getLatitude())

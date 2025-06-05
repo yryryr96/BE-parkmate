@@ -17,7 +17,6 @@ public class ParkingLotResponseDto {
     private String phoneNumber;
     private int capacity;
     private int registeredCapacity;
-    private String zoneCode;
     private String mainAddress;
     private String detailAddress;
     private double latitude;
@@ -32,7 +31,6 @@ public class ParkingLotResponseDto {
                                  String phoneNumber,
                                  int capacity,
                                  int registeredCapacity,
-                                 String zoneCode,
                                  String mainAddress,
                                  String detailAddress,
                                  double latitude,
@@ -45,7 +43,6 @@ public class ParkingLotResponseDto {
         this.phoneNumber = phoneNumber;
         this.capacity = capacity;
         this.registeredCapacity = registeredCapacity;
-        this.zoneCode = zoneCode;
         this.mainAddress = mainAddress;
         this.detailAddress = detailAddress;
         this.latitude = latitude;
@@ -62,7 +59,6 @@ public class ParkingLotResponseDto {
                 .phoneNumber(parkingLot.getPhoneNumber())
                 .capacity(parkingLot.getCapacity())
                 .registeredCapacity(parkingLot.getRegisteredCapacity())
-                .zoneCode(parkingLot.getZoneCode())
                 .mainAddress(parkingLot.getMainAddress())
                 .detailAddress(parkingLot.getDetailAddress())
                 .latitude(parkingLot.getLatitude())
@@ -81,7 +77,6 @@ public class ParkingLotResponseDto {
                 .phoneNumber(this.phoneNumber)
                 .capacity(this.capacity)
                 .registeredCapacity(this.registeredCapacity)
-                .zoneCode(this.zoneCode)
                 .mainAddress(this.mainAddress)
                 .detailAddress(this.detailAddress)
                 .latitude(this.latitude)

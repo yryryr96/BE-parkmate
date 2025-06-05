@@ -12,7 +12,6 @@ public class ParkingLotRegisterRequestVo {
     private String phoneNumber;
     private int capacity;
     private int registeredCapacity;
-    private String zoneCode;
     private String mainAddress;
     private String detailAddress;
     private double latitude;

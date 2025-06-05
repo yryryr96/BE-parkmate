@@ -46,10 +46,6 @@ public class ParkingLot extends BaseEntity {
     @Column(nullable = false)
     private int registeredCapacity;
 
-    @Comment("주차장 우편번호")
-    @Column(nullable = false)
-    private String zoneCode;
-
     @Comment("주차장 메인주소")
     @Column(nullable = false)
     private String mainAddress;
@@ -83,7 +79,6 @@ public class ParkingLot extends BaseEntity {
                        String phoneNumber,
                        int capacity,
                        int registeredCapacity,
-                       String zoneCode,
                        String mainAddress,
                        String detailAddress,
                        double latitude,
@@ -98,7 +93,6 @@ public class ParkingLot extends BaseEntity {
         this.phoneNumber = phoneNumber;
         this.capacity = capacity;
         this.registeredCapacity = registeredCapacity;
-        this.zoneCode = zoneCode;
         this.mainAddress = mainAddress;
         this.detailAddress = detailAddress;
         this.latitude = latitude;

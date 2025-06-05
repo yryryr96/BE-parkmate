@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface GeoService {
 
-    void addParkingLot(String parkingLotId, double latitude, double longitude);
+    void addParkingLot(String parkingLotUuid, double latitude, double longitude);
 
     List<ParkingLotGeoResponseDto> getNearbyParkingLots(double latitude, double longitude, double radius);
 }

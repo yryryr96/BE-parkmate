@@ -59,26 +59,11 @@ public class ParkingLotController {
         );
     }
 
-    @GetMapping("/nearby/redis")
+    @GetMapping("/nearby")
     public ApiResponse<List<ParkingLotGeoResponseVo>> getNearbyParkingLots(
             @RequestParam double latitude,
             @RequestParam double longitude,
             @RequestParam double radius) {
-
-        return ApiResponse.ok(
-                parkingLotFacade.getNearbyParkingLotsRedis(latitude, longitude, radius)
-                        .stream()
-                        .map(ParkingLotGeoResponseDto::toVo)
-                        .toList()
-        );
-    }
-
-    @GetMapping("/nearby/mysql")
-    public ApiResponse<List<ParkingLotGeoResponseVo>> getNearbyParkingLots(
-            @RequestParam double latitude,
-            @RequestParam double longitude,
-            @RequestParam double radius,
-            @RequestParam(required = false) boolean useRedis) {
 
         return ApiResponse.ok(
                 parkingLotFacade.getNearbyParkingLotsMysql(latitude, longitude, radius)
