@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  parking:
+    container_name: parking-service
+    image: 090188239653.dkr.ecr.ap-northeast-2.amazonaws.com/parking-service
+    volumes:
+      - /home/ubuntu/config/application.yml:/config/application.yml
+    environment:
+      - SPRING_CONFIG_LOCATION=file:/config/application.yml
+    ports:
+      - "8100:8100"
+    env_file:
+      - .env
+    networks:
+      - backend
+
+networks:
+  backend:
+    external: true
