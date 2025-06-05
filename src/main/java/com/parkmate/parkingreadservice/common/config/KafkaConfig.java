@@ -1,6 +1,6 @@
 package com.parkmate.parkingreadservice.common.config;
 
-import com.parkmate.parkingreadservice.parkinglot.event.ParkingLotCreateEvent;
+import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotCreateEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
