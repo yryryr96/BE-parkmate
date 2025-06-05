@@ -2,11 +2,13 @@ package com.parkmate.parkingservice.parkinglot.presentation;
 
 import com.parkmate.parkingservice.common.response.ApiResponse;
 import com.parkmate.parkingservice.facade.ParkingLotFacade;
-import com.parkmate.parkingservice.facade.dto.ParkingLotRegisterRequest;
 import com.parkmate.parkingservice.parkinglot.application.ParkingLotService;
+import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotRegisterRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotDeleteRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotUpdateRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.response.ParkingLotGeoResponseDto;
+import com.parkmate.parkingservice.parkinglot.dto.response.ParkingLotHostUuidResponseDto;
+import com.parkmate.parkingservice.parkinglot.vo.request.ParkingLotRegisterRequestVo;
 import com.parkmate.parkingservice.parkinglot.vo.request.ParkingLotUpdateRequestVo;
 import com.parkmate.parkingservice.parkinglot.vo.response.ParkingLotGeoResponseVo;
 import com.parkmate.parkingservice.parkinglot.vo.response.ParkingLotHostUuidResponseVo;
@@ -22,14 +24,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ParkingLotController {
 
-    private final ParkingLotService parkingLotService;
     private final ParkingLotFacade parkingLotFacade;
+    private final ParkingLotService parkingLotService;
 
     @PostMapping
-    public ApiResponse<String> registerParkingLot(@RequestBody ParkingLotRegisterRequest parkingLotRegisterRequest) {
-
-        parkingLotFacade.registerParkingLot(parkingLotRegisterRequest);
-        return ApiResponse.created("주차장 등록이 완료되었습니다.");
+    public ApiResponse<String> registerParkingLot(@RequestBody ParkingLotRegisterRequestVo parkingLotRegisterRequestVo) {
+        parkingLotService.register(ParkingLotRegisterRequestDto.from(parkingLotRegisterRequestVo));
+        return ApiResponse.of(
+                HttpStatus.CREATED,
+                "주차장 등록이 완료되었습니다."
+        );
     }
 
     @PutMapping("/{parkingLotUuid}")
