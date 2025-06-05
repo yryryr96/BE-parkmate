@@ -9,6 +9,7 @@ import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotUpdateReques
 import com.parkmate.parkingservice.parkinglot.dto.response.ParkingLotGeoResponseDto;
 import com.parkmate.parkingservice.parkinglot.vo.request.ParkingLotUpdateRequestVo;
 import com.parkmate.parkingservice.parkinglot.vo.response.ParkingLotGeoResponseVo;
+import com.parkmate.parkingservice.parkinglot.vo.response.ParkingLotHostUuidResponseVo;
 import com.parkmate.parkingservice.parkinglot.vo.response.ParkingLotResponseVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -73,4 +74,8 @@ public class ParkingLotController {
         );
     }
 
+    @GetMapping("/{parkingLotUuid}/host")
+    public ParkingLotHostUuidResponseVo getHostUuidByParkingLotUuid(@PathVariable String parkingLotUuid) {
+        return parkingLotService.getHostUuidByParkingLotUuid(parkingLotUuid).toVo();
+    }
 }

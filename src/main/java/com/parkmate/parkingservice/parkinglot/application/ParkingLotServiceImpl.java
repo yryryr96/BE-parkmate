@@ -6,6 +6,7 @@ import com.parkmate.parkingservice.parkinglot.domain.ParkingLot;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotRegisterRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotDeleteRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotUpdateRequestDto;
+import com.parkmate.parkingservice.parkinglot.dto.response.ParkingLotHostUuidResponseDto;
 import com.parkmate.parkingservice.parkinglot.dto.response.ParkingLotResponseDto;
 import com.parkmate.parkingservice.parkinglot.infrastructure.ParkingLotRepository;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +53,15 @@ public class ParkingLotServiceImpl implements ParkingLotService {
     public ParkingLotResponseDto findByUuid(String parkingLotUuid) {
         return ParkingLotResponseDto.from(
                 parkingLotRepository.findByParkingLotUuid(parkingLotUuid)
+                        .orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND))
+        );
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public ParkingLotHostUuidResponseDto getHostUuidByParkingLotUuid(String parkingLotUuid) {
+        return ParkingLotHostUuidResponseDto.from(
+                parkingLotRepository.findHostUuidByParkingLotUuid(parkingLotUuid)
                         .orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND))
         );
     }
