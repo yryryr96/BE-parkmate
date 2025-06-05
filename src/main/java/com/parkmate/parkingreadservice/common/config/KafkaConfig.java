@@ -1,6 +1,5 @@
 package com.parkmate.parkingreadservice.common.config;
 
-import com.parkmate.parkingreadservice.common.constant.MessageTopic;
 import com.parkmate.parkingreadservice.parkinglot.event.ParkingLotCreateEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -24,7 +23,7 @@ public class KafkaConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServer;
 
-    public Map<String, Object> getStringObjectMap(String groupId) {
+    private Map<String, Object> getStringObjectMap(String groupId) {
         Map<String, Object> props = new HashMap<>();
 
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
@@ -42,19 +41,22 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, ParkingLotCreateEvent> parkingLotCreateConsumerFactory() {
+    public ConcurrentKafkaListenerContainerFactory<String, ParkingLotCreateEvent> parkingLotCreateListener() {
+        return createListenerFactory(ParkingLotCreateEvent.class, "parking-lot-create-group");
+    }
+
+    private <T> ConsumerFactory<String, T> createConsumerFactory(Class<T> targetClass, String groupId) {
+        Map<String, Object> props = getStringObjectMap(groupId);
         return new DefaultKafkaConsumerFactory<>(
-                getStringObjectMap(MessageTopic.PARKING_LOT_CREATED_TOPIC),
+                props,
                 new StringDeserializer(),
-                new ErrorHandlingDeserializer<>(new JsonDeserializer<>(ParkingLotCreateEvent.class, false))
+                new ErrorHandlingDeserializer<>(new JsonDeserializer<>(targetClass, false))
         );
     }
 
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, ParkingLotCreateEvent> parkingLotCreateEventListener() {
-        ConcurrentKafkaListenerContainerFactory<String, ParkingLotCreateEvent> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(parkingLotCreateConsumerFactory());
-
+    private <T> ConcurrentKafkaListenerContainerFactory<String, T> createListenerFactory(Class<T> targetClass, String groupId) {
+        ConcurrentKafkaListenerContainerFactory<String, T> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(createConsumerFactory(targetClass, groupId));
         return factory;
     }
 }
