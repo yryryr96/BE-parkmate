@@ -16,5 +16,5 @@ public interface ParkingLotRepository extends JpaRepository<ParkingLot, Long> {
     Optional<ParkingLot> findByParkingLotUuid(String parkingLotUuid);
 
     @Query(value = "SELECT pl.hostUuid FROM ParkingLot pl WHERE pl.parkingLotUuid = :parkingLotUuid")
-    String findHostUuidByParkingLotUuid(String parkingLotUuid);
+    Optional<String> findHostUuidByParkingLotUuid(String parkingLotUuid);
 }

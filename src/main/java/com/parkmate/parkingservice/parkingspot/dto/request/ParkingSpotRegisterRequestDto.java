@@ -34,4 +34,12 @@ public class ParkingSpotRegisterRequestDto {
                 .nonChargeable(parkingSpotRegisterRequestVo.getNonChargeable())
                 .build();
     }
+
+    public ParkingSpotRegisterRequestDto withParkingLotUuid(String parkingLotUuid) {
+        return ParkingSpotRegisterRequestDto.builder()
+                .parkingLotUuid(parkingLotUuid)
+                .chargeable(this.chargeable)
+                .nonChargeable(this.nonChargeable)
+                .build();
+    }
 }

@@ -27,4 +27,11 @@ public class ParkingLotImageRegisterRequestDto {
                 .imageUrls(imageUrls)
                 .build();
     }
+
+    public ParkingLotImageRegisterRequestDto withParkingLotUuid(String parkingLotUuid) {
+        return ParkingLotImageRegisterRequestDto.builder()
+                .parkingLotUuid(parkingLotUuid)
+                .imageUrls(this.imageUrls)
+                .build();
+    }
 }

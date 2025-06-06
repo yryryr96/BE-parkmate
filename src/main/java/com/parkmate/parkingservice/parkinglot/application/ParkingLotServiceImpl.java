@@ -21,8 +21,8 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 
     @Transactional
     @Override
-    public void register(ParkingLotRegisterRequestDto parkingLotRegisterRequestDto) {
-        parkingLotRepository.save(parkingLotRegisterRequestDto.toEntity());
+    public ParkingLot register(ParkingLotRegisterRequestDto parkingLotRegisterRequestDto) {
+        return parkingLotRepository.save(parkingLotRegisterRequestDto.toEntity());
     }
 
     @Transactional
@@ -60,7 +60,10 @@ public class ParkingLotServiceImpl implements ParkingLotService {
     @Transactional(readOnly = true)
     @Override
     public ParkingLotHostUuidResponseDto getHostUuidByParkingLotUuid(String parkingLotUuid) {
-        return ParkingLotHostUuidResponseDto.from(parkingLotRepository.findHostUuidByParkingLotUuid(parkingLotUuid));
+        return ParkingLotHostUuidResponseDto.from(
+                parkingLotRepository.findHostUuidByParkingLotUuid(parkingLotUuid)
+                        .orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND))
+        );
     }
 
     private ParkingLot createUpdatedParkingLotEntity(ParkingLot entity,
@@ -75,7 +78,6 @@ public class ParkingLotServiceImpl implements ParkingLotService {
                 .registeredCapacity(parkingLotUpdateRequestDto.getRegisteredCapacity())
                 .isEvChargingAvailable(parkingLotUpdateRequestDto.getIsEvChargingAvailable())
                 .extraInfo(parkingLotUpdateRequestDto.getExtraInfo())
-                .zoneCode(entity.getZoneCode())
                 .mainAddress(entity.getMainAddress())
                 .detailAddress(entity.getDetailAddress())
                 .latitude(entity.getLatitude())

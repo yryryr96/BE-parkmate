@@ -15,7 +15,6 @@ public class ParkingLotResponseVo {
     private String phoneNumber;
     private int capacity;
     private int registeredCapacity;
-    private String zoneCode;
     private String mainAddress;
     private String detailAddress;
     private double latitude;
@@ -30,7 +29,6 @@ public class ParkingLotResponseVo {
                                 String phoneNumber,
                                 int capacity,
                                 int registeredCapacity,
-                                String zoneCode,
                                 String mainAddress,
                                 String detailAddress,
                                 double latitude,
@@ -43,7 +41,6 @@ public class ParkingLotResponseVo {
         this.phoneNumber = phoneNumber;
         this.capacity = capacity;
         this.registeredCapacity = registeredCapacity;
-        this.zoneCode = zoneCode;
         this.mainAddress = mainAddress;
         this.detailAddress = detailAddress;
         this.latitude = latitude;

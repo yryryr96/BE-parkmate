@@ -18,7 +18,6 @@ public class ParkingLotRegisterRequestDto {
     private String phoneNumber;
     private int capacity;
     private int registeredCapacity;
-    private String zoneCode;
     private String mainAddress;
     private String detailAddress;
     private double latitude;
@@ -33,7 +32,6 @@ public class ParkingLotRegisterRequestDto {
                                          String phoneNumber,
                                          int capacity,
                                          int registeredCapacity,
-                                         String zoneCode,
                                          String mainAddress,
                                          String detailAddress,
                                          double latitude,
@@ -46,7 +44,6 @@ public class ParkingLotRegisterRequestDto {
         this.phoneNumber = phoneNumber;
         this.capacity = capacity;
         this.registeredCapacity = registeredCapacity;
-        this.zoneCode = zoneCode;
         this.mainAddress = mainAddress;
         this.detailAddress = detailAddress;
         this.latitude = latitude;
@@ -63,7 +60,6 @@ public class ParkingLotRegisterRequestDto {
                 .phoneNumber(parkingLotRegisterRequestVo.getPhoneNumber())
                 .capacity(parkingLotRegisterRequestVo.getCapacity())
                 .registeredCapacity(parkingLotRegisterRequestVo.getRegisteredCapacity())
-                .zoneCode(parkingLotRegisterRequestVo.getZoneCode())
                 .mainAddress(parkingLotRegisterRequestVo.getMainAddress())
                 .detailAddress(parkingLotRegisterRequestVo.getDetailAddress())
                 .latitude(parkingLotRegisterRequestVo.getLatitude())
@@ -82,7 +78,6 @@ public class ParkingLotRegisterRequestDto {
                 .phoneNumber(this.phoneNumber)
                 .capacity(this.capacity)
                 .registeredCapacity(this.registeredCapacity)
-                .zoneCode(this.zoneCode)
                 .mainAddress(this.mainAddress)
                 .detailAddress(this.detailAddress)
                 .latitude(this.latitude)
