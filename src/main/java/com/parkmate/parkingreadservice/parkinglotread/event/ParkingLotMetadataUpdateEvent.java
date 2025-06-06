@@ -1,0 +1,21 @@
+package com.parkmate.parkingreadservice.parkinglotread.event;
+
+import com.parkmate.parkingreadservice.parkinglotread.vo.Image;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class ParkingLotMetadataUpdateEvent {
+
+    private String parkingLotUuid;
+    private Image thumbnailUrl;
+    private String name;
+    private String phoneNumber;
+    private String extraInfo;
+    private List<Image> imageUrls;
+}
