@@ -6,6 +6,7 @@ import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
 import com.parkmate.parkingreadservice.parkinglotread.dto.response.ParkingLotReadResponseDto;
 import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotCreateEvent;
 import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotMetadataUpdateEvent;
+import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotReactionsUpdateEvent;
 import com.parkmate.parkingreadservice.parkinglotread.infrastructure.ParkingLotReadRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,18 @@ public class ParkingLotReadServiceImpl implements ParkingLotReadService {
         parkingLotReadRepository.save(parkingLotCreateEvent.toEntity());
     }
 
+    @Async
+    @Override
+    public void syncParkingLotMetadata(ParkingLotMetadataUpdateEvent parkingLotMetadataUpdateEvent) {
+        parkingLotReadRepository.updateParkingLotMetadata(parkingLotMetadataUpdateEvent);
+    }
+
+    @Async
+    @Override
+    public void syncParkingLotReactions(ParkingLotReactionsUpdateEvent parkingLotReactionsUpdateEvent) {
+        parkingLotReadRepository.updateParkingLotReactions(parkingLotReactionsUpdateEvent);
+    }
+
     @Override
     public ParkingLotReadResponseDto getParkingLotReadByParkingLotUuid(String parkingLotUuid) {
 
@@ -32,10 +45,5 @@ public class ParkingLotReadServiceImpl implements ParkingLotReadService {
                 .orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
 
         return ParkingLotReadResponseDto.from(parkingLotRead);
-    }
-
-    @Override
-    public void updateParkingLotMetadata(ParkingLotMetadataUpdateEvent parkingLotMetadataUpdateEvent) {
-        parkingLotReadRepository.updateParkingLotMetadata(parkingLotMetadataUpdateEvent);
     }
 }

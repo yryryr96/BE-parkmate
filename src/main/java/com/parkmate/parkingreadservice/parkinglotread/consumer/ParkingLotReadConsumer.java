@@ -3,7 +3,8 @@ package com.parkmate.parkingreadservice.parkinglotread.consumer;
 import com.parkmate.parkingreadservice.common.properties.KafkaTopicProperties;
 import com.parkmate.parkingreadservice.parkinglotread.application.ParkingLotReadService;
 import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotCreateEvent;
-import com.parkmate.parkingreadservice.parkinglotread.infrastructure.ParkingLotReadRepository;
+import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotMetadataUpdateEvent;
+import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotReactionsUpdateEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -26,5 +27,21 @@ public class ParkingLotReadConsumer {
                 kafkaTopicProperties.getParkingLotCreated(),
                 parkingLotCreateEvent.toString());
         parkingLotReadService.createParkingLot(parkingLotCreateEvent);
+    }
+
+    @KafkaListener(
+            topics = "#{kafkaTopicProperties.parkingLotMetadataUpdated}",
+            containerFactory = "parkingLotMetadataUpdateListener"
+    )
+    public void consumeParkingLotMetadataUpdated(ParkingLotMetadataUpdateEvent parkingLotMetadataUpdateEvent) {
+        parkingLotReadService.syncParkingLotMetadata(parkingLotMetadataUpdateEvent);
+    }
+
+    @KafkaListener(
+            topics = "#{kafkaTopicProperties.parkingLotReactionsUpdated}",
+            containerFactory = "parkingLotReactionsUpdateListener"
+    )
+    public void consumeParkingLotReactionsUpdated(ParkingLotReactionsUpdateEvent parkingLotReactionsUpdateEvent) {
+        parkingLotReadService.syncParkingLotReactions(parkingLotReactionsUpdateEvent);
     }
 }

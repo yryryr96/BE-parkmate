@@ -12,4 +12,6 @@ import org.springframework.context.annotation.Configuration;
 public class KafkaTopicProperties {
 
     private String parkingLotCreated;
+    private String parkingLotMetadataUpdated;
+    private String parkingLotReactionsUpdated;
 }

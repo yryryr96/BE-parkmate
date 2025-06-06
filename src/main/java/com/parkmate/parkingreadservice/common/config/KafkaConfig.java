@@ -1,6 +1,8 @@
 package com.parkmate.parkingreadservice.common.config;
 
 import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotCreateEvent;
+import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotMetadataUpdateEvent;
+import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotReactionsUpdateEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,6 +45,16 @@ public class KafkaConfig {
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, ParkingLotCreateEvent> parkingLotCreateListener() {
         return createListenerFactory(ParkingLotCreateEvent.class, "parking-lot-create-group");
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, ParkingLotMetadataUpdateEvent> parkingLotMetadataUpdateListener() {
+        return createListenerFactory(ParkingLotMetadataUpdateEvent.class, "parking-lot-metadata-update-group");
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, ParkingLotReactionsUpdateEvent> parkingLotReactionsUpdateListener() {
+        return createListenerFactory(ParkingLotReactionsUpdateEvent.class, "parking-lot-reactions-update-group");
     }
 
     private <T> ConsumerFactory<String, T> createConsumerFactory(Class<T> targetClass, String groupId) {
