@@ -32,4 +32,6 @@ public class ParkingLotReadServiceImpl implements ParkingLotReadService {
 
         return ParkingLotReadResponseDto.from(parkingLotRead);
     }
+
+
 }

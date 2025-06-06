@@ -1,6 +1,7 @@
 package com.parkmate.parkingreadservice.parkinglotread.domain;
 
 import com.parkmate.parkingreadservice.common.entity.BaseEntity;
+import com.parkmate.parkingreadservice.parkinglotread.vo.Image;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class ParkingLotRead extends BaseEntity {
     @Indexed(unique = true)
     private String parkingLotUuid;
     private String hostUuid;
-    private String thumbnailUrl;
+    private Image thumbnailUrl;
     private String name;
     private String phoneNumber;
     private String address;
@@ -32,7 +33,7 @@ public class ParkingLotRead extends BaseEntity {
     private Boolean isEvChargingAvailable;
     private Set<String> evChargeTypes;
     private String extraInfo;
-    private List<String> imageUrls;
+    private List<Image> imageUrls;
     private int likeCount;
     private int dislikeCount;
 
@@ -40,7 +41,7 @@ public class ParkingLotRead extends BaseEntity {
     private ParkingLotRead(String id,
                           String parkingLotUuid,
                           String hostUuid,
-                          String thumbnailUrl,
+                          Image thumbnailUrl,
                           String name,
                           String phoneNumber,
                           String address,
@@ -49,7 +50,7 @@ public class ParkingLotRead extends BaseEntity {
                           Boolean isEvChargingAvailable,
                           Set<String> evChargeTypes,
                           String extraInfo,
-                          List<String> imageUrls,
+                          List<Image> imageUrls,
                           int likeCount,
                           int dislikeCount) {
         this.id = id;

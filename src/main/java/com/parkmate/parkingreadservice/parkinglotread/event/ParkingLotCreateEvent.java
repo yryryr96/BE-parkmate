@@ -1,6 +1,7 @@
 package com.parkmate.parkingreadservice.parkinglotread.event;
 
 import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
+import com.parkmate.parkingreadservice.parkinglotread.vo.Image;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +27,7 @@ public class ParkingLotCreateEvent {
     private Boolean isEvChargingAvailable;
     private Set<String> evChargeTypes;
     private String extraInfo;
-    private List<String> imageUrls;
+    private List<Image> imageUrls;
 
     public ParkingLotRead toEntity() {
         return ParkingLotRead.builder()

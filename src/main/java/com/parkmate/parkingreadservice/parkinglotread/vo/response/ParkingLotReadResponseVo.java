@@ -1,5 +1,6 @@
 package com.parkmate.parkingreadservice.parkinglotread.vo.response;
 
+import com.parkmate.parkingreadservice.parkinglotread.vo.Image;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.Set;
 public class ParkingLotReadResponseVo {
 
     private String hostUuid;
-    private String thumbnailUrl;
+    private Image thumbnailUrl;
     private String name;
     private String phoneNumber;
     private String address;
@@ -21,13 +22,13 @@ public class ParkingLotReadResponseVo {
     private Boolean isEvChargingAvailable;
     private Set<String> evChargeTypes;
     private String extraInfo;
-    private List<String> imageUrls;
+    private List<Image> imageUrls;
     private int likeCount;
     private int dislikeCount;
 
     @Builder
     private ParkingLotReadResponseVo(String hostUuid,
-                                    String thumbnailUrl,
+                                     Image thumbnailUrl,
                                     String name,
                                     String phoneNumber,
                                     String address,
@@ -36,7 +37,7 @@ public class ParkingLotReadResponseVo {
                                     Boolean isEvChargingAvailable,
                                     Set<String> evChargeTypes,
                                     String extraInfo,
-                                    List<String> imageUrls,
+                                    List<Image> imageUrls,
                                     int likeCount,
                                     int dislikeCount) {
         this.hostUuid = hostUuid;
