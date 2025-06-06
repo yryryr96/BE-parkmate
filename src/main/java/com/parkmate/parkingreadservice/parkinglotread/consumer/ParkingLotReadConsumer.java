@@ -1,6 +1,7 @@
 package com.parkmate.parkingreadservice.parkinglotread.consumer;
 
 import com.parkmate.parkingreadservice.common.properties.KafkaTopicProperties;
+import com.parkmate.parkingreadservice.parkinglotread.application.ParkingLotReadService;
 import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotCreateEvent;
 import com.parkmate.parkingreadservice.parkinglotread.infrastructure.ParkingLotReadRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class ParkingLotReadConsumer {
 
     private final KafkaTopicProperties kafkaTopicProperties;
-    private final ParkingLotReadRepository parkingLotReadRepository;
+    private final ParkingLotReadService parkingLotReadService;
 
     @KafkaListener(
             topics = "#{kafkaTopicProperties.parkingLotCreated}",
@@ -24,7 +25,6 @@ public class ParkingLotReadConsumer {
         log.info("Received message from {} topic: {}",
                 kafkaTopicProperties.getParkingLotCreated(),
                 parkingLotCreateEvent.toString());
-
-        parkingLotReadRepository.save(parkingLotCreateEvent.toEntity());
+        parkingLotReadService.createParkingLot(parkingLotCreateEvent);
     }
 }
