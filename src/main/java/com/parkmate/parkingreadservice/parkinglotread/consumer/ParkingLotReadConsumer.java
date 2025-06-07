@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -39,9 +41,10 @@ public class ParkingLotReadConsumer {
 
     @KafkaListener(
             topics = "#{kafkaTopicProperties.parkingLotReactionsUpdated}",
-            containerFactory = "parkingLotReactionsUpdateListener"
+            containerFactory = "parkingLotReactionsUpdateListener",
+            concurrency = "3"
     )
-    public void consumeParkingLotReactionsUpdated(ParkingLotReactionsUpdateEvent parkingLotReactionsUpdateEvent) {
-        parkingLotReadService.syncParkingLotReactions(parkingLotReactionsUpdateEvent);
+    public void consumeParkingLotReactionsUpdated(List<ParkingLotReactionsUpdateEvent> parkingLotReactionsUpdateEvents) {
+        parkingLotReadService.syncParkingLotReactions(parkingLotReactionsUpdateEvents);
     }
 }

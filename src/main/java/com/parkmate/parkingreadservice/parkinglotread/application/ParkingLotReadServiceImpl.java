@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -34,8 +36,8 @@ public class ParkingLotReadServiceImpl implements ParkingLotReadService {
 
     @Async
     @Override
-    public void syncParkingLotReactions(ParkingLotReactionsUpdateEvent parkingLotReactionsUpdateEvent) {
-        parkingLotReadRepository.updateParkingLotReactions(parkingLotReactionsUpdateEvent);
+    public void syncParkingLotReactions(List<ParkingLotReactionsUpdateEvent> parkingLotReactionsUpdateEvents) {
+        parkingLotReadRepository.updateParkingLotReactions(parkingLotReactionsUpdateEvents);
     }
 
     @Override

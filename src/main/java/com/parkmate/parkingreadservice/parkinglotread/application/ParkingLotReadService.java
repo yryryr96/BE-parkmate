@@ -5,6 +5,8 @@ import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotCreateEven
 import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotMetadataUpdateEvent;
 import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotReactionsUpdateEvent;
 
+import java.util.List;
+
 public interface ParkingLotReadService {
 
     void createParkingLot(ParkingLotCreateEvent parkingLotCreateEvent);
@@ -13,5 +15,5 @@ public interface ParkingLotReadService {
 
     void syncParkingLotMetadata(ParkingLotMetadataUpdateEvent parkingLotMetadataUpdateEvent);
 
-    void syncParkingLotReactions(ParkingLotReactionsUpdateEvent parkingLotReactionsUpdateEvent);
+    void syncParkingLotReactions(List<ParkingLotReactionsUpdateEvent> parkingLotReactionsUpdateEventList);
 }

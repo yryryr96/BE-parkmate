@@ -2,10 +2,14 @@ package com.parkmate.parkingreadservice.parkinglotread.infrastructure;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.MongoBulkWriteException;
+import com.mongodb.bulk.BulkWriteError;
 import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
 import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotMetadataUpdateEvent;
 import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotReactionsUpdateEvent;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -13,10 +17,12 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class CustomMongoRepositoryImpl implements CustomMongoRepository {
 
     private final MongoTemplate mongoTemplate;
@@ -44,25 +50,42 @@ public class CustomMongoRepositoryImpl implements CustomMongoRepository {
     }
 
     @Override
-    public void updateParkingLotReactions(ParkingLotReactionsUpdateEvent parkingLotReactionsUpdateEvent) {
+    public void updateParkingLotReactions(List<ParkingLotReactionsUpdateEvent> parkingLotReactionsUpdateEvents) {
 
-        Query query = new Query();
-        Update update = new Update();
+        if (parkingLotReactionsUpdateEvents == null || parkingLotReactionsUpdateEvents.isEmpty()) {
+            return;
+        }
 
-        query.addCriteria(
-                Criteria.where("parkingLotUuid")
-                        .is(parkingLotReactionsUpdateEvent.getParkingLotUuid())
-        );
+        BulkOperations bulkOperations = mongoTemplate.bulkOps(BulkOperations.BulkMode.UNORDERED,
+                ParkingLotRead.class);
 
-        Map<String, Object> map = createUpdateMap(parkingLotReactionsUpdateEvent);
-        map.forEach((key, value) -> {
-            if(!key.equals("parkingLotUuid") && value != null) {
-                update.set(key, value);
-            }
-        });
-        update.set("updatedAt", LocalDateTime.now());
+        for (ParkingLotReactionsUpdateEvent event : parkingLotReactionsUpdateEvents) {
 
-        mongoTemplate.updateFirst(query, update, ParkingLotRead.class);
+            Query query = new Query();
+            query.addCriteria(Criteria.where("parkingLotUuid").is(event.getParkingLotUuid()));
+
+            Update update = new Update();
+            Map<String, Object> map = createUpdateMap(event);
+            map.forEach((key, value) -> {
+                if (!key.equals("parkingLotUuid") && value != null) {
+                    update.set(key, value);
+                }
+            });
+
+            update.set("updatedAt", LocalDateTime.now());
+            bulkOperations.updateOne(query, update);
+        }
+
+        try {
+            bulkOperations.execute();
+        } catch (MongoBulkWriteException e) {
+            e.getWriteErrors().forEach(error -> {
+                int failedIndex = error.getIndex();
+                String errorMessage = error.getMessage();
+                log.error("Failed at index {}: {}", failedIndex, errorMessage);
+            });
+        }
+
     }
 
     private Map<String, Object> createUpdateMap(Object object) {

@@ -54,7 +54,11 @@ public class KafkaConfig {
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, ParkingLotReactionsUpdateEvent> parkingLotReactionsUpdateListener() {
-        return createListenerFactory(ParkingLotReactionsUpdateEvent.class, "parking-lot-reactions-update-group");
+        ConcurrentKafkaListenerContainerFactory<String, ParkingLotReactionsUpdateEvent> factory =
+                createListenerFactory(ParkingLotReactionsUpdateEvent.class, "parking-lot-reactions-update-group");
+
+        factory.setBatchListener(true);
+        return factory;
     }
 
     private <T> ConsumerFactory<String, T> createConsumerFactory(Class<T> targetClass, String groupId) {
