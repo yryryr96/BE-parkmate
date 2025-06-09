@@ -1,8 +1,10 @@
 package com.parkmate.parkingreadservice.kafka.config;
 
+import com.parkmate.parkingreadservice.kafka.properties.KafkaConsumerGroupProperties;
 import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotCreateEvent;
 import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotMetadataUpdateEvent;
 import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotReactionsUpdateEvent;
+import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +22,10 @@ import java.util.Map;
 
 @EnableKafka
 @Configuration
+@RequiredArgsConstructor
 public class KafkaConfig {
+
+
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServer;
@@ -44,18 +49,18 @@ public class KafkaConfig {
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, ParkingLotCreateEvent> parkingLotCreateListener() {
-        return createListenerFactory(ParkingLotCreateEvent.class, "parking-lot-create-group");
+        return createListenerFactory(ParkingLotCreateEvent.class, "parking-lot-created-group");
     }
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, ParkingLotMetadataUpdateEvent> parkingLotMetadataUpdateListener() {
-        return createListenerFactory(ParkingLotMetadataUpdateEvent.class, "parking-lot-metadata-update-group");
+        return createListenerFactory(ParkingLotMetadataUpdateEvent.class, "parking-lot-metadata-updated-group");
     }
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, ParkingLotReactionsUpdateEvent> parkingLotReactionsUpdateListener() {
         ConcurrentKafkaListenerContainerFactory<String, ParkingLotReactionsUpdateEvent> factory =
-                createListenerFactory(ParkingLotReactionsUpdateEvent.class, "parking-lot-reactions-update-group");
+                createListenerFactory(ParkingLotReactionsUpdateEvent.class, "parking-lot-reactions-updated-group");
 
         factory.setBatchListener(true);
         return factory;
