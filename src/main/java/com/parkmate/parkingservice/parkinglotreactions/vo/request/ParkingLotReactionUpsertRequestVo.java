@@ -7,17 +7,14 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ParkingLotReactionRequestVo {
+public class ParkingLotReactionUpsertRequestVo {
 
-    private String parkingLotUuid;
     private String userUuid;
     private ReactionType reactionType;
 
     @Builder
-    private ParkingLotReactionRequestVo(String parkingLotUuid,
-                                        String userUuid,
-                                        ReactionType reactionType) {
-        this.parkingLotUuid = parkingLotUuid;
+    private ParkingLotReactionUpsertRequestVo(String userUuid,
+                                              ReactionType reactionType) {
         this.userUuid = userUuid;
         this.reactionType = reactionType;
     }

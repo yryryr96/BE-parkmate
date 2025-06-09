@@ -2,7 +2,8 @@ package com.parkmate.parkingservice.parkinglotreactions.application;
 
 import com.parkmate.parkingservice.parkinglotreactions.domain.ParkingLotReactions;
 import com.parkmate.parkingservice.parkinglotreactions.domain.ReactionType;
-import com.parkmate.parkingservice.parkinglotreactions.dto.request.ParkingLotReactionRequestDto;
+import com.parkmate.parkingservice.parkinglotreactions.dto.request.ParkingLotReactionGetRequestDto;
+import com.parkmate.parkingservice.parkinglotreactions.dto.request.ParkingLotReactionUpsertRequestDto;
 import com.parkmate.parkingservice.parkinglotreactions.event.ReactionCreatedEvent;
 import com.parkmate.parkingservice.parkinglotreactions.infrastructure.ParkingLotReactionsRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,33 +22,43 @@ public class ParkingLotReactionsServiceImpl implements ParkingLotReactionsServic
 
     @Transactional
     @Override
-    public void addReaction(ParkingLotReactionRequestDto parkingLotReactionRequestDto) {
+    public void addReaction(ParkingLotReactionUpsertRequestDto parkingLotReactionUpsertRequestDto) {
 
         Optional<ParkingLotReactions> reaction = parkingLotReactionsRepository.findByParkingLotUuidAndUserUuid(
-                parkingLotReactionRequestDto.getParkingLotUuid(),
-                parkingLotReactionRequestDto.getUserUuid()
+                parkingLotReactionUpsertRequestDto.getParkingLotUuid(),
+                parkingLotReactionUpsertRequestDto.getUserUuid()
         );
 
         ReactionType previousReactionType = ReactionType.NONE;
 
         if (reaction.isEmpty()) {
-            ParkingLotReactions newReaction = parkingLotReactionRequestDto.toEntity();
+            ParkingLotReactions newReaction = parkingLotReactionUpsertRequestDto.toEntity();
             parkingLotReactionsRepository.save(newReaction);
 
         } else {
             ParkingLotReactions existingReaction = reaction.get();
             previousReactionType = existingReaction.getReactionType();
-            existingReaction.updateReactionType(parkingLotReactionRequestDto.getReactionType());
+            existingReaction.updateReactionType(parkingLotReactionUpsertRequestDto.getReactionType());
             parkingLotReactionsRepository.save(existingReaction);
         }
 
         eventPublisher.publishEvent(
                 ReactionCreatedEvent.builder()
-                        .parkingLotUuid(parkingLotReactionRequestDto.getParkingLotUuid())
-                        .userUuid(parkingLotReactionRequestDto.getUserUuid())
-                        .reactionType(parkingLotReactionRequestDto.getReactionType())
+                        .parkingLotUuid(parkingLotReactionUpsertRequestDto.getParkingLotUuid())
+                        .userUuid(parkingLotReactionUpsertRequestDto.getUserUuid())
+                        .reactionType(parkingLotReactionUpsertRequestDto.getReactionType())
                         .previousReactionType(previousReactionType)
                         .build()
         );
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public ReactionType getReaction(ParkingLotReactionGetRequestDto parkingLotReactionGetRequestDto) {
+
+        return parkingLotReactionsRepository.findReactionTypeByParkingLotUuidAndUserUuid(
+                    parkingLotReactionGetRequestDto.getParkingLotUuid(),
+                    parkingLotReactionGetRequestDto.getUserUuid()
+                ).orElse(ReactionType.NONE);
     }
 }

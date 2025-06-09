@@ -2,17 +2,16 @@ package com.parkmate.parkingservice.parkinglotreactions.presentation;
 
 import com.parkmate.parkingservice.common.response.ApiResponse;
 import com.parkmate.parkingservice.parkinglotreactions.application.ParkingLotReactionsService;
-import com.parkmate.parkingservice.parkinglotreactions.dto.request.ParkingLotReactionRequestDto;
-import com.parkmate.parkingservice.parkinglotreactions.vo.request.ParkingLotReactionRequestVo;
+import com.parkmate.parkingservice.parkinglotreactions.domain.ReactionType;
+import com.parkmate.parkingservice.parkinglotreactions.dto.request.ParkingLotReactionGetRequestDto;
+import com.parkmate.parkingservice.parkinglotreactions.dto.request.ParkingLotReactionUpsertRequestDto;
+import com.parkmate.parkingservice.parkinglotreactions.vo.request.ParkingLotReactionUpsertRequestVo;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/parkingLots/reactions")
+@RequestMapping("/api/v1/parkingLots")
 @RequiredArgsConstructor
 public class ParkingLotReactionsController {
 
@@ -24,11 +23,19 @@ public class ParkingLotReactionsController {
                           "ReactionType은 LIKE 또는 DISLIKE 중 하나입니다.",
             tags = {"PARKING-LOT-REACTIONS"}
     )
-    @PostMapping
-    public ApiResponse<String> addReaction(@RequestBody ParkingLotReactionRequestVo parkingLotReactionRequestVo) {
-        parkingLotReactionsService.addReaction(ParkingLotReactionRequestDto.from(parkingLotReactionRequestVo));
+    @PostMapping("/{parkingLotUuid}/reactions")
+    public ApiResponse<String> addReaction(@PathVariable String parkingLotUuid,
+                                           @RequestBody ParkingLotReactionUpsertRequestVo parkingLotReactionUpsertRequestVo) {
+        parkingLotReactionsService.addReaction(ParkingLotReactionUpsertRequestDto.of(parkingLotUuid, parkingLotReactionUpsertRequestVo));
         return ApiResponse.created(
                 "주차장 반응이 추가되었습니다."
         );
+    }
+
+    @GetMapping("/{parkingLotUuid}/reactions")
+    public ApiResponse<ReactionType> getReaction(@PathVariable String parkingLotUuid,
+                                                 @RequestParam String userUuid) {
+
+        return ApiResponse.ok(parkingLotReactionsService.getReaction(ParkingLotReactionGetRequestDto.of(parkingLotUuid, userUuid)));
     }
 }
