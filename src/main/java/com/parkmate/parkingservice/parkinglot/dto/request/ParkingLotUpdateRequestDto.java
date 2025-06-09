@@ -39,10 +39,11 @@ public class ParkingLotUpdateRequestDto {
     }
 
     public static ParkingLotUpdateRequestDto from(String parkingLotUuid,
+                                                  String hostUuid,
                                                   ParkingLotUpdateRequestVo parkingLotUpdateRequestVo) {
         return ParkingLotUpdateRequestDto.builder()
                 .parkingLotUuid(parkingLotUuid)
-                .hostUuid(parkingLotUpdateRequestVo.getHostUuid())
+                .hostUuid(hostUuid)
                 .name(parkingLotUpdateRequestVo.getName())
                 .phoneNumber(parkingLotUpdateRequestVo.getPhoneNumber())
                 .capacity(parkingLotUpdateRequestVo.getCapacity())
