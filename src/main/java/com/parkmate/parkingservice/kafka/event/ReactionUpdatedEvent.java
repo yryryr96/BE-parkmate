@@ -1,4 +1,4 @@
-package com.parkmate.parkingservice.parkinglotreactions.event;
+package com.parkmate.parkingservice.kafka.event;
 
 import com.parkmate.parkingservice.parkinglotreactions.domain.ReactionType;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-public class ReactionCreatedEvent {
+public class ReactionUpdatedEvent {
 
     private String parkingLotUuid;
     private String userUuid;
@@ -18,10 +18,10 @@ public class ReactionCreatedEvent {
     private LocalDateTime timestamp;
 
     @Builder
-    private ReactionCreatedEvent(String parkingLotUuid,
-                                String userUuid,
-                                ReactionType reactionType,
-                                ReactionType previousReactionType) {
+    private ReactionUpdatedEvent(String parkingLotUuid,
+                                 String userUuid,
+                                 ReactionType reactionType,
+                                 ReactionType previousReactionType) {
         this.parkingLotUuid = parkingLotUuid;
         this.userUuid = userUuid;
         this.reactionType = reactionType;

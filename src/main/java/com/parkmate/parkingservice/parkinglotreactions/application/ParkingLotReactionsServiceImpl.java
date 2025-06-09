@@ -4,7 +4,7 @@ import com.parkmate.parkingservice.parkinglotreactions.domain.ParkingLotReaction
 import com.parkmate.parkingservice.parkinglotreactions.domain.ReactionType;
 import com.parkmate.parkingservice.parkinglotreactions.dto.request.ParkingLotReactionGetRequestDto;
 import com.parkmate.parkingservice.parkinglotreactions.dto.request.ParkingLotReactionUpsertRequestDto;
-import com.parkmate.parkingservice.parkinglotreactions.event.ReactionCreatedEvent;
+import com.parkmate.parkingservice.kafka.event.ReactionUpdatedEvent;
 import com.parkmate.parkingservice.parkinglotreactions.infrastructure.ParkingLotReactionsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -43,7 +43,7 @@ public class ParkingLotReactionsServiceImpl implements ParkingLotReactionsServic
         }
 
         eventPublisher.publishEvent(
-                ReactionCreatedEvent.builder()
+                ReactionUpdatedEvent.builder()
                         .parkingLotUuid(parkingLotReactionUpsertRequestDto.getParkingLotUuid())
                         .userUuid(parkingLotReactionUpsertRequestDto.getUserUuid())
                         .reactionType(parkingLotReactionUpsertRequestDto.getReactionType())

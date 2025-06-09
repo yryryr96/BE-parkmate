@@ -32,9 +32,15 @@ public class ParkingLotReactionsController {
         );
     }
 
+    @Operation(
+            summary = "주차장 반응 조회",
+            description = "주차장에 대한 사용자의 반응을 조회하는 API입니다. " +
+                          "data 응답은 NONE, LIKE, DISLIKE 중 하나입니다.",
+            tags = {"PARKING-LOT-REACTIONS"}
+    )
     @GetMapping("/{parkingLotUuid}/reactions")
     public ApiResponse<ReactionType> getReaction(@PathVariable String parkingLotUuid,
-                                                 @RequestParam String userUuid) {
+                                                 @RequestHeader("X-User-UUID") String userUuid) {
 
         return ApiResponse.ok(parkingLotReactionsService.getReaction(ParkingLotReactionGetRequestDto.of(parkingLotUuid, userUuid)));
     }

@@ -1,12 +1,13 @@
 package com.parkmate.parkingservice.parkinglotimagemapping.application;
 
 import com.parkmate.parkingservice.parkinglotimagemapping.dto.request.ParkingLotImageRegisterRequestDto;
+import com.parkmate.parkingservice.parkinglotimagemapping.dto.response.ParkingLotImageMappingResponseDto;
 
 import java.util.List;
 
 public interface ParkingLotImageMappingService {
 
-    void registerParkingLotImages(ParkingLotImageRegisterRequestDto parkingLotImageRegisterRequestDto);
+    List<ParkingLotImageMappingResponseDto> registerParkingLotImages(ParkingLotImageRegisterRequestDto parkingLotImageRegisterRequestDto);
 
     List<String> getImageUrlsByParkingLotUuid(String parkingLotUuid);
 }

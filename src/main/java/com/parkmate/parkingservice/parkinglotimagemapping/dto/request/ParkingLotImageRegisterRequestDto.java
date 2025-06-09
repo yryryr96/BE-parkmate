@@ -1,5 +1,6 @@
 package com.parkmate.parkingservice.parkinglotimagemapping.dto.request;
 
+import com.parkmate.parkingservice.parkinglotimagemapping.vo.Image;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,21 +12,13 @@ import java.util.List;
 public class ParkingLotImageRegisterRequestDto {
 
     private String parkingLotUuid;
-    private List<String> imageUrls;
+    private List<Image> imageUrls;
 
     @Builder
     private ParkingLotImageRegisterRequestDto(String parkingLotUuid,
-                                             List<String> imageUrls) {
+                                             List<Image> imageUrls) {
         this.parkingLotUuid = parkingLotUuid;
         this.imageUrls = imageUrls;
-    }
-
-    public static ParkingLotImageRegisterRequestDto of(String parkingLotUuid,
-                                                       List<String> imageUrls) {
-        return ParkingLotImageRegisterRequestDto.builder()
-                .parkingLotUuid(parkingLotUuid)
-                .imageUrls(imageUrls)
-                .build();
     }
 
     public ParkingLotImageRegisterRequestDto withParkingLotUuid(String parkingLotUuid) {

@@ -1,7 +1,8 @@
 package com.parkmate.parkingservice.kafka.config;
 
 import com.parkmate.parkingservice.common.utils.CustomSerializer;
-import com.parkmate.parkingservice.parkinglotreactions.event.ReactionCreatedEvent;
+import com.parkmate.parkingservice.kafka.event.ParkingLotCreatedEvent;
+import com.parkmate.parkingservice.kafka.event.ReactionUpdatedEvent;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,12 +41,22 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ProducerFactory<String, ReactionCreatedEvent> createParkingLotReactionsFactory() {
+    public ProducerFactory<String, ReactionUpdatedEvent> createParkingLotReactionsFactory() {
         return new DefaultKafkaProducerFactory<>(parkingLotProducerConfigs());
     }
 
     @Bean(name = "parkingLotReactionsKafkaTemplate")
-    public KafkaTemplate<String, ReactionCreatedEvent> parkingLotReactionsKafkaTemplate() {
+    public KafkaTemplate<String, ReactionUpdatedEvent> parkingLotReactionsKafkaTemplate() {
         return new KafkaTemplate<>(createParkingLotReactionsFactory());
+    }
+
+    @Bean
+    public ProducerFactory<String, ParkingLotCreatedEvent> parkingLotCreatedFactory() {
+        return new DefaultKafkaProducerFactory<>(parkingLotProducerConfigs());
+    }
+
+    @Bean(name = "parkingLotCreatedKafkaTemplate")
+    public KafkaTemplate<String, ParkingLotCreatedEvent> parkingLotCreatedKafkaTemplate() {
+        return new KafkaTemplate<>(parkingLotCreatedFactory());
     }
 }
