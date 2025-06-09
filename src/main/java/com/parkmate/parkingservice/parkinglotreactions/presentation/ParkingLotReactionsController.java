@@ -25,8 +25,9 @@ public class ParkingLotReactionsController {
     )
     @PostMapping("/{parkingLotUuid}/reactions")
     public ApiResponse<String> addReaction(@PathVariable String parkingLotUuid,
+                                           @RequestHeader("X-User-UUID") String userUuid,
                                            @RequestBody ParkingLotReactionUpsertRequestVo parkingLotReactionUpsertRequestVo) {
-        parkingLotReactionsService.addReaction(ParkingLotReactionUpsertRequestDto.of(parkingLotUuid, parkingLotReactionUpsertRequestVo));
+        parkingLotReactionsService.addReaction(ParkingLotReactionUpsertRequestDto.of(parkingLotUuid, userUuid, parkingLotReactionUpsertRequestVo));
         return ApiResponse.created(
                 "주차장 반응이 추가되었습니다."
         );

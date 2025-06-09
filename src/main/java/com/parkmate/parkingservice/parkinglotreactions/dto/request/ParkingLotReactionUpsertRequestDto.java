@@ -25,10 +25,11 @@ public class ParkingLotReactionUpsertRequestDto {
     }
 
     public static ParkingLotReactionUpsertRequestDto of(String parkingLotUuid,
+                                                        String userUuid,
                                                         ParkingLotReactionUpsertRequestVo parkingLotReactionUpsertRequestVo) {
         return ParkingLotReactionUpsertRequestDto.builder()
                 .parkingLotUuid(parkingLotUuid)
-                .userUuid(parkingLotReactionUpsertRequestVo.getUserUuid())
+                .userUuid(userUuid)
                 .reactionType(parkingLotReactionUpsertRequestVo.getReactionType())
                 .build();
     }

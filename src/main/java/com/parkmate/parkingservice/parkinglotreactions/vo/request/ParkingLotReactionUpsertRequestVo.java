@@ -9,13 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ParkingLotReactionUpsertRequestVo {
 
-    private String userUuid;
     private ReactionType reactionType;
 
     @Builder
-    private ParkingLotReactionUpsertRequestVo(String userUuid,
-                                              ReactionType reactionType) {
-        this.userUuid = userUuid;
+    private ParkingLotReactionUpsertRequestVo(ReactionType reactionType) {
         this.reactionType = reactionType;
     }
 }
