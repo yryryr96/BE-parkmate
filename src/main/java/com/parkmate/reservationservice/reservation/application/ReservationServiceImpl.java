@@ -2,6 +2,10 @@ package com.parkmate.reservationservice.reservation.application;
 
 import com.parkmate.reservationservice.common.exception.BaseException;
 import com.parkmate.reservationservice.common.response.ResponseStatus;
+import com.parkmate.reservationservice.reservation.client.response.ParkingLotClientResponse;
+import com.parkmate.reservationservice.reservation.event.ReservationEvent;
+import com.parkmate.reservationservice.reservation.producer.ReservationNotificationProducer;
+import com.parkmate.reservationservice.reservation.client.ParkingServiceClient;
 import com.parkmate.reservationservice.reservation.domain.Reservation;
 import com.parkmate.reservationservice.reservation.dto.request.ReservationCancelRequestDto;
 import com.parkmate.reservationservice.reservation.dto.request.ReservationGetRequestDto;
@@ -21,13 +25,18 @@ import java.util.List;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationNotificationProducer reservationNotificationProducer;
+    private final ParkingServiceClient parkingServiceClient;
 
     private static final int MODIFY_TIME_LIMIT_MINUTES = 60;
 
     @Transactional
     @Override
     public void reserve(ReservationRequestDto reservationRequestDto) {
-        reservationRepository.save(reservationRequestDto.toEntity());
+
+        Reservation reservation = reservationRepository.save(reservationRequestDto.toEntity());
+        String hostUuid = parkingServiceClient.getHostUuidByParkingLotUuid(reservation.getParkingLotUuid()).getHostUuid();
+        reservationNotificationProducer.send(ReservationEvent.from(hostUuid));
     }
 
     @Transactional
@@ -77,6 +86,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public ReservationResponseDto getReservation(ReservationGetRequestDto reservationGetRequestDto) {
         Reservation reservation = reservationRepository.findByReservationCodeAndUserUuid(
