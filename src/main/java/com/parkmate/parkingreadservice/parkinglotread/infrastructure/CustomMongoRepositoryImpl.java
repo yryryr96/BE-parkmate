@@ -3,10 +3,10 @@ package com.parkmate.parkingreadservice.parkinglotread.infrastructure;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoBulkWriteException;
-import com.mongodb.bulk.BulkWriteError;
 import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
 import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotMetadataUpdateEvent;
 import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotReactionsUpdateEvent;
+import com.parkmate.parkingreadservice.parkinglotread.event.ReactionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.BulkOperations;
@@ -59,20 +59,36 @@ public class CustomMongoRepositoryImpl implements CustomMongoRepository {
         BulkOperations bulkOperations = mongoTemplate.bulkOps(BulkOperations.BulkMode.UNORDERED,
                 ParkingLotRead.class);
 
+        final Map<ReactionType, String> reactionFieldMap = Map.of(
+                ReactionType.LIKE, "likeCount",
+                ReactionType.DISLIKE, "dislikeCount"
+        );
+
         for (ParkingLotReactionsUpdateEvent event : parkingLotReactionsUpdateEvents) {
 
             Query query = new Query();
             query.addCriteria(Criteria.where("parkingLotUuid").is(event.getParkingLotUuid()));
 
             Update update = new Update();
-            Map<String, Object> map = createUpdateMap(event);
-            map.forEach((key, value) -> {
-                if (!key.equals("parkingLotUuid") && value != null) {
-                    update.set(key, value);
-                }
-            });
 
-            update.set("updatedAt", LocalDateTime.now());
+            ReactionType currentReaction = event.getReactionType();
+            ReactionType previousReaction = event.getPreviousReactionType();
+
+            String fieldToDecrement = reactionFieldMap.get(previousReaction);
+            if (fieldToDecrement != null) {
+                update.inc(fieldToDecrement, -1);
+            }
+
+            String fieldToIncrement = reactionFieldMap.get(currentReaction);
+            if (fieldToIncrement != null) {
+                update.inc(fieldToIncrement, 1);
+            }
+
+            if (update.getUpdateObject().isEmpty()) {
+                continue;
+            }
+
+            update.set("updatedAt", event.getTimestamp());
             bulkOperations.updateOne(query, update);
         }
 
