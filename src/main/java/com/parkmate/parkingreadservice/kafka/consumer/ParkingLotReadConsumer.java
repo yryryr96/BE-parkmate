@@ -1,6 +1,6 @@
-package com.parkmate.parkingreadservice.parkinglotread.consumer;
+package com.parkmate.parkingreadservice.kafka.consumer;
 
-import com.parkmate.parkingreadservice.common.properties.KafkaTopicProperties;
+import com.parkmate.parkingreadservice.kafka.properties.KafkaTopicProperties;
 import com.parkmate.parkingreadservice.parkinglotread.application.ParkingLotReadService;
 import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotCreateEvent;
 import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotMetadataUpdateEvent;

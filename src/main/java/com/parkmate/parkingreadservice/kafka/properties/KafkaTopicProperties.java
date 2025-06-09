@@ -1,4 +1,4 @@
-package com.parkmate.parkingreadservice.common.properties;
+package com.parkmate.parkingreadservice.kafka.properties;
 
 import lombok.Getter;
 import lombok.Setter;

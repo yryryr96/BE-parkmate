@@ -1,4 +1,4 @@
-package com.parkmate.parkingreadservice.common.config;
+package com.parkmate.parkingreadservice.kafka.config;
 
 import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotCreateEvent;
 import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotMetadataUpdateEvent;
