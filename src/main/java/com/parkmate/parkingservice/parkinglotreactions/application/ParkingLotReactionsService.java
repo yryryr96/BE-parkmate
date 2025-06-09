@@ -5,4 +5,6 @@ import com.parkmate.parkingservice.parkinglotreactions.dto.request.ParkingLotRea
 public interface ParkingLotReactionsService {
 
     void addReaction(ParkingLotReactionRequestDto parkingLotReactionRequestDto);
+
+
 }

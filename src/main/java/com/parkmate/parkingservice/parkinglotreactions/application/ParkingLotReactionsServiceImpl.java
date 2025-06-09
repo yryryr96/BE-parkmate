@@ -28,7 +28,7 @@ public class ParkingLotReactionsServiceImpl implements ParkingLotReactionsServic
                 parkingLotReactionRequestDto.getUserUuid()
         );
 
-        ReactionType previousReactionType = null;
+        ReactionType previousReactionType = ReactionType.NONE;
 
         if (reaction.isEmpty()) {
             ParkingLotReactions newReaction = parkingLotReactionRequestDto.toEntity();

@@ -33,7 +33,7 @@ public class ParkingLotReactions {
     @Comment("리액션 타입")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ReactionType reactionType;
+    private ReactionType reactionType = ReactionType.NONE;
 
     @Builder
     private ParkingLotReactions(Long id,

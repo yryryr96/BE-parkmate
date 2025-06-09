@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ReactionType {
 
+    NONE("없음"),
     LIKE("좋아요"),
     DISLIKE("싫어요")
     ;
