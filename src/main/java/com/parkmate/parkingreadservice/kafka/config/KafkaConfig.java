@@ -1,9 +1,8 @@
 package com.parkmate.parkingreadservice.kafka.config;
 
-import com.parkmate.parkingreadservice.kafka.properties.KafkaConsumerGroupProperties;
-import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotCreateEvent;
-import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotMetadataUpdateEvent;
-import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotReactionsUpdateEvent;
+import com.parkmate.parkingreadservice.kafka.event.ParkingLotCreateEvent;
+import com.parkmate.parkingreadservice.kafka.event.ParkingLotMetadataUpdateEvent;
+import com.parkmate.parkingreadservice.kafka.event.ParkingLotReactionsUpdateEvent;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;

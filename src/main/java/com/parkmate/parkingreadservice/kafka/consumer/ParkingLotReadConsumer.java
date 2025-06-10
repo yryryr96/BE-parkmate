@@ -2,9 +2,9 @@ package com.parkmate.parkingreadservice.kafka.consumer;
 
 import com.parkmate.parkingreadservice.kafka.properties.KafkaTopicProperties;
 import com.parkmate.parkingreadservice.parkinglotread.application.ParkingLotReadService;
-import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotCreateEvent;
-import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotMetadataUpdateEvent;
-import com.parkmate.parkingreadservice.parkinglotread.event.ParkingLotReactionsUpdateEvent;
+import com.parkmate.parkingreadservice.kafka.event.ParkingLotCreateEvent;
+import com.parkmate.parkingreadservice.kafka.event.ParkingLotMetadataUpdateEvent;
+import com.parkmate.parkingreadservice.kafka.event.ParkingLotReactionsUpdateEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;

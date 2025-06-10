@@ -1,6 +1,6 @@
-package com.parkmate.parkingreadservice.parkinglotread.event;
+package com.parkmate.parkingreadservice.kafka.event;
 
-import com.parkmate.parkingreadservice.parkinglotread.vo.Image;
+import com.parkmate.parkingreadservice.parkinglotread.domain.Image;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

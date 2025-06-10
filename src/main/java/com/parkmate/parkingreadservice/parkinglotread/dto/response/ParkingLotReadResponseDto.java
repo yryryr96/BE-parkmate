@@ -1,7 +1,8 @@
 package com.parkmate.parkingreadservice.parkinglotread.dto.response;
 
+import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotOption;
 import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
-import com.parkmate.parkingreadservice.parkinglotread.vo.Image;
+import com.parkmate.parkingreadservice.parkinglotread.domain.Image;
 import com.parkmate.parkingreadservice.parkinglotread.vo.response.ParkingLotReadResponseVo;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,23 +26,25 @@ public class ParkingLotReadResponseDto {
     private Set<String> evChargeTypes;
     private String extraInfo;
     private List<Image> imageUrls;
+    private List<ParkingLotOption> options;
     private int likeCount;
     private int dislikeCount;
 
     @Builder
     private ParkingLotReadResponseDto(String hostUuid,
                                       Image thumbnailUrl,
-                                     String name,
-                                     String phoneNumber,
-                                     String address,
-                                     String parkingLotType,
-                                     Set<String> parkingSpotTypes,
-                                     Boolean isEvChargingAvailable,
-                                     Set<String> evChargeTypes,
-                                     String extraInfo,
-                                     List<Image> imageUrls,
-                                     int likeCount,
-                                     int dislikeCount) {
+                                      String name,
+                                      String phoneNumber,
+                                      String address,
+                                      String parkingLotType,
+                                      Set<String> parkingSpotTypes,
+                                      Boolean isEvChargingAvailable,
+                                      Set<String> evChargeTypes,
+                                      String extraInfo,
+                                      List<Image> imageUrls,
+                                      List<ParkingLotOption> options,
+                                      int likeCount,
+                                      int dislikeCount) {
         this.hostUuid = hostUuid;
         this.thumbnailUrl = thumbnailUrl;
         this.name = name;
@@ -53,6 +56,7 @@ public class ParkingLotReadResponseDto {
         this.evChargeTypes = evChargeTypes;
         this.extraInfo = extraInfo;
         this.imageUrls = imageUrls;
+        this.options = options;
         this.likeCount = likeCount;
         this.dislikeCount = dislikeCount;
     }

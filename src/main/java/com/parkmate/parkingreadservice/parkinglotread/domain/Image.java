@@ -1,4 +1,4 @@
-package com.parkmate.parkingreadservice.parkinglotread.vo;
+package com.parkmate.parkingreadservice.parkinglotread.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

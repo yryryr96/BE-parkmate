@@ -1,6 +1,6 @@
 package com.parkmate.parkingreadservice.parkinglotread.vo.response;
 
-import com.parkmate.parkingreadservice.parkinglotread.vo.Image;
+import com.parkmate.parkingreadservice.parkinglotread.domain.Image;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

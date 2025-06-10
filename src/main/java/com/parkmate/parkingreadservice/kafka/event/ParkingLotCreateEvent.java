@@ -1,7 +1,8 @@
-package com.parkmate.parkingreadservice.parkinglotread.event;
+package com.parkmate.parkingreadservice.kafka.event;
 
 import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
-import com.parkmate.parkingreadservice.parkinglotread.vo.Image;
+import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotOption;
+import com.parkmate.parkingreadservice.parkinglotread.domain.Image;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,7 @@ public class ParkingLotCreateEvent {
     private Set<String> evChargeTypes;
     private String extraInfo;
     private List<Image> imageUrls;
+    private List<ParkingLotOption> options;
 
     public ParkingLotRead toEntity() {
         return ParkingLotRead.builder()
@@ -43,6 +45,7 @@ public class ParkingLotCreateEvent {
                 .parkingSpotTypes(parkingSpotTypes)
                 .extraInfo(extraInfo)
                 .imageUrls(imageUrls)
+                .options(options)
                 .likeCount(0)
                 .dislikeCount(0)
                 .build();
