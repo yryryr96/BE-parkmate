@@ -3,6 +3,7 @@ package com.parkmate.parkingreadservice.kafka.config;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotCreateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotMetadataUpdateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotReactionsUpdateEvent;
+import com.parkmate.parkingreadservice.kafka.properties.KafkaConsumerGroupProperties;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -24,7 +25,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class KafkaConfig {
 
-
+    private final KafkaConsumerGroupProperties kafkaConsumerGroupProperties;
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServer;
@@ -48,18 +49,18 @@ public class KafkaConfig {
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, ParkingLotCreateEvent> parkingLotCreateListener() {
-        return createListenerFactory(ParkingLotCreateEvent.class, "parking-lot-created-group");
+        return createListenerFactory(ParkingLotCreateEvent.class, kafkaConsumerGroupProperties.getParkingLotCreatedGroup());
     }
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, ParkingLotMetadataUpdateEvent> parkingLotMetadataUpdateListener() {
-        return createListenerFactory(ParkingLotMetadataUpdateEvent.class, "parking-lot-metadata-updated-group");
+        return createListenerFactory(ParkingLotMetadataUpdateEvent.class, kafkaConsumerGroupProperties.getParkingLotMetadataUpdatedGroup());
     }
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, ParkingLotReactionsUpdateEvent> parkingLotReactionsUpdateListener() {
         ConcurrentKafkaListenerContainerFactory<String, ParkingLotReactionsUpdateEvent> factory =
-                createListenerFactory(ParkingLotReactionsUpdateEvent.class, "parking-lot-reactions-updated-group");
+                createListenerFactory(ParkingLotReactionsUpdateEvent.class, kafkaConsumerGroupProperties.getParkingLotReactionsUpdatedGroup());
 
         factory.setBatchListener(true);
         return factory;
