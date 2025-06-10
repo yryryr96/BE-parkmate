@@ -4,6 +4,7 @@ import com.parkmate.parkingservice.parkinglot.domain.ParkingLot;
 import com.parkmate.parkingservice.parkinglot.domain.ParkingLotType;
 import com.parkmate.parkingservice.parkinglotimagemapping.dto.response.ParkingLotImageMappingResponseDto;
 import com.parkmate.parkingservice.parkinglotimagemapping.vo.Image;
+import com.parkmate.parkingservice.parkinglotoption.dto.response.ParkingLotOptionResponseDto;
 import com.parkmate.parkingservice.parkingspot.domain.EvChargeType;
 import com.parkmate.parkingservice.parkingspot.domain.ParkingSpotType;
 import com.parkmate.parkingservice.parkingspot.dto.response.ParkingSpotResponseDto;
@@ -12,7 +13,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
@@ -31,6 +34,7 @@ public class ParkingLotCreatedEvent {
     private Set<EvChargeType> evChargeTypes;
     private String extraInfo;
     private List<Image> imageUrls;
+    private List<ParkingLotOptionResponseDto> options;
     private LocalDateTime timestamp;
 
     @Builder
@@ -45,7 +49,8 @@ public class ParkingLotCreatedEvent {
                                    Boolean isEvChargingAvailable,
                                    Set<EvChargeType> evChargeTypes,
                                    String extraInfo,
-                                   List<Image> imageUrls) {
+                                   List<Image> imageUrls,
+                                   List<ParkingLotOptionResponseDto> options) {
         this.parkingLotUuid = parkingLotUuid;
         this.hostUuid = hostUuid;
         this.parkingLotType = parkingLotType;
@@ -58,37 +63,30 @@ public class ParkingLotCreatedEvent {
         this.evChargeTypes = evChargeTypes;
         this.extraInfo = extraInfo;
         this.imageUrls = imageUrls;
+        this.options = options;
         this.timestamp = LocalDateTime.now();
     }
 
     public static ParkingLotCreatedEvent of(ParkingLot parkingLot,
+                                            List<ParkingLotOptionResponseDto> options,
                                             List<ParkingSpotResponseDto> parkingSpots,
                                             List<ParkingLotImageMappingResponseDto> parkingLotImages) {
 
-        Set<EvChargeType> evChargeTypes = new HashSet<>();
-        Set<ParkingSpotType> parkingSpotTypes = new HashSet<>();
-        List<Image> sortedImages = new ArrayList<>();
 
-        if (parkingSpots != null) {
+        Set<EvChargeType> evChargeTypes = parkingSpots.stream()
+                .filter(spot -> spot.getType() == ParkingSpotType.EV)
+                .map(ParkingSpotResponseDto::getEvChargeTypes)
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet());
 
-            evChargeTypes = parkingSpots.stream()
-                    .filter(spot -> spot.getType() == ParkingSpotType.EV)
-                    .map(ParkingSpotResponseDto::getEvChargeTypes)
-                    .flatMap(Set::stream)
-                    .collect(Collectors.toSet());
+        Set<ParkingSpotType> parkingSpotTypes = parkingSpots.stream()
+                .map(ParkingSpotResponseDto::getType)
+                .collect(Collectors.toSet());
 
-            parkingSpotTypes = parkingSpots.stream()
-                    .map(ParkingSpotResponseDto::getType)
-                    .collect(Collectors.toSet());
-        }
-
-        if (parkingLotImages != null) {
-            sortedImages = parkingLotImages.stream()
-                    .sorted(Comparator.comparing(ParkingLotImageMappingResponseDto::getImageIndex))
-                    .map(dto -> new Image(dto.getImageUrl()))
-                    .toList();
-        }
-
+        List<Image> sortedImages = parkingLotImages.stream()
+                .sorted(Comparator.comparing(ParkingLotImageMappingResponseDto::getImageIndex))
+                .map(dto -> new Image(dto.getImageUrl()))
+                .toList();
 
         return ParkingLotCreatedEvent.builder()
                 .parkingLotUuid(parkingLot.getParkingLotUuid())
@@ -103,6 +101,7 @@ public class ParkingLotCreatedEvent {
                 .evChargeTypes(evChargeTypes)
                 .parkingSpotTypes(parkingSpotTypes)
                 .imageUrls (sortedImages)
+                .options(options)
                 .build();
     }
 }

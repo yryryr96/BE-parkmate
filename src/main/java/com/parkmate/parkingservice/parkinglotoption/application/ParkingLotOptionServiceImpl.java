@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ParkingLotOptionServiceImpl implements ParkingLotOptionService {
@@ -28,6 +30,17 @@ public class ParkingLotOptionServiceImpl implements ParkingLotOptionService {
 
         return ParkingLotOptionResponseDtoList.of(
                 parkingLotOptionRepository.findAll().stream()
+                        .map(ParkingLotOptionResponseDto::from)
+                        .toList()
+        );
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public ParkingLotOptionResponseDtoList getOptionsByOptionIds(List<Long> optionIds) {
+        return ParkingLotOptionResponseDtoList.of(
+                parkingLotOptionRepository.findAllByIdIn(optionIds)
+                        .stream()
                         .map(ParkingLotOptionResponseDto::from)
                         .toList()
         );

@@ -9,6 +9,12 @@ import com.parkmate.parkingservice.parkinglot.domain.ParkingLot;
 import com.parkmate.parkingservice.parkinglot.dto.response.ParkingLotGeoResponseDto;
 import com.parkmate.parkingservice.parkinglotimagemapping.application.ParkingLotImageMappingService;
 import com.parkmate.parkingservice.parkinglotimagemapping.dto.response.ParkingLotImageMappingResponseDto;
+import com.parkmate.parkingservice.parkinglotoption.application.ParkingLotOptionService;
+import com.parkmate.parkingservice.parkinglotoption.dto.response.ParkingLotOptionResponseDto;
+import com.parkmate.parkingservice.parkinglotoption.dto.response.ParkingLotOptionResponseDtoList;
+import com.parkmate.parkingservice.parkinglotoptionmapping.application.ParkingLotOptionMappingService;
+import com.parkmate.parkingservice.parkinglotoptionmapping.dto.request.ParkingLotMappingUpdateRequestDto;
+import com.parkmate.parkingservice.parkinglotoptionmapping.dto.response.ParkingLotOptionMappingResponseDto;
 import com.parkmate.parkingservice.parkingspot.application.ParkingSpotService;
 import com.parkmate.parkingservice.parkingspot.dto.response.ParkingSpotResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +22,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +32,8 @@ public class ParkingLotFacade {
 
     private final ParkingLotService parkingLotService;
     private final ParkingSpotService parkingSpotService;
+    private final ParkingLotOptionService parkingLotOptionService;
+    private final ParkingLotOptionMappingService parkingLotOptionMappingService;
     private final ParkingLotImageMappingService parkingLotImageMappingService;
     private final GeoService geoService;
     private final ApplicationEventPublisher eventPublisher;
@@ -33,17 +42,26 @@ public class ParkingLotFacade {
     public void registerParkingLot(ParkingLotRegisterRequest parkingLotRegisterRequest) {
 
         ParkingLot parkingLot = parkingLotService.register(parkingLotRegisterRequest.getParkingLot());
+
         String parkingLotUuid = parkingLot.getParkingLotUuid();
+        List<Long> optionIds = parkingLotRegisterRequest.getOptionIds();
+        ParkingLotOptionMappingResponseDto registeredOptionMappings = parkingLotOptionMappingService.update(
+                ParkingLotMappingUpdateRequestDto.of(parkingLotUuid, optionIds)
+        );
+
+        List<ParkingLotOptionResponseDto> options = parkingLotOptionService.getOptionsByOptionIds(
+                registeredOptionMappings.getOptionIds()
+        ).getOptions();
 
         List<ParkingSpotResponseDto> registeredParkingSpots = Optional.ofNullable(parkingLotRegisterRequest.getParkingSpot())
                 .map(parkingSpot ->
                         parkingSpotService.register(parkingSpot.withParkingLotUuid(parkingLotUuid))
-                ).orElse(null);
+                ).orElse(Collections.emptyList());
 
         List<ParkingLotImageMappingResponseDto> registeredImages = Optional.ofNullable(parkingLotRegisterRequest.getParkingLotImage())
                 .map(parkingLotImage ->
                         parkingLotImageMappingService.registerParkingLotImages(parkingLotImage.withParkingLotUuid(parkingLotUuid))
-                ).orElse(null);
+                ).orElse(Collections.emptyList());
 
         geoService.addParkingLot(
                 parkingLot.getParkingLotUuid(),
@@ -52,13 +70,15 @@ public class ParkingLotFacade {
         );
 
         eventPublisher.publishEvent(
-                ParkingLotCreatedEvent.of(parkingLot, registeredParkingSpots, registeredImages)
+                ParkingLotCreatedEvent.of(
+                        parkingLot, options, registeredParkingSpots, registeredImages
+                )
         );
     }
 
     public List<ParkingLotGeoResponseDto> getNearbyParkingLotsMysql(double latitude,
-                                                                double longitude,
-                                                                double radius) {
+                                                                    double longitude,
+                                                                    double radius) {
 
         return geoService.getNearbyParkingLots(latitude, longitude, radius);
     }
