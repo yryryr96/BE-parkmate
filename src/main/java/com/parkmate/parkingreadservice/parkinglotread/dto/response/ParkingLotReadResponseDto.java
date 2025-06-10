@@ -74,6 +74,7 @@ public class ParkingLotReadResponseDto {
                 .evChargeTypes(parkingLotRead.getEvChargeTypes())
                 .extraInfo(parkingLotRead.getExtraInfo())
                 .imageUrls(parkingLotRead.getImageUrls())
+                .options(parkingLotRead.getOptions())
                 .likeCount(parkingLotRead.getLikeCount())
                 .dislikeCount(parkingLotRead.getDislikeCount())
                 .build();
@@ -92,6 +93,7 @@ public class ParkingLotReadResponseDto {
                 .evChargeTypes(evChargeTypes)
                 .extraInfo(extraInfo)
                 .imageUrls(imageUrls)
+                .options(options)
                 .likeCount(likeCount)
                 .dislikeCount(dislikeCount)
                 .build();
