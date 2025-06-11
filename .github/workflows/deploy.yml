@@ -83,8 +83,8 @@ jobs:
             EOF
             
             # application.yml 파일을 컨테이너가 접근 가능한 위치에 생성
-            mkdir -p ~/config
-            cat > ~/config/application-parking.yml << 'EOL'
+            mkdir -p ~/config/parking
+            cat > ~/config/parking/application.yml << 'EOL'
             ${{ secrets.APPLICATION_YML }}
             EOL
             
