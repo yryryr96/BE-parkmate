@@ -9,4 +9,8 @@ public interface GeoService {
     void addParkingLot(String parkingLotUuid, double latitude, double longitude);
 
     List<ParkingLotsInRadiusResponse> getNearbyParkingLots(double latitude, double longitude, double radius);
+
+    List<ParkingLotsInRadiusResponse> getParkingLotsInBox();
+
+
 }

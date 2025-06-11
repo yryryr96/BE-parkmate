@@ -2,6 +2,7 @@ package com.parkmate.parkingreadservice.parkinglotread.presentation;
 
 import com.parkmate.parkingreadservice.common.response.ApiResponse;
 import com.parkmate.parkingreadservice.facade.ParkingLotFacade;
+import com.parkmate.parkingreadservice.geo.dto.request.NearbyParkingLotRequestDto;
 import com.parkmate.parkingreadservice.geo.vo.NearbyParkingLotResponseVoList;
 import com.parkmate.parkingreadservice.parkinglotread.application.ParkingLotReadService;
 import com.parkmate.parkingreadservice.parkinglotread.vo.response.ParkingLotReadResponseVo;
@@ -39,7 +40,7 @@ public class ParkingLotReadController {
 
         return ApiResponse.ok(
                 "주변 주차장 정보 조회에 성공했습니다.",
-                parkingLotFacade.getNearbyParkingLots(latitude, longitude, radius).toVo()
+                parkingLotFacade.getNearbyParkingLots(NearbyParkingLotRequestDto.of(latitude, longitude, radius)).toVo()
         );
     }
 }
