@@ -17,7 +17,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class GeoServiceImplByRedis implements GeoService {
 
     private final GeoOperations<String, String> geoOperations;
