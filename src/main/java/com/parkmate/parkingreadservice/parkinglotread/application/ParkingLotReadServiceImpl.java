@@ -25,7 +25,7 @@ public class ParkingLotReadServiceImpl implements ParkingLotReadService {
     @Async
     @Override
     public void createParkingLot(ParkingLotCreateEvent parkingLotCreateEvent) {
-        parkingLotReadRepository.save(parkingLotCreateEvent.toEntity());
+        parkingLotReadRepository.create(parkingLotCreateEvent);
     }
 
     @Async

@@ -1,5 +1,6 @@
 package com.parkmate.parkingreadservice.parkinglotread.dto.response;
 
+import com.parkmate.parkingreadservice.geo.dto.response.NearbyParkingLotResponseDto;
 import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotOption;
 import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
 import com.parkmate.parkingreadservice.parkinglotread.domain.Image;
@@ -96,6 +97,20 @@ public class ParkingLotReadResponseDto {
                 .options(options)
                 .likeCount(likeCount)
                 .dislikeCount(dislikeCount)
+                .build();
+    }
+
+    public NearbyParkingLotResponseDto toNearByParkingLotResponseDto(String parkingLotUuid,
+                                                                     double latitude,
+                                                                     double longitude,
+                                                                     double distance) {
+        return NearbyParkingLotResponseDto.builder()
+                .parkingLotUuid(parkingLotUuid)
+                .name(name)
+                .thumbnailUrl(thumbnailUrl.getImageUrl())
+                .latitude(latitude)
+                .longitude(longitude)
+                .distance(distance)
                 .build();
     }
 }
