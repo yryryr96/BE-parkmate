@@ -23,7 +23,7 @@ public class ParkingLotEventManager {
         geoService.addParkingLot(event.getParkingLotUuid(), event.getLatitude(), event.getLongitude());
     }
 
-    public void handleParkingLotMetaDataUpdatedEvent(ParkingLotMetadataUpdateEvent event) {
+    public void handleParkingLotMetadataUpdatedEvent(ParkingLotMetadataUpdateEvent event) {
         parkingLotReadService.syncParkingLotMetadata(event);
     }
 

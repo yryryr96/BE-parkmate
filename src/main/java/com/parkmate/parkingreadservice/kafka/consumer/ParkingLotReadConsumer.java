@@ -38,7 +38,7 @@ public class ParkingLotReadConsumer {
             containerFactory = "parkingLotMetadataUpdateListener"
     )
     public void consumeParkingLotMetadataUpdated(ParkingLotMetadataUpdateEvent event) {
-        eventManager.handleParkingLotMetaDataUpdatedEvent(event);
+        eventManager.handleParkingLotMetadataUpdatedEvent(event);
     }
 
     @KafkaListener(
