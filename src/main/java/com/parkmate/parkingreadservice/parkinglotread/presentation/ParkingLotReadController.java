@@ -2,16 +2,12 @@ package com.parkmate.parkingreadservice.parkinglotread.presentation;
 
 import com.parkmate.parkingreadservice.common.response.ApiResponse;
 import com.parkmate.parkingreadservice.facade.ParkingLotFacade;
-import com.parkmate.parkingreadservice.geo.dto.response.ParkingLotsInRadiusResponse;
-import com.parkmate.parkingreadservice.geo.vo.NearByParkingLotResponseVoList;
-import com.parkmate.parkingreadservice.geo.vo.NearbyParkingLotResponseVo;
+import com.parkmate.parkingreadservice.geo.vo.NearbyParkingLotResponseVoList;
 import com.parkmate.parkingreadservice.parkinglotread.application.ParkingLotReadService;
 import com.parkmate.parkingreadservice.parkinglotread.vo.response.ParkingLotReadResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/parkingLots")
@@ -36,7 +32,7 @@ public class ParkingLotReadController {
     }
 
     @GetMapping("/nearby")
-    public ApiResponse<NearByParkingLotResponseVoList> getNearbyParkingLots(
+    public ApiResponse<NearbyParkingLotResponseVoList> getNearbyParkingLots(
             @RequestParam double latitude,
             @RequestParam double longitude,
             @RequestParam double radius) {

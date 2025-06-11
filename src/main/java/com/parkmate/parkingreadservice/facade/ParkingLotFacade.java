@@ -2,11 +2,10 @@ package com.parkmate.parkingreadservice.facade;
 
 import com.parkmate.parkingreadservice.common.utils.RedisUtil;
 import com.parkmate.parkingreadservice.geo.application.GeoService;
-import com.parkmate.parkingreadservice.geo.dto.response.NearByParkingLotResponseDtoList;
+import com.parkmate.parkingreadservice.geo.dto.response.NearbyParkingLotResponseDtoList;
 import com.parkmate.parkingreadservice.geo.dto.response.NearbyParkingLotResponseDto;
 import com.parkmate.parkingreadservice.geo.dto.response.ParkingLotsInRadiusResponse;
 import com.parkmate.parkingreadservice.parkinglotread.application.ParkingLotReadService;
-import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
 import com.parkmate.parkingreadservice.parkinglotread.dto.response.ParkingLotReadResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,7 @@ public class ParkingLotFacade {
     private final GeoService geoService;
     private final RedisUtil<String, ParkingLotReadResponseDto> redisUtil;
 
-    public NearByParkingLotResponseDtoList getNearbyParkingLots(double latitude,
+    public NearbyParkingLotResponseDtoList getNearbyParkingLots(double latitude,
                                                                 double longitude,
                                                                 double radius) {
 
@@ -44,6 +43,6 @@ public class ParkingLotFacade {
                     );
                 }).toList();
 
-        return NearByParkingLotResponseDtoList.from(parkingLots);
+        return NearbyParkingLotResponseDtoList.from(parkingLots);
     }
 }
