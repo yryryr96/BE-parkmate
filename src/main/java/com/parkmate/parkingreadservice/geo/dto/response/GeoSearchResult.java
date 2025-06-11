@@ -3,12 +3,10 @@ package com.parkmate.parkingreadservice.geo.dto.response;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Getter
 @NoArgsConstructor
-@ToString
-public class ParkingLotsInRadiusResponse {
+public class GeoSearchResult {
 
     private String parkingLotUuid;
     private double longitude;
@@ -16,10 +14,10 @@ public class ParkingLotsInRadiusResponse {
     private double distance;
 
     @Builder
-    private ParkingLotsInRadiusResponse(String parkingLotUuid,
-                                        double longitude,
-                                        double latitude,
-                                        double distance) {
+    private GeoSearchResult(String parkingLotUuid,
+                            double longitude,
+                            double latitude,
+                            double distance) {
         this.parkingLotUuid = parkingLotUuid;
         this.longitude = longitude;
         this.latitude = latitude;

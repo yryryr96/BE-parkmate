@@ -1,6 +1,7 @@
 package com.parkmate.parkingreadservice.geo.dto.response;
 
 import com.parkmate.parkingreadservice.geo.vo.GeoParkingLotResponseVo;
+import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,5 +41,20 @@ public class GeoParkingLotResponseDto {
                 .latitude(latitude)
                 .distance(distance)
                 .build();
+    }
+
+    public static GeoParkingLotResponseDto from(ParkingLotRead parkingLotRead) {
+        return GeoParkingLotResponseDto.builder()
+                .parkingLotUuid(parkingLotRead.getParkingLotUuid())
+                .name(parkingLotRead.getName())
+//                .thumbnailUrl(parkingLotRead.getThumbnailUrl())
+                .longitude(parkingLotRead.getLongitude())
+                .latitude(parkingLotRead.getLatitude())
+                .build();
+    }
+
+    public GeoParkingLotResponseDto withDistance(double distance) {
+        this.distance = distance;
+        return this;
     }
 }

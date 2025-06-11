@@ -41,12 +41,12 @@ public class ParkingLotReadController {
 
         return ApiResponse.ok(
                 "주변 주차장 정보 조회에 성공했습니다.",
-                parkingLotFacade.getNearbyParkingLots(NearbyParkingLotRequestDto.of(latitude, longitude, radius)).toVo()
+                parkingLotFacade.getParkingLotsNearby(NearbyParkingLotRequestDto.of(latitude, longitude, radius)).toVo()
         );
     }
 
     @GetMapping("/box")
-    public ApiResponse<String> getParkingLotInBox(
+    public ApiResponse<GeoParkingLotResponseVoList> getParkingLotInBox(
             @RequestParam double swLat,
             @RequestParam double swLng,
             @RequestParam double neLat,
@@ -54,7 +54,7 @@ public class ParkingLotReadController {
     ) {
         return ApiResponse.ok(
                 "주차장 박스 정보 조회에 성공했습니다.",
-                parkingLotFacade.getParkingLotBox(InBoxParkingLotRequestDto.of(swLat, swLng, neLat, neLng)).toVo()
+                parkingLotFacade.getParkingLotsInBox(InBoxParkingLotRequestDto.of(swLat, swLng, neLat, neLng)).toVo()
         );
     }
 }
