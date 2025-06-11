@@ -2,9 +2,10 @@ package com.parkmate.parkingreadservice.facade;
 
 import com.parkmate.parkingreadservice.common.utils.RedisUtil;
 import com.parkmate.parkingreadservice.geo.application.GeoService;
+import com.parkmate.parkingreadservice.geo.dto.request.InBoxParkingLotRequestDto;
 import com.parkmate.parkingreadservice.geo.dto.request.NearbyParkingLotRequestDto;
-import com.parkmate.parkingreadservice.geo.dto.response.NearbyParkingLotResponseDtoList;
-import com.parkmate.parkingreadservice.geo.dto.response.NearbyParkingLotResponseDto;
+import com.parkmate.parkingreadservice.geo.dto.response.GeoParkingLotResponseDto;
+import com.parkmate.parkingreadservice.geo.dto.response.GeoParkingLotResponseDtoList;
 import com.parkmate.parkingreadservice.geo.dto.response.ParkingLotsInRadiusResponse;
 import com.parkmate.parkingreadservice.parkinglotread.application.ParkingLotReadService;
 import com.parkmate.parkingreadservice.parkinglotread.dto.response.ParkingLotReadResponseDto;
@@ -22,14 +23,14 @@ public class ParkingLotFacade {
     private final GeoService geoService;
     private final RedisUtil<String, ParkingLotReadResponseDto> redisUtil;
 
-    public NearbyParkingLotResponseDtoList getNearbyParkingLots(NearbyParkingLotRequestDto nearbyParkingLotRequestDto) {
+    public GeoParkingLotResponseDtoList getNearbyParkingLots(NearbyParkingLotRequestDto nearbyParkingLotRequestDto) {
 
         double latitude = nearbyParkingLotRequestDto.getLatitude();
         double longitude = nearbyParkingLotRequestDto.getLongitude();
         double radius = nearbyParkingLotRequestDto.getRadius();
 
         List<ParkingLotsInRadiusResponse> nearbyParkingLots = geoService.getNearbyParkingLots(latitude, longitude, radius);
-        List<NearbyParkingLotResponseDto> parkingLots = nearbyParkingLots.stream()
+        List<GeoParkingLotResponseDto> parkingLots = nearbyParkingLots.stream()
                 .map(pl -> {
                     Optional<ParkingLotReadResponseDto> parkingLot = redisUtil.select(pl.getParkingLotUuid());
                     if (parkingLot.isPresent()) {
@@ -46,6 +47,16 @@ public class ParkingLotFacade {
                     );
                 }).toList();
 
-        return NearbyParkingLotResponseDtoList.from(parkingLots);
+        return GeoParkingLotResponseDtoList.from(parkingLots);
+    }
+
+    public GeoParkingLotResponseDtoList getParkingLotBox(InBoxParkingLotRequestDto inBoxParkingLotRequestDto) {
+
+        double swLat = inBoxParkingLotRequestDto.getSwLat();
+        double swLng = inBoxParkingLotRequestDto.getSwLng();
+        double neLat = inBoxParkingLotRequestDto.getNeLat();
+        double neLng = inBoxParkingLotRequestDto.getNeLng();
+
+
     }
 }

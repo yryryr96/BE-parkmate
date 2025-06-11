@@ -1,13 +1,13 @@
 package com.parkmate.parkingreadservice.geo.dto.response;
 
-import com.parkmate.parkingreadservice.geo.vo.NearbyParkingLotResponseVo;
+import com.parkmate.parkingreadservice.geo.vo.GeoParkingLotResponseVo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class NearbyParkingLotResponseDto {
+public class GeoParkingLotResponseDto {
 
     private String parkingLotUuid;
     private String name;
@@ -17,12 +17,12 @@ public class NearbyParkingLotResponseDto {
     private double distance;
 
     @Builder
-    private NearbyParkingLotResponseDto(String parkingLotUuid,
-                                       String name,
-                                       String thumbnailUrl,
-                                       double longitude,
-                                       double latitude,
-                                       double distance) {
+    private GeoParkingLotResponseDto(String parkingLotUuid,
+                                     String name,
+                                     String thumbnailUrl,
+                                     double longitude,
+                                     double latitude,
+                                     double distance) {
         this.parkingLotUuid = parkingLotUuid;
         this.name = name;
         this.thumbnailUrl = thumbnailUrl;
@@ -31,8 +31,8 @@ public class NearbyParkingLotResponseDto {
         this.distance = distance;
     }
 
-    public NearbyParkingLotResponseVo toVo() {
-        return NearbyParkingLotResponseVo.builder()
+    public GeoParkingLotResponseVo toVo() {
+        return GeoParkingLotResponseVo.builder()
                 .parkingLotUuid(parkingLotUuid)
                 .name(name)
                 .thumbnailUrl(thumbnailUrl)
