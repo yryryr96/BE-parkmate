@@ -32,7 +32,7 @@ public interface ParkingLotGeoLocationRepository extends JpaRepository<ParkingLo
 
     @Modifying
     @Query(value = """
-            INSERT INTO parking_lot_geo_location (:parkingLotUuid, location)
+            INSERT INTO parking_lot_geo_location (parking_lot_uuid, location)
             VALUES (:parkingLotUuid,
                     ST_PointFromText(CONCAT('POINT(', :latitude, ' ', :longitude, ')'), 4326))
             """,

@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ParkingSpotSequenceServiceImpl implements ParkingSpotSequenceService {
@@ -18,10 +20,11 @@ public class ParkingSpotSequenceServiceImpl implements ParkingSpotSequenceServic
     public Long getSpotSequence(String parkingLotUuid,
                                 ParkingSpotType parkingSpotType) {
 
-        return parkingSpotSequenceRepository.getRegularSpotSequence(
-                        parkingLotUuid,
-                        parkingSpotType)
-                .orElse(1L);
+        Optional<ParkingSpotSequence> sequence = parkingSpotSequenceRepository.findByParkingLotUuidAndParkingSpotType(
+                parkingLotUuid,
+                parkingSpotType);
+
+        return sequence.isEmpty() ? 1L : sequence.get().getSequence();
     }
 
     @Transactional

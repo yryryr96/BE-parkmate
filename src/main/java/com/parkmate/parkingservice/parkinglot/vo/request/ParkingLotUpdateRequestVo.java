@@ -5,7 +5,6 @@ import lombok.Getter;
 @Getter
 public class ParkingLotUpdateRequestVo {
 
-    private String hostUuid;
     private String name;
     private String phoneNumber;
     private int capacity;

@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ParkingSpotService {
 
-    void register(ParkingSpotRegisterRequestDto parkingSpotRegisterRequestDto);
+    List<ParkingSpotResponseDto> register(ParkingSpotRegisterRequestDto parkingSpotRegisterRequestDto);
 
     void update(ParkingSpotUpdateRequestDto parkingSpotUpdateRequestDto);
 

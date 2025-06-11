@@ -2,7 +2,9 @@ package com.parkmate.parkingservice.parkinglotimagemapping.application;
 
 import com.parkmate.parkingservice.parkinglotimagemapping.domain.ParkingLotImageMapping;
 import com.parkmate.parkingservice.parkinglotimagemapping.dto.request.ParkingLotImageRegisterRequestDto;
+import com.parkmate.parkingservice.parkinglotimagemapping.dto.response.ParkingLotImageMappingResponseDto;
 import com.parkmate.parkingservice.parkinglotimagemapping.infrastructure.ParkingLotImageMappingRepository;
+import com.parkmate.parkingservice.parkinglotimagemapping.vo.Image;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,27 +20,30 @@ public class ParkingLotImageMappingServiceImpl implements ParkingLotImageMapping
 
     @Transactional
     @Override
-    public void registerParkingLotImages(ParkingLotImageRegisterRequestDto parkingLotImageRegisterRequestDto) {
+    public List<ParkingLotImageMappingResponseDto> registerParkingLotImages(ParkingLotImageRegisterRequestDto parkingLotImageRegisterRequestDto) {
 
         if (parkingLotImageMappingRepository.existsByParkingLotUuid(parkingLotImageRegisterRequestDto.getParkingLotUuid())) {
             parkingLotImageMappingRepository.deleteByParkingLotUuid(parkingLotImageRegisterRequestDto.getParkingLotUuid());
         }
 
         String parkingLotUuid = parkingLotImageRegisterRequestDto.getParkingLotUuid();
-        List<String> imageUrls = parkingLotImageRegisterRequestDto.getImageUrls();
+        List<Image> imageUrls = parkingLotImageRegisterRequestDto.getImageUrls();
         List<ParkingLotImageMapping> parkingLotImageMappingList = new ArrayList<>();
 
         for (int idx = 0; idx < imageUrls.size(); idx++) {
             parkingLotImageMappingList.add(
                     ParkingLotImageMapping.builder()
                             .parkingLotUuid(parkingLotUuid)
-                            .imageUrl(imageUrls.get(idx))
+                            .imageUrl(imageUrls.get(idx).getImageUrl())
                             .imageIndex(idx)
                             .build()
             );
         }
 
-        parkingLotImageMappingRepository.saveAll(parkingLotImageMappingList);
+        List<ParkingLotImageMapping> parkingLotImageMappings = parkingLotImageMappingRepository.saveAll(parkingLotImageMappingList);
+        return parkingLotImageMappings.stream()
+                .map(ParkingLotImageMappingResponseDto::from)
+                .toList();
     }
 
     @Transactional(readOnly = true)

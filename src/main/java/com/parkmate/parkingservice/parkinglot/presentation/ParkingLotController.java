@@ -5,10 +5,8 @@ import com.parkmate.parkingservice.facade.ParkingLotFacade;
 import com.parkmate.parkingservice.facade.dto.ParkingLotRegisterRequest;
 import com.parkmate.parkingservice.parkinglot.application.ParkingLotService;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotDeleteRequestDto;
-import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotRegisterRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotUpdateRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.response.ParkingLotGeoResponseDto;
-import com.parkmate.parkingservice.parkinglot.vo.request.ParkingLotRegisterRequestVo;
 import com.parkmate.parkingservice.parkinglot.vo.request.ParkingLotUpdateRequestVo;
 import com.parkmate.parkingservice.parkinglot.vo.response.ParkingLotGeoResponseVo;
 import com.parkmate.parkingservice.parkinglot.vo.response.ParkingLotHostUuidResponseVo;
@@ -54,9 +52,10 @@ public class ParkingLotController {
     )
     @PutMapping("/{parkingLotUuid}")
     public ApiResponse<String> updateParkingLot(@PathVariable String parkingLotUuid,
+                                                @RequestHeader("X-Host-UUID") String hostUuid,
                                                 @RequestBody ParkingLotUpdateRequestVo parkingLotUpdateRequestVo) {
 
-        parkingLotService.update(ParkingLotUpdateRequestDto.from(parkingLotUuid, parkingLotUpdateRequestVo));
+        parkingLotService.update(ParkingLotUpdateRequestDto.from(parkingLotUuid, hostUuid, parkingLotUpdateRequestVo));
         return ApiResponse.of(
                 HttpStatus.OK,
                 "주차장 정보가 업데이트되었습니다."
@@ -71,7 +70,7 @@ public class ParkingLotController {
     )
     @DeleteMapping("/{parkingLotUuid}")
     public ApiResponse<String> deleteParkingLot(@PathVariable String parkingLotUuid,
-                                                @RequestParam("hostUuid") String hostUuid) {
+                                                @RequestHeader("X-Host-UUID") String hostUuid) {
         parkingLotService.delete(ParkingLotDeleteRequestDto.of(parkingLotUuid, hostUuid));
         return ApiResponse.of(
                 HttpStatus.NO_CONTENT,
