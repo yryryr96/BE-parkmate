@@ -1,6 +1,5 @@
 package com.parkmate.parkingservice.parkinglotoptionmapping.dto.request;
 
-import com.parkmate.parkingservice.parkinglot.domain.ParkingLot;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

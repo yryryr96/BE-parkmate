@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ParkingLotGeoResponseVo {
+public class NearbyParkingLotResponseVo {
 
     private String parkingLotUuid;
     private double longitude;
@@ -14,10 +14,10 @@ public class ParkingLotGeoResponseVo {
     private double distance;
 
     @Builder
-    private ParkingLotGeoResponseVo(String parkingLotUuid,
-                                   double longitude,
-                                   double latitude,
-                                   double distance) {
+    private NearbyParkingLotResponseVo(String parkingLotUuid,
+                                       double longitude,
+                                       double latitude,
+                                       double distance) {
         this.parkingLotUuid = parkingLotUuid;
         this.longitude = longitude;
         this.latitude = latitude;

@@ -6,17 +6,13 @@ import com.parkmate.parkingservice.facade.dto.ParkingLotRegisterRequest;
 import com.parkmate.parkingservice.parkinglot.application.ParkingLotService;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotDeleteRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotUpdateRequestDto;
-import com.parkmate.parkingservice.parkinglot.dto.response.ParkingLotGeoResponseDto;
 import com.parkmate.parkingservice.parkinglot.vo.request.ParkingLotUpdateRequestVo;
-import com.parkmate.parkingservice.parkinglot.vo.response.ParkingLotGeoResponseVo;
 import com.parkmate.parkingservice.parkinglot.vo.response.ParkingLotHostUuidResponseVo;
 import com.parkmate.parkingservice.parkinglot.vo.response.ParkingLotResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/parkingLots")
@@ -87,25 +83,6 @@ public class ParkingLotController {
     public ApiResponse<ParkingLotResponseVo> getParkingLotByUuid(@PathVariable String parkingLotUuid) {
         return ApiResponse.ok(
                 parkingLotService.findByUuid(parkingLotUuid).toVo()
-        );
-    }
-
-    @Operation(
-            summary = "근처 주차장 조회",
-            description = "위도와 경도를 기반으로 지정된 반경 내의 주차장을 조회하는 API입니다.",
-            tags = {"PARKING-LOT-SERVICE"}
-    )
-    @GetMapping("/nearby")
-    public ApiResponse<List<ParkingLotGeoResponseVo>> getNearbyParkingLots(
-            @RequestParam double latitude,
-            @RequestParam double longitude,
-            @RequestParam double radius) {
-
-        return ApiResponse.ok(
-                parkingLotFacade.getNearbyParkingLotsMysql(latitude, longitude, radius)
-                        .stream()
-                        .map(ParkingLotGeoResponseDto::toVo)
-                        .toList()
         );
     }
 
