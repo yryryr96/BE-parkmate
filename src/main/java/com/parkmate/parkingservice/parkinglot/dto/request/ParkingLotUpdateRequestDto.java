@@ -1,6 +1,5 @@
 package com.parkmate.parkingservice.parkinglot.dto.request;
 
-import com.parkmate.parkingservice.parkinglot.domain.ParkingLot;
 import com.parkmate.parkingservice.parkinglot.vo.request.ParkingLotUpdateRequestVo;
 import lombok.Builder;
 import lombok.Getter;

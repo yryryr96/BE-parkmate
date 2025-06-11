@@ -1,10 +1,10 @@
 package com.parkmate.parkingservice.parkinglotreactions.application;
 
+import com.parkmate.parkingservice.kafka.event.ReactionUpdatedEvent;
 import com.parkmate.parkingservice.parkinglotreactions.domain.ParkingLotReactions;
 import com.parkmate.parkingservice.parkinglotreactions.domain.ReactionType;
 import com.parkmate.parkingservice.parkinglotreactions.dto.request.ParkingLotReactionGetRequestDto;
 import com.parkmate.parkingservice.parkinglotreactions.dto.request.ParkingLotReactionUpsertRequestDto;
-import com.parkmate.parkingservice.kafka.event.ReactionUpdatedEvent;
 import com.parkmate.parkingservice.parkinglotreactions.infrastructure.ParkingLotReactionsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;

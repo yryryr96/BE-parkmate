@@ -1,6 +1,5 @@
 package com.parkmate.parkingservice.parkinglotoptionmapping.application;
 
-import com.parkmate.parkingservice.parkinglot.domain.ParkingLot;
 import com.parkmate.parkingservice.parkinglotoptionmapping.domain.ParkingLotOptionMapping;
 import com.parkmate.parkingservice.parkinglotoptionmapping.dto.request.ParkingLotMappingUpdateRequestDto;
 import com.parkmate.parkingservice.parkinglotoptionmapping.dto.response.ParkingLotOptionMappingResponseDto;
