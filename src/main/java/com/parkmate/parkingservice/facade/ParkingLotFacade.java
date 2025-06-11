@@ -2,16 +2,12 @@ package com.parkmate.parkingservice.facade;
 
 import com.parkmate.parkingservice.facade.dto.ParkingLotRegisterRequest;
 import com.parkmate.parkingservice.kafka.event.ParkingLotCreatedEvent;
-import com.parkmate.parkingservice.parkinglot.application.GeoServiceImplByMysql;
 import com.parkmate.parkingservice.parkinglot.application.ParkingLotService;
-import com.parkmate.parkingservice.parkinglot.application.GeoService;
 import com.parkmate.parkingservice.parkinglot.domain.ParkingLot;
-import com.parkmate.parkingservice.parkinglot.dto.response.ParkingLotGeoResponseDto;
 import com.parkmate.parkingservice.parkinglotimagemapping.application.ParkingLotImageMappingService;
 import com.parkmate.parkingservice.parkinglotimagemapping.dto.response.ParkingLotImageMappingResponseDto;
 import com.parkmate.parkingservice.parkinglotoption.application.ParkingLotOptionService;
 import com.parkmate.parkingservice.parkinglotoption.dto.response.ParkingLotOptionResponseDto;
-import com.parkmate.parkingservice.parkinglotoption.dto.response.ParkingLotOptionResponseDtoList;
 import com.parkmate.parkingservice.parkinglotoptionmapping.application.ParkingLotOptionMappingService;
 import com.parkmate.parkingservice.parkinglotoptionmapping.dto.request.ParkingLotMappingUpdateRequestDto;
 import com.parkmate.parkingservice.parkinglotoptionmapping.dto.response.ParkingLotOptionMappingResponseDto;
@@ -35,7 +31,6 @@ public class ParkingLotFacade {
     private final ParkingLotOptionService parkingLotOptionService;
     private final ParkingLotOptionMappingService parkingLotOptionMappingService;
     private final ParkingLotImageMappingService parkingLotImageMappingService;
-    private final GeoService geoService;
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
@@ -63,23 +58,10 @@ public class ParkingLotFacade {
                         parkingLotImageMappingService.registerParkingLotImages(parkingLotImage.withParkingLotUuid(parkingLotUuid))
                 ).orElse(Collections.emptyList());
 
-        geoService.addParkingLot(
-                parkingLot.getParkingLotUuid(),
-                parkingLot.getLatitude(),
-                parkingLot.getLongitude()
-        );
-
         eventPublisher.publishEvent(
                 ParkingLotCreatedEvent.of(
                         parkingLot, options, registeredParkingSpots, registeredImages
                 )
         );
-    }
-
-    public List<ParkingLotGeoResponseDto> getNearbyParkingLotsMysql(double latitude,
-                                                                    double longitude,
-                                                                    double radius) {
-
-        return geoService.getNearbyParkingLots(latitude, longitude, radius);
     }
 }

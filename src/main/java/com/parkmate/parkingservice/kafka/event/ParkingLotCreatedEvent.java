@@ -29,6 +29,8 @@ public class ParkingLotCreatedEvent {
     private String name;
     private String phoneNumber;
     private String address;
+    private double latitude;
+    private double longitude;
     private int capacity;
     private Boolean isEvChargingAvailable;
     private Set<EvChargeType> evChargeTypes;
@@ -45,6 +47,8 @@ public class ParkingLotCreatedEvent {
                                    String name,
                                    String phoneNumber,
                                    String address,
+                                   double latitude,
+                                   double longitude,
                                    int capacity,
                                    Boolean isEvChargingAvailable,
                                    Set<EvChargeType> evChargeTypes,
@@ -58,6 +62,8 @@ public class ParkingLotCreatedEvent {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.capacity = capacity;
         this.isEvChargingAvailable = isEvChargingAvailable;
         this.evChargeTypes = evChargeTypes;
@@ -94,13 +100,15 @@ public class ParkingLotCreatedEvent {
                 .parkingLotType(parkingLot.getParkingLotType())
                 .phoneNumber(parkingLot.getPhoneNumber())
                 .address(parkingLot.getMainAddress() + " " + parkingLot.getDetailAddress())
+                .latitude(parkingLot.getLatitude())
+                .longitude(parkingLot.getLongitude())
                 .name(parkingLot.getName())
                 .capacity(parkingLot.getCapacity())
                 .isEvChargingAvailable(parkingLot.getIsEvChargingAvailable())
                 .extraInfo(parkingLot.getExtraInfo())
                 .evChargeTypes(evChargeTypes)
                 .parkingSpotTypes(parkingSpotTypes)
-                .imageUrls (sortedImages)
+                .imageUrls(sortedImages)
                 .options(options)
                 .build();
     }

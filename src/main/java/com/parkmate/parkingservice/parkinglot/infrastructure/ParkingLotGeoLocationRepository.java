@@ -1,12 +1,10 @@
 package com.parkmate.parkingservice.parkinglot.infrastructure;
 
-import com.parkmate.parkingservice.parkinglot.domain.ParkingLot;
 import com.parkmate.parkingservice.parkinglot.domain.ParkingLotGeoLocation;
-import com.parkmate.parkingservice.parkinglot.dto.response.ParkingLotGeoResponseDto;
+import com.parkmate.parkingservice.parkinglot.dto.response.ParkingLotsInRadiusResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,9 +24,9 @@ public interface ParkingLotGeoLocationRepository extends JpaRepository<ParkingLo
                  ST_SRID(Point(:longitude, :latitude), 4326)
             ) <= :radius
             ORDER BY distance""", nativeQuery = true)
-    List<ParkingLotGeoResponseDto> findNearbyParkingLots(double latitude,
-                                                         double longitude,
-                                                         double radius);
+    List<ParkingLotsInRadiusResponse> findNearbyParkingLots(double latitude,
+                                                            double longitude,
+                                                            double radius);
 
     @Modifying
     @Query(value = """
