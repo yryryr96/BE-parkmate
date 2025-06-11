@@ -1,10 +1,10 @@
 package com.parkmate.parkingreadservice.kafka.consumer;
 
-import com.parkmate.parkingreadservice.kafka.properties.KafkaTopicProperties;
-import com.parkmate.parkingreadservice.parkinglotread.application.ParkingLotReadService;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotCreateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotMetadataUpdateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotReactionsUpdateEvent;
+import com.parkmate.parkingreadservice.kafka.eventmanager.ParkingLotEventManager;
+import com.parkmate.parkingreadservice.kafka.properties.KafkaTopicProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -18,25 +18,27 @@ import java.util.List;
 public class ParkingLotReadConsumer {
 
     private final KafkaTopicProperties kafkaTopicProperties;
-    private final ParkingLotReadService parkingLotReadService;
+    private final ParkingLotEventManager eventManager;
 
     @KafkaListener(
             topics = "#{kafkaTopicProperties.parkingLotCreated}",
-            containerFactory = "parkingLotCreateListener"
+            containerFactory = "parkingLotCreateListener",
+            concurrency = "3"
     )
-    public void consumeParkingLotCreated(ParkingLotCreateEvent parkingLotCreateEvent) {
+    public void consumeParkingLotCreated(ParkingLotCreateEvent event) {
         log.info("Received message from {} topic: {}",
                 kafkaTopicProperties.getParkingLotCreated(),
-                parkingLotCreateEvent.toString());
-        parkingLotReadService.createParkingLot(parkingLotCreateEvent);
+                event.toString());
+
+        eventManager.handleParkingLotCreatedEvent(event);
     }
 
     @KafkaListener(
             topics = "#{kafkaTopicProperties.parkingLotMetadataUpdated}",
             containerFactory = "parkingLotMetadataUpdateListener"
     )
-    public void consumeParkingLotMetadataUpdated(ParkingLotMetadataUpdateEvent parkingLotMetadataUpdateEvent) {
-        parkingLotReadService.syncParkingLotMetadata(parkingLotMetadataUpdateEvent);
+    public void consumeParkingLotMetadataUpdated(ParkingLotMetadataUpdateEvent event) {
+        eventManager.handleParkingLotMetaDataUpdatedEvent(event);
     }
 
     @KafkaListener(
@@ -44,7 +46,7 @@ public class ParkingLotReadConsumer {
             containerFactory = "parkingLotReactionsUpdateListener",
             concurrency = "3"
     )
-    public void consumeParkingLotReactionsUpdated(List<ParkingLotReactionsUpdateEvent> parkingLotReactionsUpdateEvents) {
-        parkingLotReadService.syncParkingLotReactions(parkingLotReactionsUpdateEvents);
+    public void consumeParkingLotReactionsUpdated(List<ParkingLotReactionsUpdateEvent> events) {
+        eventManager.handleParkingLotReactionsUpdatedEvent(events);
     }
 }

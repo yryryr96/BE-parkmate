@@ -24,6 +24,8 @@ public class ParkingLotCreateEvent {
     private String name;
     private String phoneNumber;
     private String address;
+    private double latitude;
+    private double longitude;
     private int capacity;
     private Boolean isEvChargingAvailable;
     private Set<String> evChargeTypes;

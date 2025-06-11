@@ -3,6 +3,7 @@ package com.parkmate.parkingreadservice.parkinglotread.infrastructure;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoBulkWriteException;
+import com.parkmate.parkingreadservice.kafka.event.ParkingLotCreateEvent;
 import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotMetadataUpdateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotReactionsUpdateEvent;
@@ -26,6 +27,27 @@ import java.util.Map;
 public class CustomMongoRepositoryImpl implements CustomMongoRepository {
 
     private final MongoTemplate mongoTemplate;
+
+    @Override
+    public void create(ParkingLotCreateEvent parkingLotCreateEvent) {
+
+        Query query = new Query();
+        Update update = new Update();
+
+        query.addCriteria(
+                Criteria.where("parkingLotUuid")
+                        .is(parkingLotCreateEvent.getParkingLotUuid())
+        );
+
+        Map<String, Object> map = createUpdateMap(parkingLotCreateEvent);
+        map.forEach((key, value) -> {
+            if(!key.equals("parkingLotUuid") && value != null) {
+                update.set(key, value);
+            }
+        });
+
+        mongoTemplate.upsert(query, update, ParkingLotRead.class);
+    }
 
     @Override
     public void updateParkingLotMetadata(ParkingLotMetadataUpdateEvent parkingLotMetadataUpdateEvent) {
