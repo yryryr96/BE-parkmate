@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   parking-read:
-    container_name: parking-read
+    container_name: parking-read-service
     image: 090188239653.dkr.ecr.ap-northeast-2.amazonaws.com/parking-read-service
     volumes:
       - /home/ubuntu/config/parking-read/application.yml:/config/parking-read/application.yml
