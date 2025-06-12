@@ -1,5 +1,6 @@
 package com.parkmate.parkingreadservice.kafka.config;
 
+import com.parkmate.parkingreadservice.kafka.event.OperationCreateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotCreateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotMetadataUpdateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotReactionsUpdateEvent;
@@ -64,6 +65,11 @@ public class KafkaConfig {
 
         factory.setBatchListener(true);
         return factory;
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, OperationCreateEvent> parkingLotOperationCreatedListener() {
+        return createListenerFactory(OperationCreateEvent.class, kafkaConsumerGroupProperties.getParkingLotOperationCreatedGroup());
     }
 
     private <T> ConsumerFactory<String, T> createConsumerFactory(Class<T> targetClass, String groupId) {

@@ -4,7 +4,6 @@ import com.parkmate.parkingreadservice.geo.dto.request.InBoxParkingLotRequestDto
 import com.parkmate.parkingreadservice.geo.dto.request.NearbyParkingLotRequestDto;
 import com.parkmate.parkingreadservice.geo.dto.response.GeoSearchResult;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.geo.*;
 import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.core.GeoOperations;

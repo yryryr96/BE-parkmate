@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface ParkingLotReadRepository extends CrudRepository<ParkingLotRead, String>, CustomMongoRepository {
+public interface ParkingLotReadRepository extends CrudRepository<ParkingLotRead, String>, ParkingLotMongoRepository {
 
     Optional<ParkingLotRead> findByParkingLotUuid(String parkingLotUuid);
 }

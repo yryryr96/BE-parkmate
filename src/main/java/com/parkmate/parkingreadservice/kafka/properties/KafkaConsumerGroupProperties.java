@@ -14,4 +14,5 @@ public class KafkaConsumerGroupProperties {
     private String parkingLotCreatedGroup;
     private String parkingLotMetadataUpdatedGroup;
     private String parkingLotReactionsUpdatedGroup;
+    private String parkingLotOperationCreatedGroup;
 }

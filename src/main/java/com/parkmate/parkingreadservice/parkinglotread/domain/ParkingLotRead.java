@@ -1,6 +1,5 @@
 package com.parkmate.parkingreadservice.parkinglotread.domain;
 
-import com.parkmate.parkingreadservice.common.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +14,7 @@ import java.util.Set;
 @Document
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ParkingLotRead extends BaseEntity {
+public class ParkingLotRead {
 
     @Id
     private String id;

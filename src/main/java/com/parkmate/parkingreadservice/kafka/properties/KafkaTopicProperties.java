@@ -14,4 +14,5 @@ public class KafkaTopicProperties {
     private String parkingLotCreated;
     private String parkingLotMetadataUpdated;
     private String parkingLotReactionsUpdated;
+    private String parkingLotOperationCreated;
 }
