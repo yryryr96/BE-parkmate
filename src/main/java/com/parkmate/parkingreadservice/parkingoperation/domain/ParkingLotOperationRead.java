@@ -11,8 +11,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Getter
 @Document(collection = "parking_operation_read")
+@Getter
 @CompoundIndex(def = "{'parkingLotUuid': 1, 'operationDate': 1}", unique = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ParkingLotOperationRead {
@@ -21,8 +21,8 @@ public class ParkingLotOperationRead {
     private String id;
     private String parkingLotUuid;
     private LocalDate operationDate;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private LocalDateTime startDateTime;
+    private LocalDateTime endDateTime;
     private int baseIntervalMinutes;
     private int baseFee;
     private int extraIntervalMinutes;
@@ -35,8 +35,8 @@ public class ParkingLotOperationRead {
     private ParkingLotOperationRead(String id,
                                     String parkingLotUuid,
                                     LocalDate operationDate,
-                                    LocalDateTime startTime,
-                                    LocalDateTime endTime,
+                                    LocalDateTime startDateTime,
+                                    LocalDateTime endDateTime,
                                     int baseIntervalMinutes,
                                     int baseFee,
                                     int extraIntervalMinutes,
@@ -47,8 +47,8 @@ public class ParkingLotOperationRead {
         this.id = id;
         this.parkingLotUuid = parkingLotUuid;
         this.operationDate = operationDate;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
         this.baseIntervalMinutes = baseIntervalMinutes;
         this.baseFee = baseFee;
         this.extraIntervalMinutes = extraIntervalMinutes;
