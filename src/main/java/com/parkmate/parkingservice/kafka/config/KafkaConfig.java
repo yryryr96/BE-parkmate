@@ -1,6 +1,7 @@
 package com.parkmate.parkingservice.kafka.config;
 
 import com.parkmate.parkingservice.common.utils.CustomSerializer;
+import com.parkmate.parkingservice.kafka.event.OperationCreatedEvent;
 import com.parkmate.parkingservice.kafka.event.ParkingLotCreatedEvent;
 import com.parkmate.parkingservice.kafka.event.ReactionUpdatedEvent;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -58,5 +59,15 @@ public class KafkaConfig {
     @Bean(name = "parkingLotCreatedKafkaTemplate")
     public KafkaTemplate<String, ParkingLotCreatedEvent> parkingLotCreatedKafkaTemplate() {
         return new KafkaTemplate<>(parkingLotCreatedFactory());
+    }
+
+    @Bean
+    public ProducerFactory<String, OperationCreatedEvent> operationCreatedFactory() {
+        return new DefaultKafkaProducerFactory<>(parkingLotProducerConfigs());
+    }
+
+    @Bean(name = "operationCreatedKafkaTemplate")
+    public KafkaTemplate<String, OperationCreatedEvent> operationCreatedKafkaTemplate() {
+        return new KafkaTemplate<>(operationCreatedFactory());
     }
 }

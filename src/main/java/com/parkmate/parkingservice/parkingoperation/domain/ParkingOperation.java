@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 
 @Document(collection = "parking_operations")
 @Getter
+@CompoundIndex(def = "{'parkingLotUuid': 1, 'operationDate': 1}", unique = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ParkingOperation extends BaseEntity {
 

@@ -22,4 +22,7 @@ public interface ParkingOperationMongoRepository extends MongoRepository<Parking
             String parkingLotUuid,
             String parkingOperationUuid
     );
+
+    Optional<ParkingOperation> findByParkingLotUuidAndOperationDate(String parkingLotUuid,
+                                                 LocalDate operationDate);
 }

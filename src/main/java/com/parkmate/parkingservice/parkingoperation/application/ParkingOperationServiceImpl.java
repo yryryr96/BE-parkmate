@@ -2,11 +2,13 @@ package com.parkmate.parkingservice.parkingoperation.application;
 
 import com.parkmate.parkingservice.common.exception.BaseException;
 import com.parkmate.parkingservice.common.response.ResponseStatus;
+import com.parkmate.parkingservice.kafka.event.OperationCreatedEvent;
 import com.parkmate.parkingservice.parkingoperation.domain.ParkingOperation;
 import com.parkmate.parkingservice.parkingoperation.dto.request.*;
 import com.parkmate.parkingservice.parkingoperation.dto.response.ParkingOperationResponseDto;
 import com.parkmate.parkingservice.parkingoperation.infrastructure.ParkingOperationMongoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,12 +19,25 @@ import java.util.List;
 public class ParkingOperationServiceImpl implements ParkingOperationService {
 
     private final ParkingOperationMongoRepository parkingOperationMongoRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     @Override
     public void register(ParkingOperationRegisterRequestDto parkingOperationCreateRequestDto) {
-        parkingOperationMongoRepository.save(
+
+        parkingOperationMongoRepository.findByParkingLotUuidAndOperationDate(
+                parkingOperationCreateRequestDto.getParkingLotUuid(),
+                parkingOperationCreateRequestDto.getOperationDate()
+        ).ifPresent(parkingOperation -> {
+            throw new BaseException(ResponseStatus.DUPLICATE_RESOURCE);
+        });
+
+        ParkingOperation operation = parkingOperationMongoRepository.save(
                 parkingOperationCreateRequestDto.toEntity()
+        );
+
+        eventPublisher.publishEvent(
+                OperationCreatedEvent.from(operation)
         );
     }
 

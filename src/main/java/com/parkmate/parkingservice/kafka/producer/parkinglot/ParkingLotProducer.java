@@ -1,4 +1,4 @@
-package com.parkmate.parkingservice.kafka.producer;
+package com.parkmate.parkingservice.kafka.producer.parkinglot;
 
 import com.parkmate.parkingservice.kafka.event.ParkingLotCreatedEvent;
 import com.parkmate.parkingservice.kafka.event.ReactionUpdatedEvent;
@@ -13,7 +13,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class KafkaProducer {
+public class ParkingLotProducer {
 
     private final KafkaTemplate<String, ReactionUpdatedEvent> parkingLotReactionsKafkaTemplate;
     private final KafkaTemplate<String, ParkingLotCreatedEvent> parkingLotCreatedKafkaTemplate;
