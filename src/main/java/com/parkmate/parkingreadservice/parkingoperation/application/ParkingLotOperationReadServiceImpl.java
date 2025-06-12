@@ -31,5 +31,7 @@ public class ParkingLotOperationReadServiceImpl implements ParkingLotOperationRe
                 startDateTime,
                 endDateTime
         );
+
+        return null;
     }
 }

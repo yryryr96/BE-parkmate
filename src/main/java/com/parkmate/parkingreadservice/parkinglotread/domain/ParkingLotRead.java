@@ -20,7 +20,6 @@ public class ParkingLotRead {
     @Id
     private String id;
 
-//    @Indexed(unique = true)
     @TextIndexed
     private String parkingLotUuid;
     private String hostUuid;
@@ -30,6 +29,7 @@ public class ParkingLotRead {
     private String address;
     private double latitude;
     private double longitude;
+    private int capacity;
     private String parkingLotType;
     private Set<String> parkingSpotTypes;
     private Boolean isEvChargingAvailable;
@@ -50,6 +50,7 @@ public class ParkingLotRead {
                            String address,
                            double latitude,
                            double longitude,
+                           int capacity,
                            String parkingLotType,
                            Set<String> parkingSpotTypes,
                            Boolean isEvChargingAvailable,
@@ -68,6 +69,7 @@ public class ParkingLotRead {
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.capacity = capacity;
         this.parkingLotType = parkingLotType;
         this.parkingSpotTypes = parkingSpotTypes;
         this.isEvChargingAvailable = isEvChargingAvailable;

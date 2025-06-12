@@ -15,8 +15,8 @@ public class OperationCreateEvent {
 
     private String parkingLotUuid;
     private LocalDate operationDate;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private LocalDateTime startDateTime;
+    private LocalDateTime endDateTime;
     private int baseIntervalMinutes;
     private int baseFee;
     private int extraIntervalMinutes;
@@ -27,8 +27,8 @@ public class OperationCreateEvent {
         return ParkingLotOperationRead.builder()
                 .parkingLotUuid(parkingLotUuid)
                 .operationDate(operationDate)
-                .startTime(startTime)
-                .endTime(endTime)
+                .startDateTime(startDateTime)
+                .endDateTime(endDateTime)
                 .baseIntervalMinutes(baseIntervalMinutes)
                 .baseFee(baseFee)
                 .extraIntervalMinutes(extraIntervalMinutes)
