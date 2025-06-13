@@ -14,8 +14,8 @@ public class OperationCreatedEvent {
 
     private String parkingLotUuid;
     private LocalDate operationDate;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private LocalDateTime startDateTime;
+    private LocalDateTime endDateTime;
     private int baseIntervalMinutes;
     private int baseFee;
     private int extraIntervalMinutes;
@@ -25,8 +25,8 @@ public class OperationCreatedEvent {
     @Builder
     private OperationCreatedEvent(String parkingLotUuid,
                                  LocalDate operationDate,
-                                 LocalDateTime startTime,
-                                 LocalDateTime endTime,
+                                 LocalDateTime startDateTime,
+                                 LocalDateTime endDateTime,
                                  int baseIntervalMinutes,
                                  int baseFee,
                                  int extraIntervalMinutes,
@@ -34,8 +34,8 @@ public class OperationCreatedEvent {
                                  double discountRate) {
         this.parkingLotUuid = parkingLotUuid;
         this.operationDate = operationDate;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
         this.baseIntervalMinutes = baseIntervalMinutes;
         this.baseFee = baseFee;
         this.extraIntervalMinutes = extraIntervalMinutes;
@@ -47,8 +47,8 @@ public class OperationCreatedEvent {
         return OperationCreatedEvent.builder()
                 .parkingLotUuid(operation.getParkingLotUuid())
                 .operationDate(operation.getOperationDate())
-                .startTime(operation.getValidStartTime())
-                .endTime(operation.getValidEndTime())
+                .startDateTime(operation.getValidStartTime())
+                .endDateTime(operation.getValidEndTime())
                 .baseIntervalMinutes(operation.getBaseIntervalMinutes())
                 .baseFee(operation.getBaseFee())
                 .extraIntervalMinutes(operation.getExtraIntervalMinutes())
