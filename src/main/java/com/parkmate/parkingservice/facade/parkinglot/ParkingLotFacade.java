@@ -1,6 +1,6 @@
-package com.parkmate.parkingservice.facade;
+package com.parkmate.parkingservice.facade.parkinglot;
 
-import com.parkmate.parkingservice.facade.dto.ParkingLotRegisterRequest;
+import com.parkmate.parkingservice.facade.parkinglot.dto.ParkingLotRegisterRequest;
 import com.parkmate.parkingservice.kafka.event.ParkingLotCreatedEvent;
 import com.parkmate.parkingservice.parkinglot.application.ParkingLotService;
 import com.parkmate.parkingservice.parkinglot.domain.ParkingLot;

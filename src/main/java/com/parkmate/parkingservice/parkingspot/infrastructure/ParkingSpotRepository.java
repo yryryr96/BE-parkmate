@@ -1,6 +1,7 @@
 package com.parkmate.parkingservice.parkingspot.infrastructure;
 
 import com.parkmate.parkingservice.parkingspot.domain.ParkingSpot;
+import com.parkmate.parkingservice.parkingspot.domain.ParkingSpotType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -16,4 +17,7 @@ public interface ParkingSpotRepository extends JpaRepository<ParkingSpot, Long> 
                                                     String parkingLotUuid);
 
     List<ParkingSpot> findAllByParkingLotUuid(String parkingLotUuid);
+
+    List<ParkingSpot> findAllByParkingLotUuidAndType(String parkingLotUuid,
+                                        ParkingSpotType parkingSpotType);
 }
