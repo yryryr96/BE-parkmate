@@ -8,9 +8,12 @@ import com.parkmate.parkingreadservice.geo.dto.response.GeoParkingLotResponseDto
 import com.parkmate.parkingreadservice.geo.dto.response.GeoParkingLotResponseDtoList;
 import com.parkmate.parkingreadservice.geo.dto.response.GeoSearchResult;
 import com.parkmate.parkingreadservice.parkinglotread.application.ParkingLotReadService;
+import com.parkmate.parkingreadservice.parkingoperation.application.ParkingLotOperationReadService;
+import com.parkmate.parkingreadservice.parkingoperation.dto.response.ParkingLotOperationResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -20,6 +23,7 @@ public class ParkingLotFacade {
 
     private final ParkingLotReadService parkingLotReadService;
     private final GeoService geoService;
+    private final ParkingLotOperationReadService operationService;
     private final RedisUtil<String, GeoParkingLotResponseDto> redisUtil;
 
     public GeoParkingLotResponseDtoList getParkingLotsNearby(NearbyParkingLotRequestDto nearbyParkingLotRequestDto) {
@@ -31,7 +35,24 @@ public class ParkingLotFacade {
     public GeoParkingLotResponseDtoList getParkingLotsInBox(InBoxParkingLotRequestDto inBoxParkingLotRequestDto) {
 
         List<GeoSearchResult> parkingLotsInBox = geoService.getParkingLotsInBox(inBoxParkingLotRequestDto);
-        return getGeoParkingLotResponseDtoList(parkingLotsInBox);
+
+        GeoParkingLotResponseDtoList geoResults = getGeoParkingLotResponseDtoList(parkingLotsInBox);
+        List<GeoParkingLotResponseDto> geoParkingLots = geoResults.getParkingLots();
+
+        LocalDateTime requestStart = LocalDateTime.now();
+        LocalDateTime requestEnd = requestStart.plusHours(5);
+
+        Set<String> operationResultSet = operationService.getOperationsByUuidAndDateRange(
+                geoParkingLots.stream()
+                        .map(GeoParkingLotResponseDto::getParkingLotUuid)
+                        .toList(),
+                requestStart,
+                requestEnd
+        );
+
+        return GeoParkingLotResponseDtoList.from(geoParkingLots.stream()
+                .filter(pr -> operationResultSet.contains(pr.getParkingLotUuid()))
+                .toList());
     }
 
     private GeoParkingLotResponseDtoList getGeoParkingLotResponseDtoList(List<GeoSearchResult> geoSearchResults) {

@@ -1,16 +1,16 @@
 package com.parkmate.parkingreadservice.parkingoperation.application;
 
 import com.parkmate.parkingreadservice.kafka.event.OperationCreateEvent;
-import com.parkmate.parkingreadservice.parkingoperation.dto.response.ParkingLotOperationResponseDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 public interface ParkingLotOperationReadService {
 
     void create(OperationCreateEvent operationCreateEvent);
 
-    List<ParkingLotOperationResponseDto> getOperationsByUuidAndDateRange(
+    Set<String> getOperationsByUuidAndDateRange(
             List<String> parkingLotUuids,
             LocalDateTime startDateTime,
             LocalDateTime endDateTime

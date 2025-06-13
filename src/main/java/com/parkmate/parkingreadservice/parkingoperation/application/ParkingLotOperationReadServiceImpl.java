@@ -8,18 +8,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +22,6 @@ import java.util.stream.Stream;
 public class ParkingLotOperationReadServiceImpl implements ParkingLotOperationReadService {
 
     private final ParkingLotOperationRepository parkingLotOperationRepository;
-    private final StandardServletMultipartResolver standardServletMultipartResolver;
 
     @Async
     @Override
@@ -36,9 +30,9 @@ public class ParkingLotOperationReadServiceImpl implements ParkingLotOperationRe
     }
 
     @Override
-    public List<ParkingLotOperationResponseDto> getOperationsByUuidAndDateRange(List<String> parkingLotUuids,
-                                                                                LocalDateTime requestStart,
-                                                                                LocalDateTime requestEnd) {
+    public Set<String> getOperationsByUuidAndDateRange(List<String> parkingLotUuids,
+                                                       LocalDateTime requestStart,
+                                                       LocalDateTime requestEnd) {
 
         LocalDate requestStartDate = requestStart.toLocalDate();
         LocalDate requestEndDate = requestEnd.toLocalDate();
@@ -61,12 +55,12 @@ public class ParkingLotOperationReadServiceImpl implements ParkingLotOperationRe
                                         .collect(Collectors.toList())
                         )));
 
-        List<ParkingLotOperationResponseDto> result = new ArrayList<>();
+        Set<String> result = new HashSet<>();
         for (List<ParkingLotOperationRead> value : operationMap.values()) {
             if (isEntirePeriodValid(value, requestStart, requestEnd)) {
 
                 value.stream()
-                        .map(ParkingLotOperationResponseDto::from)
+                        .map(ParkingLotOperationRead::getParkingLotUuid)
                         .forEach(result::add);
             }
         }

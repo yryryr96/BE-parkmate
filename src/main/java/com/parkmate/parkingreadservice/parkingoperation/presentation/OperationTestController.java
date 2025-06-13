@@ -16,17 +16,17 @@ public class OperationTestController {
 
     private final ParkingLotOperationReadService parkingLotOperationReadService;
 
-    @GetMapping("/{parkingLotUuid}")
-    public ApiResponse<List<ParkingLotOperationResponseDto>> testOperation(@PathVariable String parkingLotUuid,
-                                                                           @RequestParam LocalDateTime requestStart,
-                                                                           @RequestParam LocalDateTime requestEnd) {
-
-        return ApiResponse.ok(
-                parkingLotOperationReadService.getOperationsByUuidAndDateRange(
-                        List.of(parkingLotUuid),
-                        requestStart,
-                        requestEnd
-                )
-        );
-    }
+//    @GetMapping("/{parkingLotUuid}")
+//    public ApiResponse<List<ParkingLotOperationResponseDto>> testOperation(@PathVariable String parkingLotUuid,
+//                                                                           @RequestParam LocalDateTime requestStart,
+//                                                                           @RequestParam LocalDateTime requestEnd) {
+//
+//        return ApiResponse.ok(
+//                parkingLotOperationReadService.getOperationsByUuidAndDateRange(
+//                        List.of(parkingLotUuid),
+//                        requestStart,
+//                        requestEnd
+//                )
+//        );
+//    }
 }
