@@ -1,4 +1,4 @@
-package com.parkmate.parkingreadservice.geo.vo;
+package com.parkmate.parkingreadservice.geo.vo.response;
 
 import lombok.Builder;
 import lombok.Getter;

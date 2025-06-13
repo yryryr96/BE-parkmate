@@ -1,6 +1,6 @@
 package com.parkmate.parkingreadservice.geo.dto.response;
 
-import com.parkmate.parkingreadservice.geo.vo.GeoParkingLotResponseVoList;
+import com.parkmate.parkingreadservice.geo.vo.response.GeoParkingLotResponseVoList;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -9,7 +9,6 @@ import com.parkmate.parkingreadservice.geo.dto.response.GeoParkingLotResponseDto
 import com.parkmate.parkingreadservice.geo.dto.response.GeoSearchResult;
 import com.parkmate.parkingreadservice.parkinglotread.application.ParkingLotReadService;
 import com.parkmate.parkingreadservice.parkingoperation.application.ParkingLotOperationReadService;
-import com.parkmate.parkingreadservice.parkingoperation.dto.response.ParkingLotOperationResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +41,7 @@ public class ParkingLotFacade {
         LocalDateTime requestStart = LocalDateTime.now();
         LocalDateTime requestEnd = requestStart.plusHours(5);
 
-        Set<String> operationResultSet = operationService.getOperationsByUuidAndDateRange(
+        Set<String> operationResultSet = operationService.validateOperationByUuidAndDateRange(
                 geoParkingLots.stream()
                         .map(GeoParkingLotResponseDto::getParkingLotUuid)
                         .toList(),
