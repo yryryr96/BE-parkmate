@@ -1,6 +1,6 @@
-package com.parkmate.reservationservice.common.config;
+package com.parkmate.reservationservice.kafka.config;
 
-import com.parkmate.reservationservice.reservation.event.ReservationEvent;
+import com.parkmate.reservationservice.kafka.event.ReservationEvent;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;

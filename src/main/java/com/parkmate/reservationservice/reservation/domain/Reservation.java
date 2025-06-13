@@ -19,7 +19,7 @@ public class Reservation extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Comment( "예약 코드")
+    @Comment("예약 코드")
     @Column(unique = true, nullable = false)
     private String reservationCode;
 
