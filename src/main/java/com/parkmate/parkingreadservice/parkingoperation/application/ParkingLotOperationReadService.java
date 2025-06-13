@@ -10,7 +10,7 @@ public interface ParkingLotOperationReadService {
 
     void create(OperationCreateEvent operationCreateEvent);
 
-    Set<String> validateOperationByUuidAndDateRange(
+    Set<String> findAvailableParkingLotUuids(
             List<String> parkingLotUuids,
             LocalDateTime startDateTime,
             LocalDateTime endDateTime

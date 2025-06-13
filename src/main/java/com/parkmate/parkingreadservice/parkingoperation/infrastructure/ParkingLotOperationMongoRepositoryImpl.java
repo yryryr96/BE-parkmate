@@ -26,8 +26,8 @@ public class ParkingLotOperationMongoRepositoryImpl implements ParkingLotOperati
     }
 
     @Override
-    public List<ParkingLotOperationRead> findAllByUuidAndOperationDateBetween(List<String> parkingLotUuids,
-                                                                              List<LocalDate> dates) {
+    public List<ParkingLotOperationRead> findAvailableParkingLotUuids(List<String> parkingLotUuids,
+                                                                      List<LocalDate> dates) {
 
         Query query = new Query();
         query.addCriteria(

@@ -10,7 +10,7 @@ public interface ParkingLotOperationMongoRepository {
 
     void create(OperationCreateEvent operationCreateEvent);
 
-    List<ParkingLotOperationRead> findAllByUuidAndOperationDateBetween(List<String> parkingLotUuids,
-                                                                       List<LocalDate> dates);
+    List<ParkingLotOperationRead> findAvailableParkingLotUuids(List<String> parkingLotUuids,
+                                                               List<LocalDate> dates);
 
 }

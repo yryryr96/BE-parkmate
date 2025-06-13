@@ -1,13 +1,9 @@
 package com.parkmate.parkingreadservice.parkingoperation.presentation;
 
-import com.parkmate.parkingreadservice.common.response.ApiResponse;
 import com.parkmate.parkingreadservice.parkingoperation.application.ParkingLotOperationReadService;
-import com.parkmate.parkingreadservice.parkingoperation.dto.response.ParkingLotOperationResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/v1/operations/test")
 @RestController

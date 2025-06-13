@@ -29,14 +29,15 @@ public class ParkingLotOperationReadServiceImpl implements ParkingLotOperationRe
     }
 
     @Override
-    public Set<String> validateOperationByUuidAndDateRange(List<String> parkingLotUuids,
-                                                           LocalDateTime requestStart,
-                                                           LocalDateTime requestEnd) {
+    public Set<String> findAvailableParkingLotUuids(List<String> parkingLotUuids,
+                                                    LocalDateTime requestStart,
+                                                    LocalDateTime requestEnd) {
 
         LocalDate requestStartDate = requestStart.toLocalDate();
         LocalDate requestEndDate = requestEnd.toLocalDate();
+
         List<LocalDate> dates = requestStartDate.datesUntil(requestEndDate.plusDays(1)).toList();
-        List<ParkingLotOperationRead> operations = parkingLotOperationRepository.findAllByUuidAndOperationDateBetween(
+        List<ParkingLotOperationRead> operations = parkingLotOperationRepository.findAvailableParkingLotUuids(
                 parkingLotUuids,
                 dates
         );
@@ -107,6 +108,7 @@ public class ParkingLotOperationReadServiceImpl implements ParkingLotOperationRe
     private boolean isRequestWithinOperation(LocalDateTime requestStart,
                                              LocalDateTime requestEnd,
                                              ParkingLotOperationRead op) {
+
         return (op.getStartDateTime().isBefore(requestStart) || op.getStartDateTime().equals(requestStart)) &&
                (op.getEndDateTime().isAfter(requestEnd) || op.getEndDateTime().equals(requestEnd));
     }

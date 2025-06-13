@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @NoArgsConstructor
@@ -35,13 +36,18 @@ public class InBoxParkingLotRequestDto {
 
     public static InBoxParkingLotRequestDto of(InBoxParkingLotRequestVo inBoxParkingLotRequestVo) {
 
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startDate = inBoxParkingLotRequestVo.getStartDate() == null ? now : inBoxParkingLotRequestVo.getStartDate();
+        LocalDateTime endDate = inBoxParkingLotRequestVo.getEndDate() == null ? LocalDateTime.of(now.toLocalDate(),
+                LocalTime.of(23, 59,59)) : inBoxParkingLotRequestVo.getEndDate();
+
         return InBoxParkingLotRequestDto.builder()
                 .swLat(inBoxParkingLotRequestVo.getSwLat())
                 .swLng(inBoxParkingLotRequestVo.getSwLng())
                 .neLat(inBoxParkingLotRequestVo.getNeLat())
                 .neLng(inBoxParkingLotRequestVo.getNeLng())
-                .startDate(inBoxParkingLotRequestVo.getStartDate())
-                .endDate(inBoxParkingLotRequestVo.getEndDate())
+                .startDate(startDate)
+                .endDate(endDate)
                 .build();
     }
 }
