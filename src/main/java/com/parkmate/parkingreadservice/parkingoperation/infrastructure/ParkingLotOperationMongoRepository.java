@@ -3,6 +3,7 @@ package com.parkmate.parkingreadservice.parkingoperation.infrastructure;
 import com.parkmate.parkingreadservice.kafka.event.OperationCreateEvent;
 import com.parkmate.parkingreadservice.parkingoperation.domain.ParkingLotOperationRead;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -11,7 +12,6 @@ public interface ParkingLotOperationMongoRepository {
     void create(OperationCreateEvent operationCreateEvent);
 
     List<ParkingLotOperationRead> findAllByUuidAndOperationDateBetween(List<String> parkingLotUuids,
-                                                                       LocalDateTime startDateTime,
-                                                                       LocalDateTime endDateTime);
+                                                                       List<LocalDate> dates);
 
 }

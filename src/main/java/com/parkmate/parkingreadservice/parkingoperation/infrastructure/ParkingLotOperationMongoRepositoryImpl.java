@@ -23,20 +23,19 @@ public class ParkingLotOperationMongoRepositoryImpl implements ParkingLotOperati
 
     @Override
     public void create(OperationCreateEvent operationCreateEvent) {
-            mongoTemplate.save(operationCreateEvent.toEntity());
+        mongoTemplate.save(operationCreateEvent.toEntity());
     }
 
     @Override
     public List<ParkingLotOperationRead> findAllByUuidAndOperationDateBetween(List<String> parkingLotUuids,
-                                                                              LocalDateTime startDateTime,
-                                                                              LocalDateTime endDateTime) {
+                                                                              List<LocalDate> dates) {
 
         Query query = new Query();
         query.addCriteria(
                 Criteria.where("parkingLotUuid")
                         .in(parkingLotUuids)
-                        .and("startDateTime").gte(startDateTime)
-                        .and("endDateTime").lte(endDateTime)
+                        .and("operationDate")
+                        .in(dates)
         );
 
         return mongoTemplate.find(query, ParkingLotOperationRead.class);
@@ -45,6 +44,7 @@ public class ParkingLotOperationMongoRepositoryImpl implements ParkingLotOperati
     private Map<String, Object> createUpdateMap(Object object) {
 
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.convertValue(object, new TypeReference<>() {});
+        return mapper.convertValue(object, new TypeReference<>() {
+        });
     }
 }
