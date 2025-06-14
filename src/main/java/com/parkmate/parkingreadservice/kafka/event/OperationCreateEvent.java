@@ -26,7 +26,7 @@ public class OperationCreateEvent {
     public ParkingLotOperationRead toEntity() {
         return ParkingLotOperationRead.builder()
                 .parkingLotUuid(parkingLotUuid)
-                .operationDate(operationDate)
+                .operationDate(startDateTime.toLocalDate().atStartOfDay())
                 .startDateTime(startDateTime)
                 .endDateTime(endDateTime)
                 .baseIntervalMinutes(baseIntervalMinutes)

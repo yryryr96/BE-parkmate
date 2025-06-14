@@ -14,6 +14,7 @@ public class GeoParkingLotResponseVo {
     private double longitude;
     private double latitude;
     private double distance;
+    private int availableSpotCount;
 
     @Builder
     private GeoParkingLotResponseVo(String parkingLotUuid,
@@ -21,12 +22,14 @@ public class GeoParkingLotResponseVo {
                                     String thumbnailUrl,
                                     double longitude,
                                     double latitude,
-                                    double distance) {
+                                    double distance,
+                                    int availableSpotCount) {
         this.parkingLotUuid = parkingLotUuid;
         this.name = name;
         this.thumbnailUrl = thumbnailUrl;
         this.longitude = longitude;
         this.latitude = latitude;
         this.distance = distance;
+        this.availableSpotCount = availableSpotCount;
     }
 }

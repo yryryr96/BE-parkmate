@@ -13,11 +13,13 @@ import java.util.Set;
 @NoArgsConstructor
 public class ParkingLotReadResponseVo {
 
+    private String parkingLotUuid;
     private String hostUuid;
     private Image thumbnailUrl;
     private String name;
     private String phoneNumber;
     private String address;
+    private int capacity;
     private String parkingLotType;
     private Set<String> parkingSpotTypes;
     private Boolean isEvChargingAvailable;
@@ -29,11 +31,13 @@ public class ParkingLotReadResponseVo {
     private int dislikeCount;
 
     @Builder
-    private ParkingLotReadResponseVo(String hostUuid,
+    private ParkingLotReadResponseVo(String parkingLotUuid,
+                                     String hostUuid,
                                      Image thumbnailUrl,
                                      String name,
                                      String phoneNumber,
                                      String address,
+                                     int capacity,
                                      String parkingLotType,
                                      Set<String> parkingSpotTypes,
                                      Boolean isEvChargingAvailable,
@@ -43,11 +47,13 @@ public class ParkingLotReadResponseVo {
                                      List<ParkingLotOption> options,
                                      int likeCount,
                                      int dislikeCount) {
+        this.parkingLotUuid = parkingLotUuid;
         this.hostUuid = hostUuid;
         this.thumbnailUrl = thumbnailUrl;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.capacity = capacity;
         this.parkingLotType = parkingLotType;
         this.parkingSpotTypes = parkingSpotTypes;
         this.isEvChargingAvailable = isEvChargingAvailable;

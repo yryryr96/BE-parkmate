@@ -4,59 +4,136 @@ import com.parkmate.parkingreadservice.common.utils.RedisUtil;
 import com.parkmate.parkingreadservice.geo.application.GeoService;
 import com.parkmate.parkingreadservice.geo.dto.request.InBoxParkingLotRequestDto;
 import com.parkmate.parkingreadservice.geo.dto.request.NearbyParkingLotRequestDto;
-import com.parkmate.parkingreadservice.geo.dto.response.GeoParkingLotResponseDto;
-import com.parkmate.parkingreadservice.geo.dto.response.GeoParkingLotResponseDtoList;
+import com.parkmate.parkingreadservice.geo.dto.response.InBoxParkingLotResponseDto;
+import com.parkmate.parkingreadservice.geo.dto.response.InBoxParkingLotResponseDtoList;
 import com.parkmate.parkingreadservice.geo.dto.response.GeoSearchResult;
 import com.parkmate.parkingreadservice.parkinglotread.application.ParkingLotReadService;
+import com.parkmate.parkingreadservice.parkinglotread.dto.response.ParkingLotReadResponseDto;
 import com.parkmate.parkingreadservice.parkingoperation.application.ParkingLotOperationReadService;
+import com.parkmate.parkingreadservice.reservation.application.ReservationRecordService;
+import com.parkmate.parkingreadservice.reservation.dto.response.ReserveParkingLotResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ParkingLotFacade {
 
     private final ParkingLotReadService parkingLotReadService;
-    private final GeoService geoService;
     private final ParkingLotOperationReadService operationService;
-    private final RedisUtil<String, GeoParkingLotResponseDto> redisUtil;
+    private final ReservationRecordService reservationRecordService;
+    private final GeoService geoService;
+    private final RedisUtil<String, ParkingLotReadResponseDto> redisUtil;
 
-    public GeoParkingLotResponseDtoList getParkingLotsNearby(NearbyParkingLotRequestDto nearbyParkingLotRequestDto) {
+    public InBoxParkingLotResponseDtoList getParkingLotsNearby(NearbyParkingLotRequestDto nearbyParkingLotRequestDto) {
 
         List<GeoSearchResult> nearbyParkingLots = geoService.getParkingLotsNearby(nearbyParkingLotRequestDto);
-        return GeoParkingLotResponseDtoList.from(resolveParkingLotDetails(nearbyParkingLots));
+//        GeoParkingLotResponseDtoList.from(resolveParkingLotDetails(nearbyParkingLots));
+        return null;
     }
 
-    public GeoParkingLotResponseDtoList getParkingLotsInBox(InBoxParkingLotRequestDto inBoxParkingLotRequestDto) {
+    public InBoxParkingLotResponseDtoList getParkingLotsInBox(InBoxParkingLotRequestDto inBoxParkingLotRequestDto) {
 
         List<GeoSearchResult> parkingLotsInBox = geoService.getParkingLotsInBox(inBoxParkingLotRequestDto);
-        List<GeoParkingLotResponseDto> geoParkingLots = resolveParkingLotDetails(parkingLotsInBox);
+        List<ParkingLotReadResponseDto> parkingLotReadResponseDtos = resolveParkingLotDetails(parkingLotsInBox);
 
-        List<GeoParkingLotResponseDto> availableParkingLots = filterByOperations(inBoxParkingLotRequestDto, geoParkingLots);
+        LocalDateTime startDateTime = inBoxParkingLotRequestDto.getStartDateTime();
+        LocalDateTime endDateTime = inBoxParkingLotRequestDto.getEndDateTime();
 
-        return GeoParkingLotResponseDtoList.from(availableParkingLots);
-    }
-
-    private List<GeoParkingLotResponseDto> filterByOperations(InBoxParkingLotRequestDto inBoxParkingLotRequestDto,
-                                                                        List<GeoParkingLotResponseDto> geoParkingLots) {
-
-        Set<String> operationResultSet = operationService.findAvailableParkingLotUuids(
-                geoParkingLots.stream()
-                        .map(GeoParkingLotResponseDto::getParkingLotUuid)
-                        .toList(),
-                inBoxParkingLotRequestDto.getStartDate(),
-                inBoxParkingLotRequestDto.getEndDate()
+        List<ParkingLotReadResponseDto> filteredParkingLotsByOperation = filterByOperations(
+                parkingLotReadResponseDtos,
+                startDateTime,
+                endDateTime
         );
 
-        return geoParkingLots.stream()
+        List<ParkingLotReadResponseDto> filteredParkingLotsByReservation = filterByReservationRecord(
+                filteredParkingLotsByOperation,
+                startDateTime,
+                endDateTime
+        );
+
+        Map<String, GeoSearchResult> map = parkingLotsInBox.stream()
+                .collect(Collectors.toMap(
+                        GeoSearchResult::getParkingLotUuid,
+                        geoSearchResult -> geoSearchResult
+                ));
+
+        List<InBoxParkingLotResponseDto> result = filteredParkingLotsByReservation.stream()
+                .map(p -> {
+                    GeoSearchResult geoSearchResult = map.get(p.getParkingLotUuid());
+                    return InBoxParkingLotResponseDto.from(
+                            p,
+                            geoSearchResult.getLatitude(),
+                            geoSearchResult.getLongitude(),
+                            geoSearchResult.getDistance()
+                    );
+                })
+                .toList();
+
+        return InBoxParkingLotResponseDtoList.from(result);
+    }
+
+    private List<ParkingLotReadResponseDto> filterByReservationRecord(List<ParkingLotReadResponseDto> parkingLots,
+                                                                      LocalDateTime startDateTime,
+                                                                      LocalDateTime endDateTime) {
+
+        Map<String, ParkingLotReadResponseDto> map = parkingLots.stream()
+                .collect(Collectors.toMap(
+                        ParkingLotReadResponseDto::getParkingLotUuid,
+                        parkingLotReadResponseDto -> parkingLotReadResponseDto
+                ));
+
+        List<ReserveParkingLotResponseDto> reservedParkingLotInfos = reservationRecordService.getParkingLotUuidsByUuidsAndDates(
+                parkingLots.stream()
+                        .map(ParkingLotReadResponseDto::getParkingLotUuid)
+                        .toList(),
+                startDateTime,
+                endDateTime
+        );
+
+        if (reservedParkingLotInfos == null || reservedParkingLotInfos.isEmpty()) {
+            return parkingLots;
+        }
+
+        List<ParkingLotReadResponseDto> results = new ArrayList<>();
+        for (ReserveParkingLotResponseDto reservedParkingLotInfo : reservedParkingLotInfos) {
+
+            String parkingLotUuid = reservedParkingLotInfo.getParkingLotUuid();
+            int reservedSpotCount = reservedParkingLotInfo.getReservedSpotCount();
+            int availableSpotCount = map.get(parkingLotUuid).getCapacity() - reservedSpotCount;
+
+            if (availableSpotCount > 0) {
+                results.add(map.get(parkingLotUuid).changeCapacity(availableSpotCount));
+            }
+        }
+
+        return results;
+    }
+
+    private List<ParkingLotReadResponseDto> filterByOperations(List<ParkingLotReadResponseDto> parkingLots,
+                                                               LocalDateTime startDateTime,
+                                                               LocalDateTime endDateTime) {
+
+        Set<String> operationResultSet = operationService.findAvailableParkingLotUuids(
+                parkingLots.stream()
+                        .map(ParkingLotReadResponseDto::getParkingLotUuid)
+                        .toList(),
+                startDateTime,
+                endDateTime
+        );
+
+        return parkingLots.stream()
                 .filter(pr -> operationResultSet.contains(pr.getParkingLotUuid()))
                 .toList();
     }
 
-    private List<GeoParkingLotResponseDto> resolveParkingLotDetails(List<GeoSearchResult> geoSearchResults) {
+    private List<ParkingLotReadResponseDto> resolveParkingLotDetails(List<GeoSearchResult> geoSearchResults) {
 
         if (geoSearchResults == null || geoSearchResults.isEmpty()) {
             return Collections.emptyList();
@@ -66,14 +143,15 @@ public class ParkingLotFacade {
                 .map(GeoSearchResult::getParkingLotUuid)
                 .toList();
 
-        List<GeoParkingLotResponseDto> cachedParkingLots = redisUtil.nullableMultiSelect(allUuids);
-        Map<String, GeoParkingLotResponseDto> resultMap = new HashMap<>();
+        List<ParkingLotReadResponseDto> cachedParkingLots = redisUtil.nullableMultiSelect(allUuids);
+        Map<String, ParkingLotReadResponseDto> resultMap = new HashMap<>();
         List<String> nonCachedUuids = new ArrayList<>();
 
         for (int idx = 0; idx < allUuids.size(); idx++) {
-            GeoParkingLotResponseDto dto = cachedParkingLots.get(idx);
+            ParkingLotReadResponseDto dto = cachedParkingLots.get(idx);
             if (dto != null) {
-                resultMap.put(allUuids.get(idx), dto);
+                resultMap.put(allUuids.get(idx),
+                        dto);
             } else {
                 nonCachedUuids.add(allUuids.get(idx));
             }
@@ -83,26 +161,17 @@ public class ParkingLotFacade {
             return new ArrayList<>(resultMap.values());
         }
 
-        Map<String, Double> distanceMap = geoSearchResults.stream()
-                .filter(result -> nonCachedUuids.contains(result.getParkingLotUuid()))
+        List<ParkingLotReadResponseDto> nonCachedParkingLots = parkingLotReadService.getParkingLotsByUuids(nonCachedUuids);
+        Map<String, ParkingLotReadResponseDto> nonCachedMap = nonCachedParkingLots.stream()
                 .collect(Collectors.toMap(
-                        GeoSearchResult::getParkingLotUuid,
-                        GeoSearchResult::getDistance
-                ));
-
-        List<GeoParkingLotResponseDto> nonCachedParkingLots = parkingLotReadService.getParkingLotsByUuids(nonCachedUuids);
-        Map<String, GeoParkingLotResponseDto> nonCachedMap = nonCachedParkingLots.stream()
-                .collect(Collectors.toMap(
-                                GeoParkingLotResponseDto::getParkingLotUuid,
-                                dto -> dto.withDistance(distanceMap.get(dto.getParkingLotUuid()))
+                                ParkingLotReadResponseDto::getParkingLotUuid,
+                                parkingLotReadResponseDto -> parkingLotReadResponseDto
                         )
                 );
 
         resultMap.putAll(nonCachedMap);
         redisUtil.multiInsert(nonCachedMap);
 
-        List<GeoParkingLotResponseDto> finalDetails = new ArrayList<>(resultMap.values());
-        finalDetails.sort(Comparator.comparing(GeoParkingLotResponseDto::getDistance));
-        return finalDetails;
+        return new ArrayList<>(resultMap.values());
     }
 }

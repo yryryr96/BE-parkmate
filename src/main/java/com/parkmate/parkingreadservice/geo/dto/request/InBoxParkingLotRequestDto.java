@@ -16,38 +16,42 @@ public class InBoxParkingLotRequestDto {
     private double swLng;
     private double neLat;
     private double neLng;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private boolean isEvChargingAvailable;
+    private LocalDateTime startDateTime;
+    private LocalDateTime endDateTime;
 
     @Builder
     private InBoxParkingLotRequestDto(double swLat,
                                       double swLng,
                                       double neLat,
                                       double neLng,
-                                      LocalDateTime startDate,
-                                      LocalDateTime endDate) {
+                                      boolean isEvChargingAvailable,
+                                      LocalDateTime startDateTime,
+                                      LocalDateTime endDateTime) {
         this.swLat = swLat;
         this.swLng = swLng;
         this.neLat = neLat;
         this.neLng = neLng;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.isEvChargingAvailable = isEvChargingAvailable;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
     }
 
     public static InBoxParkingLotRequestDto of(InBoxParkingLotRequestVo inBoxParkingLotRequestVo) {
 
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime startDate = inBoxParkingLotRequestVo.getStartDate() == null ? now : inBoxParkingLotRequestVo.getStartDate();
-        LocalDateTime endDate = inBoxParkingLotRequestVo.getEndDate() == null ? LocalDateTime.of(now.toLocalDate(),
-                LocalTime.of(23, 59,59)) : inBoxParkingLotRequestVo.getEndDate();
+        LocalDateTime startDateTime = inBoxParkingLotRequestVo.getStartDateTime() == null ? now : inBoxParkingLotRequestVo.getStartDateTime();
+        LocalDateTime endDateTime = inBoxParkingLotRequestVo.getEndDateTime() == null ? LocalDateTime.of(now.toLocalDate(),
+                LocalTime.of(23, 59,59)) : inBoxParkingLotRequestVo.getEndDateTime();
 
         return InBoxParkingLotRequestDto.builder()
                 .swLat(inBoxParkingLotRequestVo.getSwLat())
                 .swLng(inBoxParkingLotRequestVo.getSwLng())
                 .neLat(inBoxParkingLotRequestVo.getNeLat())
                 .neLng(inBoxParkingLotRequestVo.getNeLng())
-                .startDate(startDate)
-                .endDate(endDate)
+                .isEvChargingAvailable(inBoxParkingLotRequestVo.isEvChargingAvailable())
+                .startDateTime(startDateTime)
+                .endDateTime(endDateTime)
                 .build();
     }
 }
