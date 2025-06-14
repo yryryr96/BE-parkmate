@@ -1,7 +1,7 @@
 package com.parkmate.parkingservice.kafka.producer.operation;
 
 import com.parkmate.parkingservice.kafka.event.OperationCreatedEvent;
-import com.parkmate.parkingservice.kafka.properties.KafkaTopicProperties;
+import com.parkmate.parkingservice.kafka.constant.KafkaTopics;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -14,13 +14,12 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Slf4j
 public class OperationProducer {
 
-    private final KafkaTopicProperties kafkaTopicProperties;
     private final KafkaTemplate<String, OperationCreatedEvent> operationCreatedKafkaTemplate;
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void sendOperationCreatedEvent(OperationCreatedEvent operationCreatedEvent) {
         operationCreatedKafkaTemplate.send(
-                kafkaTopicProperties.getParkingLotOperationCreated(),
+                KafkaTopics.parkingLotOperationCreated,
                 operationCreatedEvent.getParkingLotUuid(),
                 operationCreatedEvent
         );
