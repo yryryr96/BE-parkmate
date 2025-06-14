@@ -21,8 +21,7 @@ public class MongoConfig {
     public MappingMongoConverter mappingMongoConverter(
             MongoDatabaseFactory mongoDatabaseFactory,
             MongoMappingContext mongoMappingContext,
-            MongoCustomConversions mongoCustomConversions // (1)에서 만든 Bean을 주입받습니다.
-    ) {
+            MongoCustomConversions mongoCustomConversions) {
         DbRefResolver dbRefResolver = new DefaultDbRefResolver(mongoDatabaseFactory);
         MappingMongoConverter converter = new MappingMongoConverter(dbRefResolver, mongoMappingContext);
 
