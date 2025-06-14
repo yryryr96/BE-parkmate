@@ -3,7 +3,7 @@ package com.parkmate.reservationservice.reservation.application;
 import com.parkmate.reservationservice.common.exception.BaseException;
 import com.parkmate.reservationservice.common.generator.ReservationCodeGenerator;
 import com.parkmate.reservationservice.common.response.ResponseStatus;
-import com.parkmate.reservationservice.kafka.event.ReservationEvent;
+import com.parkmate.reservationservice.kafka.event.ReservationCreateEvent;
 import com.parkmate.reservationservice.reservation.domain.Reservation;
 import com.parkmate.reservationservice.reservation.domain.ReservationStatus;
 import com.parkmate.reservationservice.reservation.dto.request.ReservationCancelRequestDto;
@@ -43,14 +43,17 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void reserve(ReservationCreateRequestDto reservationCreateRequestDto) {
 
+        log.info("=====================1=========================");
         ParkingSpotResponse clientResponse = fetchPotentialParkingSpots(reservationCreateRequestDto);
 
+        log.info("=====================2=========================");
         Set<Long> unAvailableParkingSpotIds = getUnavailableParkingSpotIds(
                 clientResponse.getParkingLotUuid(),
                 reservationCreateRequestDto.getEntryTime(),
                 reservationCreateRequestDto.getExitTime()
         );
 
+        log.info("=====================3=========================");
         ParkingSpot availableSpot = findFirstAvailableSpot(clientResponse.getParkingSpots(),
                 unAvailableParkingSpotIds);
 
@@ -69,7 +72,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         reservationRepository.save(reservation);
 
-        eventPublisher.publishEvent(ReservationEvent.from(clientResponse.getHostUuid(), reservation));
+        eventPublisher.publishEvent(ReservationCreateEvent.from(clientResponse.getHostUuid(), reservation));
     }
 
     private ParkingSpotResponse fetchPotentialParkingSpots(ReservationCreateRequestDto reservationCreateRequestDto) {
@@ -84,17 +87,22 @@ public class ReservationServiceImpl implements ReservationService {
                 requestDates
         );
 
-        ParkingSpotResponse clientResponse = parkingServiceClient.getParkingSpots(parkingSpotRequest);
+        ParkingSpotResponse clientResponse = parkingServiceClient.getParkingSpots(parkingSpotRequest)
+                .orElseThrow(
+                        () -> new BaseException(ResponseStatus.PARKING_LOT_NOT_AVAILABLE)
+                );
 
-        if (clientResponse.getParkingSpots().isEmpty()) {
+        if (clientResponse.getParkingSpots() == null || clientResponse.getParkingSpots().isEmpty()) {
             throw new BaseException(ResponseStatus.PARKING_LOT_NOT_AVAILABLE);
         }
+
         return clientResponse;
     }
 
     private Set<Long> getUnavailableParkingSpotIds(String parkingLotUuid,
                                                    LocalDateTime entryTime,
                                                    LocalDateTime exitTime) {
+
         List<Reservation> existingReservations = reservationRepository.findAllByParkingLotUuidAndStatus(
                 parkingLotUuid,
                 entryTime,
@@ -108,7 +116,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     private ParkingSpot findFirstAvailableSpot(List<ParkingSpot> parkingSpots,
-                                                      Set<Long> unAvailableParkingSpotIds) {
+                                               Set<Long> unAvailableParkingSpotIds) {
 
         return parkingSpots.stream()
                 .filter(parkingSpot -> !unAvailableParkingSpotIds.contains(parkingSpot.getId()))

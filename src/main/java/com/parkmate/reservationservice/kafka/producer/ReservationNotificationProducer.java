@@ -1,6 +1,7 @@
 package com.parkmate.reservationservice.kafka.producer;
 
-import com.parkmate.reservationservice.kafka.event.ReservationEvent;
+import com.parkmate.reservationservice.kafka.event.ReservationCreateEvent;
+import com.parkmate.reservationservice.kafka.properties.KafkaTopics;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -13,14 +14,12 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Slf4j
 public class ReservationNotificationProducer {
 
-    private final KafkaTemplate<String, ReservationEvent> kafkaTemplate;
-
-    private static final String TOPIC = "reservation.reservation.created";
+    private final KafkaTemplate<String, ReservationCreateEvent> kafkaTemplate;
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void send(ReservationEvent reservationEvent) {
+    public void send(ReservationCreateEvent reservationCreateEvent) {
 
-        kafkaTemplate.send(TOPIC, reservationEvent);
-        log.info("Reservation notification sent: {}", reservationEvent);
+        kafkaTemplate.send(KafkaTopics.reservationCreated, reservationCreateEvent);
+        log.info("Reservation notification sent: {}", reservationCreateEvent);
     }
 }

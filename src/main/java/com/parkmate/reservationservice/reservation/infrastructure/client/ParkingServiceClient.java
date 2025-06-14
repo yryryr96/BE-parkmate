@@ -6,9 +6,11 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.Optional;
+
 @FeignClient(name = "parking-service", url = "${parking.service.url}")
 public interface ParkingServiceClient {
 
     @PostMapping("/internal/parkingSpots/search")
-    ParkingSpotResponse getParkingSpots(@RequestBody ParkingSpotRequest parkingSpotRequest);
+    Optional<ParkingSpotResponse> getParkingSpots(@RequestBody ParkingSpotRequest parkingSpotRequest);
 }
