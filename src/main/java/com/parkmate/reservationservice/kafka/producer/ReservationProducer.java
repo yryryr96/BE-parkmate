@@ -12,7 +12,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ReservationNotificationProducer {
+public class ReservationProducer {
 
     private final KafkaTemplate<String, ReservationCreateEvent> kafkaTemplate;
 
