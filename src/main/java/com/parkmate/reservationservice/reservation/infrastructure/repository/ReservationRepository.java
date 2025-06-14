@@ -20,8 +20,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query(value = "SELECT r FROM Reservation r " +
             "WHERE r.parkingLotUuid = :parkingLotUuid and " +
             "r.status = :status and " +
-            "r.entryTime <= :endDateTime and " +
-            "r.exitTime >= :startDateTime"
+            "r.entryTime < :endDateTime and " +
+            "r.exitTime > :startDateTime"
     )
     List<Reservation> findAllByParkingLotUuidAndStatus(String parkingLotUuid,
                                                        LocalDateTime startDateTime,

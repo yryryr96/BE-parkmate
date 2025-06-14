@@ -43,17 +43,14 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void reserve(ReservationCreateRequestDto reservationCreateRequestDto) {
 
-        log.info("=====================1=========================");
         ParkingSpotResponse clientResponse = fetchPotentialParkingSpots(reservationCreateRequestDto);
 
-        log.info("=====================2=========================");
         Set<Long> unAvailableParkingSpotIds = getUnavailableParkingSpotIds(
                 clientResponse.getParkingLotUuid(),
                 reservationCreateRequestDto.getEntryTime(),
                 reservationCreateRequestDto.getExitTime()
         );
 
-        log.info("=====================3=========================");
         ParkingSpot availableSpot = findFirstAvailableSpot(clientResponse.getParkingSpots(),
                 unAvailableParkingSpotIds);
 
