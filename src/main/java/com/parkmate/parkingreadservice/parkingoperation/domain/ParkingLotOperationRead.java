@@ -8,7 +8,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Document(collection = "parking_operation_read")
@@ -20,7 +19,7 @@ public class ParkingLotOperationRead {
     @Id
     private String id;
     private String parkingLotUuid;
-    private LocalDate operationDate;
+    private LocalDateTime operationDate;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private int baseIntervalMinutes;
@@ -34,7 +33,7 @@ public class ParkingLotOperationRead {
     @Builder
     private ParkingLotOperationRead(String id,
                                     String parkingLotUuid,
-                                    LocalDate operationDate,
+                                    LocalDateTime operationDate,
                                     LocalDateTime startDateTime,
                                     LocalDateTime endDateTime,
                                     int baseIntervalMinutes,
