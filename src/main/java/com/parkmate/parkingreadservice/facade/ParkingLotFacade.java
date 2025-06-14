@@ -4,9 +4,7 @@ import com.parkmate.parkingreadservice.common.utils.RedisUtil;
 import com.parkmate.parkingreadservice.geo.application.GeoService;
 import com.parkmate.parkingreadservice.geo.dto.request.InBoxParkingLotRequestDto;
 import com.parkmate.parkingreadservice.geo.dto.request.NearbyParkingLotRequestDto;
-import com.parkmate.parkingreadservice.geo.dto.response.InBoxParkingLotResponseDto;
-import com.parkmate.parkingreadservice.geo.dto.response.InBoxParkingLotResponseDtoList;
-import com.parkmate.parkingreadservice.geo.dto.response.GeoSearchResult;
+import com.parkmate.parkingreadservice.geo.dto.response.*;
 import com.parkmate.parkingreadservice.parkinglotread.application.ParkingLotReadService;
 import com.parkmate.parkingreadservice.parkinglotread.dto.response.ParkingLotReadResponseDto;
 import com.parkmate.parkingreadservice.parkingoperation.application.ParkingLotOperationReadService;
@@ -31,11 +29,27 @@ public class ParkingLotFacade {
     private final GeoService geoService;
     private final RedisUtil<String, ParkingLotReadResponseDto> redisUtil;
 
-    public InBoxParkingLotResponseDtoList getParkingLotsNearby(NearbyParkingLotRequestDto nearbyParkingLotRequestDto) {
+    private record EnrichedParkingLot(ParkingLotReadResponseDto parkingLots, GeoSearchResult geoSearchResult) {}
 
-        List<GeoSearchResult> nearbyParkingLots = geoService.getParkingLotsNearby(nearbyParkingLotRequestDto);
-//        GeoParkingLotResponseDtoList.from(resolveParkingLotDetails(nearbyParkingLots));
-        return null;
+    public NearbyParkingLotResponseDtoList getParkingLotsNearby(NearbyParkingLotRequestDto nearbyParkingLotRequestDto) {
+
+        List<GeoSearchResult> geoSearchResults = geoService.getParkingLotsNearby(nearbyParkingLotRequestDto);
+
+        List<ParkingLotReadResponseDto> parkingLots = resolveParkingLotDetails(geoSearchResults);
+
+        List<EnrichedParkingLot> enrichedParkingLots = enrichParkingLotsWithGeoData(parkingLots, geoSearchResults);
+
+        List<NearbyParkingLotResponseDto> result = enrichedParkingLots.stream()
+                .map(enriched -> NearbyParkingLotResponseDto.of(
+                        enriched.parkingLots(),
+                        enriched.geoSearchResult().getLatitude(),
+                        enriched.geoSearchResult().getLongitude(),
+                        enriched.geoSearchResult().getDistance()
+                ))
+                .sorted(Comparator.comparing(NearbyParkingLotResponseDto::getDistance))
+                .toList();
+
+        return NearbyParkingLotResponseDtoList.from(result);
     }
 
     public InBoxParkingLotResponseDtoList getParkingLotsInBox(InBoxParkingLotRequestDto inBoxParkingLotRequestDto) {
@@ -45,6 +59,12 @@ public class ParkingLotFacade {
 
         LocalDateTime startDateTime = inBoxParkingLotRequestDto.getStartDateTime();
         LocalDateTime endDateTime = inBoxParkingLotRequestDto.getEndDateTime();
+
+        if (inBoxParkingLotRequestDto.isEvChargingAvailable()) {
+            parkingLotReadResponseDtos = parkingLotReadResponseDtos.stream()
+                    .filter(p -> p.getIsEvChargingAvailable().equals(Boolean.TRUE))
+                    .toList();
+        }
 
         List<ParkingLotReadResponseDto> filteredParkingLotsByOperation = filterByOperations(
                 parkingLotReadResponseDtos,
@@ -58,22 +78,16 @@ public class ParkingLotFacade {
                 endDateTime
         );
 
-        Map<String, GeoSearchResult> map = parkingLotsInBox.stream()
-                .collect(Collectors.toMap(
-                        GeoSearchResult::getParkingLotUuid,
-                        geoSearchResult -> geoSearchResult
-                ));
+        List<EnrichedParkingLot> enrichedParkingLots = enrichParkingLotsWithGeoData(filteredParkingLotsByReservation,
+                parkingLotsInBox);
 
-        List<InBoxParkingLotResponseDto> result = filteredParkingLotsByReservation.stream()
-                .map(p -> {
-                    GeoSearchResult geoSearchResult = map.get(p.getParkingLotUuid());
-                    return InBoxParkingLotResponseDto.from(
-                            p,
-                            geoSearchResult.getLatitude(),
-                            geoSearchResult.getLongitude(),
-                            geoSearchResult.getDistance()
-                    );
-                })
+        List<InBoxParkingLotResponseDto> result = enrichedParkingLots.stream()
+                .map(enriched -> InBoxParkingLotResponseDto.of(
+                        enriched.parkingLots(),
+                        enriched.geoSearchResult().getLatitude(),
+                        enriched.geoSearchResult().getLongitude(),
+                        enriched.geoSearchResult().getDistance()
+                ))
                 .toList();
 
         return InBoxParkingLotResponseDtoList.from(result);
@@ -173,5 +187,23 @@ public class ParkingLotFacade {
         redisUtil.multiInsert(nonCachedMap);
 
         return new ArrayList<>(resultMap.values());
+    }
+
+    private List<EnrichedParkingLot> enrichParkingLotsWithGeoData(
+            List<ParkingLotReadResponseDto> parkingLots,
+            List<GeoSearchResult> geoResults) {
+
+        Map<String, GeoSearchResult> geoInfoMap = geoResults.stream()
+                .collect(Collectors.toMap(
+                        GeoSearchResult::getParkingLotUuid,
+                        geoResult -> geoResult
+                ));
+
+        return parkingLots.stream()
+                .map(parkingLot -> {
+                    GeoSearchResult geoInfo = geoInfoMap.get(parkingLot.getParkingLotUuid());
+                    return new EnrichedParkingLot(parkingLot, geoInfo);
+                })
+                .toList();
     }
 }

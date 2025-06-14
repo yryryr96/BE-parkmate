@@ -8,12 +8,12 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class GeoParkingLotResponseVoList {
+public class InBoxParkingLotResponseList {
 
-    private List<GeoParkingLotResponseVo> parkingLots;
+    private List<InBoxParkingLotResponseVo> parkingLots;
 
     @Builder
-    private GeoParkingLotResponseVoList(List<GeoParkingLotResponseVo> parkingLots) {
+    private InBoxParkingLotResponseList(List<InBoxParkingLotResponseVo> parkingLots) {
         this.parkingLots = parkingLots;
     }
 }

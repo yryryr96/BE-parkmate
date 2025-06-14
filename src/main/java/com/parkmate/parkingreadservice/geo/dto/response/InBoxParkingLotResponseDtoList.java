@@ -1,6 +1,6 @@
 package com.parkmate.parkingreadservice.geo.dto.response;
 
-import com.parkmate.parkingreadservice.geo.vo.response.GeoParkingLotResponseVoList;
+import com.parkmate.parkingreadservice.geo.vo.response.InBoxParkingLotResponseList;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,8 +22,8 @@ public class InBoxParkingLotResponseDtoList {
         return new InBoxParkingLotResponseDtoList(parkingLots);
     }
 
-    public GeoParkingLotResponseVoList toVo() {
-        return GeoParkingLotResponseVoList.builder()
+    public InBoxParkingLotResponseList toVo() {
+        return InBoxParkingLotResponseList.builder()
                 .parkingLots(parkingLots.stream()
                         .map(InBoxParkingLotResponseDto::toVo)
                         .toList())
