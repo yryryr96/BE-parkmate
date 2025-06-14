@@ -54,18 +54,7 @@ public class ReservationServiceImpl implements ReservationService {
         ParkingSpot availableSpot = findFirstAvailableSpot(clientResponse.getParkingSpots(),
                 unAvailableParkingSpotIds);
 
-        Reservation reservation = Reservation.builder()
-                .reservationCode(ReservationCodeGenerator.generate())
-                .userUuid(reservationCreateRequestDto.getUserUuid())
-                .parkingLotUuid(reservationCreateRequestDto.getParkingLotUuid())
-                .parkingSpotId(availableSpot.getId())
-                .vehicleNumber(reservationCreateRequestDto.getVehicleNumber())
-                .entryTime(reservationCreateRequestDto.getEntryTime())
-                .exitTime(reservationCreateRequestDto.getExitTime())
-                .amount(reservationCreateRequestDto.getAmount())
-                .paymentType(reservationCreateRequestDto.getPaymentType())
-                .status(ReservationStatus.CONFIRMED)
-                .build();
+        Reservation reservation = reservationCreateRequestDto.toEntity(availableSpot.getId());
 
         reservationRepository.save(reservation);
 

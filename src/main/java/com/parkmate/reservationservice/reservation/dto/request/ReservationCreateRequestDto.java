@@ -55,4 +55,19 @@ public class ReservationCreateRequestDto {
                 .paymentType(reservationCreateRequestVo.getPaymentType())
                 .build();
     }
+
+    public Reservation toEntity(Long parkingSpotId) {
+        return Reservation.builder()
+                .reservationCode(ReservationCodeGenerator.generate())
+                .userUuid(this.userUuid)
+                .parkingLotUuid(this.parkingLotUuid)
+                .parkingSpotId(parkingSpotId)
+                .vehicleNumber(this.vehicleNumber)
+                .entryTime(this.entryTime)
+                .exitTime(this.exitTime)
+                .amount(this.amount)
+                .paymentType(this.paymentType)
+                .status(ReservationStatus.CONFIRMED)
+                .build();
+    }
 }
