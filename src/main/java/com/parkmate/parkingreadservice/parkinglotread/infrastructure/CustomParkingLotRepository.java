@@ -7,7 +7,7 @@ import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
 
 import java.util.List;
 
-public interface ParkingLotMongoRepository {
+public interface CustomParkingLotRepository {
 
     void create(ParkingLotCreateEvent parkingLotCreateEvent);
 

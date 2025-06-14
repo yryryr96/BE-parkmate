@@ -24,7 +24,7 @@ import java.util.Map;
 @Repository
 @RequiredArgsConstructor
 @Slf4j
-public class ParkingLotMongoRepositoryImpl implements ParkingLotMongoRepository {
+public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepository {
 
     private final MongoTemplate mongoTemplate;
 
