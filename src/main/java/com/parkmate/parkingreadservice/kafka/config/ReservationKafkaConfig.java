@@ -10,7 +10,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 public class ReservationKafkaConfig extends CommonKafkaConfig {
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, ReservationCreateEvent> reservationKafkaListener() {
+    public ConcurrentKafkaListenerContainerFactory<String, ReservationCreateEvent> reservationCreateKafkaListener() {
         return createListenerFactory(ReservationCreateEvent.class, KafkaConsumerGroups.reservationCreatedGroup);
     }
 }
