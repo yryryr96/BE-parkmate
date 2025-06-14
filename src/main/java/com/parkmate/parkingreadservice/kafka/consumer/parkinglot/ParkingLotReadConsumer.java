@@ -4,7 +4,7 @@ import com.parkmate.parkingreadservice.kafka.event.ParkingLotCreateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotMetadataUpdateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotReactionsUpdateEvent;
 import com.parkmate.parkingreadservice.kafka.eventmanager.ParkingLotEventManager;
-import com.parkmate.parkingreadservice.kafka.properties.KafkaTopicProperties;
+import com.parkmate.parkingreadservice.kafka.constant.KafkaTopics;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -17,24 +17,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ParkingLotReadConsumer {
 
-    private final KafkaTopicProperties kafkaTopicProperties;
     private final ParkingLotEventManager eventManager;
 
     @KafkaListener(
-            topics = "#{kafkaTopicProperties.parkingLotCreated}",
+            topics = KafkaTopics.parkingLotCreated,
             containerFactory = "parkingLotCreateListener",
             concurrency = "3"
     )
     public void consumeParkingLotCreated(ParkingLotCreateEvent event) {
-        log.info("Received message from {} topic: {}",
-                kafkaTopicProperties.getParkingLotCreated(),
-                event.toString());
-
         eventManager.handleParkingLotCreatedEvent(event);
     }
 
     @KafkaListener(
-            topics = "#{kafkaTopicProperties.parkingLotMetadataUpdated}",
+            topics = KafkaTopics.parkingLotMetadataUpdated,
             containerFactory = "parkingLotMetadataUpdateListener"
     )
     public void consumeParkingLotMetadataUpdated(ParkingLotMetadataUpdateEvent event) {
@@ -42,7 +37,7 @@ public class ParkingLotReadConsumer {
     }
 
     @KafkaListener(
-            topics = "#{kafkaTopicProperties.parkingLotReactionsUpdated}",
+            topics = KafkaTopics.parkingLotReactionsUpdated,
             containerFactory = "parkingLotReactionsUpdateListener",
             concurrency = "3"
     )
