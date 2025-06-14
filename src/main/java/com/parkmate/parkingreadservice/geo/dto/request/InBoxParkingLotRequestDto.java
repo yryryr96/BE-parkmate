@@ -37,7 +37,7 @@ public class InBoxParkingLotRequestDto {
         this.endDateTime = endDateTime;
     }
 
-    public static InBoxParkingLotRequestDto of(InBoxParkingLotRequestVo inBoxParkingLotRequestVo) {
+    public static InBoxParkingLotRequestDto from(InBoxParkingLotRequestVo inBoxParkingLotRequestVo) {
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime startDateTime = inBoxParkingLotRequestVo.getStartDateTime() == null ? now : inBoxParkingLotRequestVo.getStartDateTime();

@@ -51,7 +51,7 @@ public class ParkingLotReadController {
             @ModelAttribute InBoxParkingLotRequestVo inBoxParkingLotRequestVo) {
         return ApiResponse.ok(
                 "주차장 박스 정보 조회에 성공했습니다.",
-                parkingLotFacade.getParkingLotsInBox(InBoxParkingLotRequestDto.of(inBoxParkingLotRequestVo)).toVo()
+                parkingLotFacade.getParkingLotsInBox(InBoxParkingLotRequestDto.from(inBoxParkingLotRequestVo)).toVo()
         );
     }
 }
