@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Optional;
 
 @Getter
 @NoArgsConstructor
@@ -16,7 +17,7 @@ public class InBoxParkingLotRequestDto {
     private double swLng;
     private double neLat;
     private double neLng;
-    private boolean isEvChargingAvailable;
+    private Boolean isEvChargingAvailable;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
 
@@ -49,7 +50,9 @@ public class InBoxParkingLotRequestDto {
                 .swLng(inBoxParkingLotRequestVo.getSwLng())
                 .neLat(inBoxParkingLotRequestVo.getNeLat())
                 .neLng(inBoxParkingLotRequestVo.getNeLng())
-                .isEvChargingAvailable(inBoxParkingLotRequestVo.isEvChargingAvailable())
+                .isEvChargingAvailable(
+                        Optional.ofNullable(inBoxParkingLotRequestVo.getIsEvChargingAvailable()).orElse(false)
+                )
                 .startDateTime(startDateTime)
                 .endDateTime(endDateTime)
                 .build();

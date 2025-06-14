@@ -29,7 +29,6 @@ public class ParkingLotFacade {
     private final GeoService geoService;
     private final RedisUtil<String, ParkingLotReadResponseDto> redisUtil;
 
-    private record EnrichedParkingLot(ParkingLotReadResponseDto parkingLots, GeoSearchResult geoSearchResult) {}
 
     public NearbyParkingLotResponseDtoList getParkingLotsNearby(NearbyParkingLotRequestDto nearbyParkingLotRequestDto) {
 
@@ -37,7 +36,8 @@ public class ParkingLotFacade {
 
         List<ParkingLotReadResponseDto> parkingLots = resolveParkingLotDetails(geoSearchResults);
 
-        List<EnrichedParkingLot> enrichedParkingLots = enrichParkingLotsWithGeoData(parkingLots, geoSearchResults);
+        List<EnrichedParkingLot> enrichedParkingLots = enrichParkingLotsWithGeoData(parkingLots,
+                geoSearchResults);
 
         List<NearbyParkingLotResponseDto> result = enrichedParkingLots.stream()
                 .map(enriched -> NearbyParkingLotResponseDto.of(
@@ -60,11 +60,8 @@ public class ParkingLotFacade {
         LocalDateTime startDateTime = inBoxParkingLotRequestDto.getStartDateTime();
         LocalDateTime endDateTime = inBoxParkingLotRequestDto.getEndDateTime();
 
-        if (inBoxParkingLotRequestDto.isEvChargingAvailable()) {
-            parkingLotReadResponseDtos = parkingLotReadResponseDtos.stream()
-                    .filter(p -> p.getIsEvChargingAvailable().equals(Boolean.TRUE))
-                    .toList();
-        }
+        parkingLotReadResponseDtos = filterByEvChargingCondition(inBoxParkingLotRequestDto.getIsEvChargingAvailable(),
+                parkingLotReadResponseDtos);
 
         List<ParkingLotReadResponseDto> filteredParkingLotsByOperation = filterByOperations(
                 parkingLotReadResponseDtos,
@@ -91,6 +88,14 @@ public class ParkingLotFacade {
                 .toList();
 
         return InBoxParkingLotResponseDtoList.from(result);
+    }
+
+    private List<ParkingLotReadResponseDto> filterByEvChargingCondition(Boolean isEvChargingAvailable,
+                                                                        List<ParkingLotReadResponseDto> parkingLots) {
+
+        return parkingLots.stream()
+                .filter(p -> p.getIsEvChargingAvailable().equals(isEvChargingAvailable))
+                .toList();
     }
 
     private List<ParkingLotReadResponseDto> filterByReservationRecord(List<ParkingLotReadResponseDto> parkingLots,
@@ -202,8 +207,12 @@ public class ParkingLotFacade {
         return parkingLots.stream()
                 .map(parkingLot -> {
                     GeoSearchResult geoInfo = geoInfoMap.get(parkingLot.getParkingLotUuid());
-                    return new EnrichedParkingLot(parkingLot, geoInfo);
+                    return new EnrichedParkingLot(parkingLot,
+                            geoInfo);
                 })
                 .toList();
+    }
+
+    private record EnrichedParkingLot(ParkingLotReadResponseDto parkingLots, GeoSearchResult geoSearchResult) {
     }
 }

@@ -17,7 +17,7 @@ public class InBoxParkingLotRequestVo {
     private double swLng;
     private double neLat;
     private double neLng;
-    private boolean isEvChargingAvailable;
+    private Boolean isEvChargingAvailable;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
 }
