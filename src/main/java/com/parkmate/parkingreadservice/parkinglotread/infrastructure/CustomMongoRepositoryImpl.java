@@ -4,10 +4,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoBulkWriteException;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotCreateEvent;
-import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotMetadataUpdateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotReactionsUpdateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ReactionType;
+import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.BulkOperations;
@@ -123,7 +123,14 @@ public class CustomMongoRepositoryImpl implements CustomMongoRepository {
                 log.error("Failed at index {}: {}", failedIndex, errorMessage);
             });
         }
+    }
 
+    @Override
+    public List<ParkingLotRead> findByParkingLotUuids(List<String> parkingLotUuids) {
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("parkingLotUuid").in(parkingLotUuids));
+        return mongoTemplate.find(query, ParkingLotRead.class);
     }
 
     private Map<String, Object> createUpdateMap(Object object) {

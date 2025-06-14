@@ -4,7 +4,8 @@ import io.lettuce.core.RedisException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class RedisUtil<K,V> {
@@ -27,6 +28,50 @@ public class RedisUtil<K,V> {
         try {
             V value = this.redisTemplate.opsForValue().get(key);
             return Optional.ofNullable(value);
+        } catch (Exception e) {
+            throw new RedisException(e.getMessage());
+        }
+    }
+
+    public List<V> multiSelect(List<K> keys) {
+        if (keys == null || keys.isEmpty()) {
+            return Collections.emptyList();
+        }
+        try {
+            List<V> values = this.redisTemplate.opsForValue().multiGet(keys);
+            return values.stream()
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new RedisException(e.getMessage());
+        }
+    }
+
+    public List<V> nullableMultiSelect(List<K> keys) {
+        if (keys == null || keys.isEmpty()) {
+            return Collections.emptyList();
+        }
+        try {
+            return this.redisTemplate.opsForValue().multiGet(keys);
+        } catch (Exception e) {
+            throw new RedisException(e.getMessage());
+        }
+    }
+
+    public void multiInsert(Map<K, V> keyValueMap) {
+        if (keyValueMap == null || keyValueMap.isEmpty()) {
+            return;
+        }
+        try {
+            this.redisTemplate.opsForValue().multiSet(keyValueMap);
+        } catch (Exception e) {
+            throw new RedisException(e.getMessage());
+        }
+    }
+
+    public boolean exists(K key) {
+        try {
+            return this.redisTemplate.hasKey(key);
         } catch (Exception e) {
             throw new RedisException(e.getMessage());
         }

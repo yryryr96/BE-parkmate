@@ -2,11 +2,12 @@ package com.parkmate.parkingreadservice.parkinglotread.application;
 
 import com.parkmate.parkingreadservice.common.exception.BaseException;
 import com.parkmate.parkingreadservice.common.response.ResponseStatus;
-import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
-import com.parkmate.parkingreadservice.parkinglotread.dto.response.ParkingLotReadResponseDto;
+import com.parkmate.parkingreadservice.geo.dto.response.GeoParkingLotResponseDto;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotCreateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotMetadataUpdateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotReactionsUpdateEvent;
+import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
+import com.parkmate.parkingreadservice.parkinglotread.dto.response.ParkingLotReadResponseDto;
 import com.parkmate.parkingreadservice.parkinglotread.infrastructure.ParkingLotReadRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,5 +48,13 @@ public class ParkingLotReadServiceImpl implements ParkingLotReadService {
                 .orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
 
         return ParkingLotReadResponseDto.from(parkingLotRead);
+    }
+
+    @Override
+    public List<GeoParkingLotResponseDto> getParkingLotsByUuids(List<String> parkingLotUuids) {
+        return parkingLotReadRepository.findByParkingLotUuids(parkingLotUuids)
+                .stream()
+                .map(GeoParkingLotResponseDto::from)
+                .toList();
     }
 }

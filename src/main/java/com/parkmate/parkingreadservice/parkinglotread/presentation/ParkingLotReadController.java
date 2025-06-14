@@ -2,7 +2,9 @@ package com.parkmate.parkingreadservice.parkinglotread.presentation;
 
 import com.parkmate.parkingreadservice.common.response.ApiResponse;
 import com.parkmate.parkingreadservice.facade.ParkingLotFacade;
-import com.parkmate.parkingreadservice.geo.vo.NearbyParkingLotResponseVoList;
+import com.parkmate.parkingreadservice.geo.dto.request.InBoxParkingLotRequestDto;
+import com.parkmate.parkingreadservice.geo.dto.request.NearbyParkingLotRequestDto;
+import com.parkmate.parkingreadservice.geo.vo.GeoParkingLotResponseVoList;
 import com.parkmate.parkingreadservice.parkinglotread.application.ParkingLotReadService;
 import com.parkmate.parkingreadservice.parkinglotread.vo.response.ParkingLotReadResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,14 +34,27 @@ public class ParkingLotReadController {
     }
 
     @GetMapping("/nearby")
-    public ApiResponse<NearbyParkingLotResponseVoList> getNearbyParkingLots(
+    public ApiResponse<GeoParkingLotResponseVoList> getNearbyParkingLots(
             @RequestParam double latitude,
             @RequestParam double longitude,
             @RequestParam double radius) {
 
         return ApiResponse.ok(
                 "주변 주차장 정보 조회에 성공했습니다.",
-                parkingLotFacade.getNearbyParkingLots(latitude, longitude, radius).toVo()
+                parkingLotFacade.getParkingLotsNearby(NearbyParkingLotRequestDto.of(latitude, longitude, radius)).toVo()
+        );
+    }
+
+    @GetMapping("/box")
+    public ApiResponse<GeoParkingLotResponseVoList> getParkingLotInBox(
+            @RequestParam double swLat,
+            @RequestParam double swLng,
+            @RequestParam double neLat,
+            @RequestParam double neLng
+    ) {
+        return ApiResponse.ok(
+                "주차장 박스 정보 조회에 성공했습니다.",
+                parkingLotFacade.getParkingLotsInBox(InBoxParkingLotRequestDto.of(swLat, swLng, neLat, neLng)).toVo()
         );
     }
 }

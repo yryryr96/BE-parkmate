@@ -1,8 +1,7 @@
 package com.parkmate.parkingreadservice.kafka.event;
 
-import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
-import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotOption;
 import com.parkmate.parkingreadservice.parkinglotread.domain.Image;
+import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotOption;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,24 +31,4 @@ public class ParkingLotCreateEvent {
     private String extraInfo;
     private List<Image> imageUrls;
     private List<ParkingLotOption> options;
-
-    public ParkingLotRead toEntity() {
-        return ParkingLotRead.builder()
-                .parkingLotUuid(parkingLotUuid)
-                .hostUuid(hostUuid)
-                .thumbnailUrl(imageUrls.isEmpty() ? null : imageUrls.get(0))
-                .name(name)
-                .phoneNumber(phoneNumber)
-                .address(address)
-                .isEvChargingAvailable(isEvChargingAvailable != null ? isEvChargingAvailable : false)
-                .evChargeTypes(evChargeTypes)
-                .parkingLotType(parkingLotType)
-                .parkingSpotTypes(parkingSpotTypes)
-                .extraInfo(extraInfo)
-                .imageUrls(imageUrls)
-                .options(options)
-                .likeCount(0)
-                .dislikeCount(0)
-                .build();
-    }
 }

@@ -27,6 +27,8 @@ public class ParkingLotRead extends BaseEntity {
     private String name;
     private String phoneNumber;
     private String address;
+    private double latitude;
+    private double longitude;
     private String parkingLotType;
     private Set<String> parkingSpotTypes;
     private Boolean isEvChargingAvailable;
@@ -34,26 +36,28 @@ public class ParkingLotRead extends BaseEntity {
     private String extraInfo;
     private List<Image> imageUrls;
     private List<ParkingLotOption> options;
-    private int likeCount;
-    private int dislikeCount;
+    private int likeCount = 0;
+    private int dislikeCount = 0;
 
     @Builder
     private ParkingLotRead(String id,
-                          String parkingLotUuid,
-                          String hostUuid,
-                          Image thumbnailUrl,
-                          String name,
-                          String phoneNumber,
-                          String address,
-                          String parkingLotType,
-                          Set<String> parkingSpotTypes,
-                          Boolean isEvChargingAvailable,
-                          Set<String> evChargeTypes,
-                          String extraInfo,
-                          List<Image> imageUrls,
+                           String parkingLotUuid,
+                           String hostUuid,
+                           Image thumbnailUrl,
+                           String name,
+                           String phoneNumber,
+                           String address,
+                           double latitude,
+                           double longitude,
+                           String parkingLotType,
+                           Set<String> parkingSpotTypes,
+                           Boolean isEvChargingAvailable,
+                           Set<String> evChargeTypes,
+                           String extraInfo,
+                           List<Image> imageUrls,
                            List<ParkingLotOption> options,
-                          int likeCount,
-                          int dislikeCount) {
+                           int likeCount,
+                           int dislikeCount) {
         this.id = id;
         this.parkingLotUuid = parkingLotUuid;
         this.hostUuid = hostUuid;
@@ -61,6 +65,8 @@ public class ParkingLotRead extends BaseEntity {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.parkingLotType = parkingLotType;
         this.parkingSpotTypes = parkingSpotTypes;
         this.isEvChargingAvailable = isEvChargingAvailable;

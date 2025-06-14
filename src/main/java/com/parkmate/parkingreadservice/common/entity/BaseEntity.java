@@ -6,7 +6,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Persistable;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Getter
 public abstract class BaseEntity implements Persistable<String> {
