@@ -1,16 +1,9 @@
 package com.parkmate.parkingreadservice.kafka.config;
 
-import com.parkmate.parkingreadservice.kafka.event.ParkingLotCreateEvent;
-import com.parkmate.parkingreadservice.kafka.event.ParkingLotMetadataUpdateEvent;
-import com.parkmate.parkingreadservice.kafka.event.ParkingLotReactionsUpdateEvent;
-import com.parkmate.parkingreadservice.kafka.properties.KafkaConsumerGroupProperties;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
@@ -20,17 +13,13 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import java.util.HashMap;
 import java.util.Map;
 
-@EnableKafka
-@Configuration
 @RequiredArgsConstructor
-public class KafkaConfig {
-
-    private final KafkaConsumerGroupProperties kafkaConsumerGroupProperties;
+public abstract class CommonKafkaConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServer;
 
-    private Map<String, Object> getStringObjectMap(String groupId) {
+    protected Map<String, Object> getStringObjectMap(String groupId) {
         Map<String, Object> props = new HashMap<>();
 
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
@@ -47,26 +36,7 @@ public class KafkaConfig {
         return props;
     }
 
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, ParkingLotCreateEvent> parkingLotCreateListener() {
-        return createListenerFactory(ParkingLotCreateEvent.class, kafkaConsumerGroupProperties.getParkingLotCreatedGroup());
-    }
-
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, ParkingLotMetadataUpdateEvent> parkingLotMetadataUpdateListener() {
-        return createListenerFactory(ParkingLotMetadataUpdateEvent.class, kafkaConsumerGroupProperties.getParkingLotMetadataUpdatedGroup());
-    }
-
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, ParkingLotReactionsUpdateEvent> parkingLotReactionsUpdateListener() {
-        ConcurrentKafkaListenerContainerFactory<String, ParkingLotReactionsUpdateEvent> factory =
-                createListenerFactory(ParkingLotReactionsUpdateEvent.class, kafkaConsumerGroupProperties.getParkingLotReactionsUpdatedGroup());
-
-        factory.setBatchListener(true);
-        return factory;
-    }
-
-    private <T> ConsumerFactory<String, T> createConsumerFactory(Class<T> targetClass, String groupId) {
+    protected <T> ConsumerFactory<String, T> createConsumerFactory(Class<T> targetClass, String groupId) {
         Map<String, Object> props = getStringObjectMap(groupId);
         return new DefaultKafkaConsumerFactory<>(
                 props,
@@ -75,7 +45,7 @@ public class KafkaConfig {
         );
     }
 
-    private <T> ConcurrentKafkaListenerContainerFactory<String, T> createListenerFactory(Class<T> targetClass, String groupId) {
+    protected <T> ConcurrentKafkaListenerContainerFactory<String, T> createListenerFactory(Class<T> targetClass, String groupId) {
         ConcurrentKafkaListenerContainerFactory<String, T> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(createConsumerFactory(targetClass, groupId));
         return factory;

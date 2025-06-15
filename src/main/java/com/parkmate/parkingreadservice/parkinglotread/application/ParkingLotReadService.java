@@ -1,6 +1,5 @@
 package com.parkmate.parkingreadservice.parkinglotread.application;
 
-import com.parkmate.parkingreadservice.geo.dto.response.GeoParkingLotResponseDto;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotCreateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotMetadataUpdateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotReactionsUpdateEvent;
@@ -18,5 +17,5 @@ public interface ParkingLotReadService {
 
     void syncParkingLotReactions(List<ParkingLotReactionsUpdateEvent> parkingLotReactionsUpdateEventList);
 
-    List<GeoParkingLotResponseDto> getParkingLotsByUuids(List<String> noCachedParkingLotUuids);
+    List<ParkingLotReadResponseDto> getParkingLotsByUuids(List<String> parkingLotUuids);
 }

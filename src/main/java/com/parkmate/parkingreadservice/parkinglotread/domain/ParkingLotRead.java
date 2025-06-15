@@ -1,26 +1,25 @@
 package com.parkmate.parkingreadservice.parkinglotread.domain;
 
-import com.parkmate.parkingreadservice.common.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 import java.util.Set;
 
-@Document
+@Document(collection = "parking_lot_read")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ParkingLotRead extends BaseEntity {
+public class ParkingLotRead {
 
     @Id
     private String id;
 
-    @Indexed(unique = true)
+    @TextIndexed
     private String parkingLotUuid;
     private String hostUuid;
     private Image thumbnailUrl;
@@ -29,6 +28,7 @@ public class ParkingLotRead extends BaseEntity {
     private String address;
     private double latitude;
     private double longitude;
+    private int capacity;
     private String parkingLotType;
     private Set<String> parkingSpotTypes;
     private Boolean isEvChargingAvailable;
@@ -49,6 +49,7 @@ public class ParkingLotRead extends BaseEntity {
                            String address,
                            double latitude,
                            double longitude,
+                           int capacity,
                            String parkingLotType,
                            Set<String> parkingSpotTypes,
                            Boolean isEvChargingAvailable,
@@ -67,6 +68,7 @@ public class ParkingLotRead extends BaseEntity {
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.capacity = capacity;
         this.parkingLotType = parkingLotType;
         this.parkingSpotTypes = parkingSpotTypes;
         this.isEvChargingAvailable = isEvChargingAvailable;

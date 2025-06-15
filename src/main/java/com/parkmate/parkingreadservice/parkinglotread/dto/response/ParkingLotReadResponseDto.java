@@ -1,6 +1,5 @@
 package com.parkmate.parkingreadservice.parkinglotread.dto.response;
 
-import com.parkmate.parkingreadservice.geo.dto.response.GeoParkingLotResponseDto;
 import com.parkmate.parkingreadservice.parkinglotread.domain.Image;
 import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotOption;
 import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
@@ -16,11 +15,13 @@ import java.util.Set;
 @NoArgsConstructor
 public class ParkingLotReadResponseDto {
 
+    private String parkingLotUuid;
     private String hostUuid;
     private Image thumbnailUrl;
     private String name;
     private String phoneNumber;
     private String address;
+    private int capacity;
     private String parkingLotType;
     private Set<String> parkingSpotTypes;
     private Boolean isEvChargingAvailable;
@@ -32,11 +33,13 @@ public class ParkingLotReadResponseDto {
     private int dislikeCount;
 
     @Builder
-    private ParkingLotReadResponseDto(String hostUuid,
+    private ParkingLotReadResponseDto(String parkingLotUuid,
+                                      String hostUuid,
                                       Image thumbnailUrl,
                                       String name,
                                       String phoneNumber,
                                       String address,
+                                      int capacity,
                                       String parkingLotType,
                                       Set<String> parkingSpotTypes,
                                       Boolean isEvChargingAvailable,
@@ -46,11 +49,13 @@ public class ParkingLotReadResponseDto {
                                       List<ParkingLotOption> options,
                                       int likeCount,
                                       int dislikeCount) {
+        this.parkingLotUuid = parkingLotUuid;
         this.hostUuid = hostUuid;
         this.thumbnailUrl = thumbnailUrl;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.capacity = capacity;
         this.parkingLotType = parkingLotType;
         this.parkingSpotTypes = parkingSpotTypes;
         this.isEvChargingAvailable = isEvChargingAvailable;
@@ -64,11 +69,13 @@ public class ParkingLotReadResponseDto {
 
     public static ParkingLotReadResponseDto from(ParkingLotRead parkingLotRead) {
         return ParkingLotReadResponseDto.builder()
+                .parkingLotUuid(parkingLotRead.getParkingLotUuid())
                 .hostUuid(parkingLotRead.getHostUuid())
                 .thumbnailUrl(parkingLotRead.getThumbnailUrl())
                 .name(parkingLotRead.getName())
                 .phoneNumber(parkingLotRead.getPhoneNumber())
                 .address(parkingLotRead.getAddress())
+                .capacity(parkingLotRead.getCapacity())
                 .parkingLotType(parkingLotRead.getParkingLotType())
                 .parkingSpotTypes(parkingLotRead.getParkingSpotTypes())
                 .isEvChargingAvailable(parkingLotRead.getIsEvChargingAvailable())
@@ -83,11 +90,13 @@ public class ParkingLotReadResponseDto {
 
     public ParkingLotReadResponseVo toVo() {
         return ParkingLotReadResponseVo.builder()
+                .parkingLotUuid(parkingLotUuid)
                 .hostUuid(hostUuid)
                 .thumbnailUrl(thumbnailUrl)
                 .name(name)
                 .phoneNumber(phoneNumber)
                 .address(address)
+                .capacity(capacity)
                 .parkingLotType(parkingLotType)
                 .parkingSpotTypes(parkingSpotTypes)
                 .isEvChargingAvailable(isEvChargingAvailable)
@@ -100,17 +109,24 @@ public class ParkingLotReadResponseDto {
                 .build();
     }
 
-    public GeoParkingLotResponseDto toGeoParkingLotResponseDto(String parkingLotUuid,
-                                                               double latitude,
-                                                               double longitude,
-                                                               double distance) {
-        return GeoParkingLotResponseDto.builder()
-                .parkingLotUuid(parkingLotUuid)
-                .name(name)
-//                .thumbnailUrl(thumbnailUrl.getImageUrl())
-                .latitude(latitude)
-                .longitude(longitude)
-                .distance(distance)
+    public ParkingLotReadResponseDto changeCapacity(int capacity) {
+        return ParkingLotReadResponseDto.builder()
+                .parkingLotUuid(this.parkingLotUuid)
+                .hostUuid(this.hostUuid)
+                .thumbnailUrl(this.thumbnailUrl)
+                .name(this.name)
+                .phoneNumber(this.phoneNumber)
+                .address(this.address)
+                .capacity(capacity)
+                .parkingLotType(this.parkingLotType)
+                .parkingSpotTypes(this.parkingSpotTypes)
+                .isEvChargingAvailable(this.isEvChargingAvailable)
+                .evChargeTypes(this.evChargeTypes)
+                .extraInfo(this.extraInfo)
+                .imageUrls(this.imageUrls)
+                .options(this.options)
+                .likeCount(this.likeCount)
+                .dislikeCount(this.dislikeCount)
                 .build();
     }
 }
