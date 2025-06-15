@@ -46,7 +46,6 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
 
         parkingSpotRepository.saveAll(allSpots);
 
-
         return allSpots.stream()
                 .map(ParkingSpotResponseDto::from)
                 .toList();
