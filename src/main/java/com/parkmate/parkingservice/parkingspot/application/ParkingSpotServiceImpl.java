@@ -9,6 +9,7 @@ import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotGetRequest
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotRegisterRequestDto;
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotUpdateRequestDto;
 import com.parkmate.parkingservice.parkingspot.dto.response.ParkingSpotResponseDto;
+import com.parkmate.parkingservice.parkingspot.dto.response.ParkingSpotSimpleResponseDto;
 import com.parkmate.parkingservice.parkingspot.infrastructure.ParkingSpotRepository;
 import com.parkmate.parkingservice.parkingspot.vo.request.ChargeableSpotRegisterVo;
 import com.parkmate.parkingservice.parkingspot.vo.request.NonChargeableSpotRegisterVo;
@@ -27,11 +28,10 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class ParkingSpotServiceImpl implements ParkingSpotService {
 
-    private final ParkingSpotRepository parkingSpotRepository;
-    private final ParkingSpotSequenceService parkingSpotSequenceService;
-
     private static final String EV_SPOT_NAME_PREFIX = "EV-";
     private static final String REGULAR_SPOT_NAME_PREFIX = "REG-";
+    private final ParkingSpotRepository parkingSpotRepository;
+    private final ParkingSpotSequenceService parkingSpotSequenceService;
 
     @Transactional
     @Override
@@ -41,17 +41,20 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
         List<NonChargeableSpotRegisterVo> nonChargeable = parkingSpotRegisterRequestDto.getNonChargeable();
         String parkingLotUuid = parkingSpotRegisterRequestDto.getParkingLotUuid();
 
-        List<ParkingSpot> evParkingSpots = saveEvParkingSpots(parkingLotUuid, chargeable);
-        List<ParkingSpot> regularParkingSpots = saveRegularParkingSpots(parkingLotUuid, nonChargeable);
+        List<ParkingSpot> evParkingSpots = saveEvParkingSpots(parkingLotUuid,
+                chargeable);
+        List<ParkingSpot> regularParkingSpots = saveRegularParkingSpots(parkingLotUuid,
+                nonChargeable);
 
-        return Stream.of(evParkingSpots, regularParkingSpots)
+        return Stream.of(evParkingSpots,
+                        regularParkingSpots)
                 .flatMap(List::stream)
                 .map(ParkingSpotResponseDto::from)
                 .toList();
     }
 
     private List<ParkingSpot> saveRegularParkingSpots(String parkingLotUuid,
-                                         List<NonChargeableSpotRegisterVo> nonChargeable) {
+                                                      List<NonChargeableSpotRegisterVo> nonChargeable) {
 
         if (nonChargeable == null || nonChargeable.isEmpty()) {
             return Collections.emptyList();
@@ -62,7 +65,8 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
 
             ParkingSpotType parkingSpotType = nonChargeableSpotRegisterVo.getParkingSpotType();
 
-            Long sequence = parkingSpotSequenceService.getSpotSequence(parkingLotUuid, parkingSpotType);
+            Long sequence = parkingSpotSequenceService.getSpotSequence(parkingLotUuid,
+                    parkingSpotType);
             for (int c = 0; c < nonChargeableSpotRegisterVo.getCount(); c++) {
                 ParkingSpot parkingSpot = ParkingSpot.builder()
                         .parkingLotUuid(parkingLotUuid)
@@ -75,21 +79,24 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
                 sequence++;
             }
 
-            parkingSpotSequenceService.update(parkingLotUuid, parkingSpotType, sequence);
+            parkingSpotSequenceService.update(parkingLotUuid,
+                    parkingSpotType,
+                    sequence);
         }
 
         return parkingSpotRepository.saveAll(parkingSpots);
     }
 
     private List<ParkingSpot> saveEvParkingSpots(String parkingLotUuid,
-                                    List<ChargeableSpotRegisterVo> chargeable) {
+                                                 List<ChargeableSpotRegisterVo> chargeable) {
 
         if (chargeable == null || chargeable.isEmpty()) {
             return Collections.emptyList();
         }
 
         ParkingSpotType parkingSpotType = ParkingSpotType.EV;
-        Long sequence = parkingSpotSequenceService.getSpotSequence(parkingLotUuid, parkingSpotType);
+        Long sequence = parkingSpotSequenceService.getSpotSequence(parkingLotUuid,
+                parkingSpotType);
         List<ParkingSpot> parkingSpots = new ArrayList<>();
 
         for (ChargeableSpotRegisterVo chargeableSpotRegisterVo : chargeable) {
@@ -106,7 +113,9 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
             sequence++;
         }
 
-        parkingSpotSequenceService.update(parkingLotUuid, parkingSpotType, sequence);
+        parkingSpotSequenceService.update(parkingLotUuid,
+                parkingSpotType,
+                sequence);
         return parkingSpotRepository.saveAll(parkingSpots);
     }
 
@@ -145,6 +154,17 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
         return parkingSpotRepository.findAllByParkingLotUuid(parkingLotUuid)
                 .stream()
                 .map(ParkingSpotResponseDto::from)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<ParkingSpotSimpleResponseDto> getParkingSpotsByParkingLotUuidAndType(String parkingLotUuid,
+                                                                                     ParkingSpotType parkingSpotType) {
+
+        return parkingSpotRepository.findAllByParkingLotUuidAndType(parkingLotUuid, parkingSpotType)
+                .stream()
+                .map(ParkingSpotSimpleResponseDto::from)
                 .toList();
     }
 }

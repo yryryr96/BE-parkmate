@@ -103,7 +103,7 @@ public class ParkingLotCreatedEvent {
                 .latitude(parkingLot.getLatitude())
                 .longitude(parkingLot.getLongitude())
                 .name(parkingLot.getName())
-                .capacity(parkingLot.getCapacity())
+                .capacity(parkingLot.getRegisteredCapacity())
                 .isEvChargingAvailable(parkingLot.getIsEvChargingAvailable())
                 .extraInfo(parkingLot.getExtraInfo())
                 .evChargeTypes(evChargeTypes)

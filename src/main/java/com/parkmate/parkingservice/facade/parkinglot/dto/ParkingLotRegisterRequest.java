@@ -1,4 +1,4 @@
-package com.parkmate.parkingservice.facade.dto;
+package com.parkmate.parkingservice.facade.parkinglot.dto;
 
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotRegisterRequestDto;
 import com.parkmate.parkingservice.parkinglotimagemapping.dto.request.ParkingLotImageRegisterRequestDto;

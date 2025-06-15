@@ -1,8 +1,8 @@
 package com.parkmate.parkingservice.parkinglot.presentation;
 
 import com.parkmate.parkingservice.common.response.ApiResponse;
-import com.parkmate.parkingservice.facade.ParkingLotFacade;
-import com.parkmate.parkingservice.facade.dto.ParkingLotRegisterRequest;
+import com.parkmate.parkingservice.facade.parkinglot.ParkingLotFacade;
+import com.parkmate.parkingservice.facade.parkinglot.dto.ParkingLotRegisterRequest;
 import com.parkmate.parkingservice.parkinglot.application.ParkingLotService;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotDeleteRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotUpdateRequestDto;
