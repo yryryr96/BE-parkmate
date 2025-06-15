@@ -40,8 +40,14 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
         List<ParkingSpot> evParkingSpots = parkingSpotFactory.createEvSpots(parkingLotUuid, chargeable);
         List<ParkingSpot> regularParkingSpots = parkingSpotFactory.createRegularSpots(parkingLotUuid, nonChargeable);
 
-        return Stream.of(evParkingSpots, regularParkingSpots)
+        List<ParkingSpot> allSpots = Stream.of(evParkingSpots, regularParkingSpots)
                 .flatMap(List::stream)
+                .toList();
+
+        parkingSpotRepository.saveAll(allSpots);
+
+
+        return allSpots.stream()
                 .map(ParkingSpotResponseDto::from)
                 .toList();
     }
