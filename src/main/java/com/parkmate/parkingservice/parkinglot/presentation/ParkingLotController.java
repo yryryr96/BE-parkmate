@@ -86,14 +86,4 @@ public class ParkingLotController {
         );
     }
 
-    @Operation(
-            summary = "주차장 UUID로 호스트 UUID 조회",
-            description = "주차장 UUID를 PathVariable로 받아 해당 주차장의 호스트 UUID를 조회하는 API입니다. " +
-                          "FeignClient를 사용하여 다른 서비스와 통신합니다.",
-            tags = {"PARKING-LOT-SERVICE"}
-    )
-    @GetMapping("/{parkingLotUuid}/host")
-    public ParkingLotHostUuidResponseVo getHostUuidByParkingLotUuid(@PathVariable String parkingLotUuid) {
-        return parkingLotService.getHostUuidByParkingLotUuid(parkingLotUuid).toVo();
-    }
 }
