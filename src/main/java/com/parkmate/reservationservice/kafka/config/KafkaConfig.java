@@ -1,6 +1,6 @@
-package com.parkmate.reservationservice.common.config;
+package com.parkmate.reservationservice.kafka.config;
 
-import com.parkmate.reservationservice.reservation.event.ReservationEvent;
+import com.parkmate.reservationservice.kafka.event.ReservationCreateEvent;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,12 +32,12 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ProducerFactory<String, ReservationEvent> createReservationNotification() {
+    public ProducerFactory<String, ReservationCreateEvent> createReservationNotification() {
         return new DefaultKafkaProducerFactory<>(reservationProducerConfigs());
     }
 
     @Bean
-    public KafkaTemplate<String, ReservationEvent> kafkaTemplate() {
+    public KafkaTemplate<String, ReservationCreateEvent> kafkaTemplate() {
         return new KafkaTemplate<>(createReservationNotification());
     }
 }

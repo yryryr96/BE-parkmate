@@ -5,11 +5,11 @@ import com.parkmate.reservationservice.reservation.application.ReservationServic
 import com.parkmate.reservationservice.reservation.dto.request.ReservationCancelRequestDto;
 import com.parkmate.reservationservice.reservation.dto.request.ReservationGetRequestDto;
 import com.parkmate.reservationservice.reservation.dto.request.ReservationModifyRequestDto;
-import com.parkmate.reservationservice.reservation.dto.request.ReservationRequestDto;
+import com.parkmate.reservationservice.reservation.dto.request.ReservationCreateRequestDto;
 import com.parkmate.reservationservice.reservation.dto.response.ReservationResponseDto;
 import com.parkmate.reservationservice.reservation.vo.request.ReservationCancelRequestVo;
 import com.parkmate.reservationservice.reservation.vo.request.ReservationModifyRequestVo;
-import com.parkmate.reservationservice.reservation.vo.request.ReservationRequestVo;
+import com.parkmate.reservationservice.reservation.vo.request.ReservationCreateRequestVo;
 import com.parkmate.reservationservice.reservation.vo.response.ReservationResponseVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +24,9 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping
-    public ApiResponse<String> reserve(@RequestBody ReservationRequestVo reservationRequestVo) {
+    public ApiResponse<String> reserve(@RequestBody ReservationCreateRequestVo reservationCreateRequestVo) {
 
-        reservationService.reserve(ReservationRequestDto.from(reservationRequestVo));
+        reservationService.reserve(ReservationCreateRequestDto.from(reservationCreateRequestVo));
         return ApiResponse.ok("예약이 완료되었습니다.");
     }
 

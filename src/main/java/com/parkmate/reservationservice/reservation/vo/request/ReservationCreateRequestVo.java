@@ -6,10 +6,10 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class ReservationRequestVo {
+public class ReservationCreateRequestVo {
 
     private String userUuid;
-    private Long parkingSpotId;
+    private String parkingSpotType;
     private String parkingLotUuid;
     private String vehicleNumber;
     private LocalDateTime entryTime;
