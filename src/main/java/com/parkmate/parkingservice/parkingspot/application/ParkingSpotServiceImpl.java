@@ -37,17 +37,15 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
     @Override
     public List<ParkingSpotResponseDto> register(ParkingSpotRegisterRequestDto parkingSpotRegisterRequestDto) {
 
-        List<ChargeableSpotRegisterVo> chargeable = parkingSpotRegisterRequestDto.getChargeable();
-        List<NonChargeableSpotRegisterVo> nonChargeable = parkingSpotRegisterRequestDto.getNonChargeable();
         String parkingLotUuid = parkingSpotRegisterRequestDto.getParkingLotUuid();
 
-        List<ParkingSpot> evParkingSpots = saveEvParkingSpots(parkingLotUuid,
-                chargeable);
-        List<ParkingSpot> regularParkingSpots = saveRegularParkingSpots(parkingLotUuid,
-                nonChargeable);
+        List<ChargeableSpotRegisterVo> chargeable = parkingSpotRegisterRequestDto.getChargeable();
+        List<NonChargeableSpotRegisterVo> nonChargeable = parkingSpotRegisterRequestDto.getNonChargeable();
 
-        return Stream.of(evParkingSpots,
-                        regularParkingSpots)
+        List<ParkingSpot> evParkingSpots = saveEvParkingSpots(parkingLotUuid, chargeable);
+        List<ParkingSpot> regularParkingSpots = saveRegularParkingSpots(parkingLotUuid, nonChargeable);
+
+        return Stream.of(evParkingSpots, regularParkingSpots)
                 .flatMap(List::stream)
                 .map(ParkingSpotResponseDto::from)
                 .toList();
@@ -79,9 +77,7 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
                 sequence++;
             }
 
-            parkingSpotSequenceService.update(parkingLotUuid,
-                    parkingSpotType,
-                    sequence);
+            parkingSpotSequenceService.update(parkingLotUuid, parkingSpotType, sequence);
         }
 
         return parkingSpotRepository.saveAll(parkingSpots);
@@ -95,8 +91,7 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
         }
 
         ParkingSpotType parkingSpotType = ParkingSpotType.EV;
-        Long sequence = parkingSpotSequenceService.getSpotSequence(parkingLotUuid,
-                parkingSpotType);
+        Long sequence = parkingSpotSequenceService.getSpotSequence(parkingLotUuid, parkingSpotType);
         List<ParkingSpot> parkingSpots = new ArrayList<>();
 
         for (ChargeableSpotRegisterVo chargeableSpotRegisterVo : chargeable) {
@@ -104,27 +99,21 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
                     .parkingLotUuid(parkingLotUuid)
                     .name(EV_SPOT_NAME_PREFIX + sequence)
                     .type(parkingSpotType)
-                    .evChargeTypes(
-                            new HashSet<>(chargeableSpotRegisterVo.getEvChargeTypes())
-                    )
+                    .evChargeTypes(new HashSet<>(chargeableSpotRegisterVo.getEvChargeTypes()))
                     .build();
 
             parkingSpots.add(parkingSpot);
             sequence++;
         }
 
-        parkingSpotSequenceService.update(parkingLotUuid,
-                parkingSpotType,
-                sequence);
+        parkingSpotSequenceService.update(parkingLotUuid, parkingSpotType, sequence);
         return parkingSpotRepository.saveAll(parkingSpots);
     }
 
     @Transactional
     @Override
     public void update(ParkingSpotUpdateRequestDto parkingSpotUpdateRequestDto) {
-        parkingSpotRepository.save(
-                parkingSpotUpdateRequestDto.toEntity()
-        );
+        parkingSpotRepository.save(parkingSpotUpdateRequestDto.toEntity());
     }
 
     @Transactional

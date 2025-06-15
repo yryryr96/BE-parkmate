@@ -1,7 +1,7 @@
 package com.parkmate.parkingservice.kafka.producer.operation;
 
-import com.parkmate.parkingservice.kafka.event.OperationCreatedEvent;
 import com.parkmate.parkingservice.kafka.constant.KafkaTopics;
+import com.parkmate.parkingservice.kafka.event.OperationCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;

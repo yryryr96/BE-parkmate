@@ -7,6 +7,8 @@ import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotUpdateReques
 import com.parkmate.parkingservice.parkinglot.dto.response.ParkingLotHostUuidResponseDto;
 import com.parkmate.parkingservice.parkinglot.dto.response.ParkingLotResponseDto;
 
+import java.util.List;
+
 public interface ParkingLotService {
 
     ParkingLot register(ParkingLotRegisterRequestDto parkingLotRegisterRequestDto);
@@ -18,4 +20,6 @@ public interface ParkingLotService {
     ParkingLotResponseDto findByUuid(String parkingLotUuid);
 
     ParkingLotHostUuidResponseDto getHostUuidByParkingLotUuid(String parkingLotUuid);
+
+    List<ParkingLot> getHostParkingLotsByHostUuid(String hostUuid);
 }

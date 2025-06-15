@@ -24,6 +24,7 @@ public class ParkingLotRegisterRequestDto {
     private double longitude;
     private Boolean isEvChargingAvailable;
     private String extraInfo;
+    private String thumbnailUrl;
 
     @Builder
     private ParkingLotRegisterRequestDto(String hostUuid,
@@ -37,7 +38,8 @@ public class ParkingLotRegisterRequestDto {
                                          double latitude,
                                          double longitude,
                                          Boolean isEvChargingAvailable,
-                                         String extraInfo) {
+                                         String extraInfo,
+                                         String thumbnailUrl) {
         this.hostUuid = hostUuid;
         this.parkingLotType = parkingLotType;
         this.name = name;
@@ -50,6 +52,7 @@ public class ParkingLotRegisterRequestDto {
         this.longitude = longitude;
         this.isEvChargingAvailable = isEvChargingAvailable;
         this.extraInfo = extraInfo;
+        this.thumbnailUrl = thumbnailUrl;
     }
 
     public static ParkingLotRegisterRequestDto from(ParkingLotRegisterRequestVo parkingLotRegisterRequestVo) {
@@ -66,24 +69,26 @@ public class ParkingLotRegisterRequestDto {
                 .longitude(parkingLotRegisterRequestVo.getLongitude())
                 .isEvChargingAvailable(parkingLotRegisterRequestVo.getIsEvChargingAvailable())
                 .extraInfo(parkingLotRegisterRequestVo.getExtraInfo())
+                .thumbnailUrl(parkingLotRegisterRequestVo.getThumbnailUrl())
                 .build();
     }
 
     public ParkingLot toEntity() {
         return ParkingLot.builder()
                 .parkingLotUuid(UUIDGenerator.generateUUID())
-                .hostUuid(this.hostUuid)
-                .parkingLotType(this.parkingLotType)
-                .name(this.name)
-                .phoneNumber(this.phoneNumber)
-                .capacity(this.capacity)
-                .registeredCapacity(this.registeredCapacity)
-                .mainAddress(this.mainAddress)
-                .detailAddress(this.detailAddress)
-                .latitude(this.latitude)
-                .longitude(this.longitude)
-                .isEvChargingAvailable(this.isEvChargingAvailable)
-                .extraInfo(this.extraInfo)
+                .hostUuid(hostUuid)
+                .parkingLotType(parkingLotType)
+                .name(name)
+                .phoneNumber(phoneNumber)
+                .capacity(capacity)
+                .registeredCapacity(registeredCapacity)
+                .mainAddress(mainAddress)
+                .detailAddress(detailAddress)
+                .latitude(latitude)
+                .longitude(longitude)
+                .isEvChargingAvailable(isEvChargingAvailable)
+                .extraInfo(extraInfo)
+                .thumbnailUrl(thumbnailUrl)
                 .build();
     }
 }

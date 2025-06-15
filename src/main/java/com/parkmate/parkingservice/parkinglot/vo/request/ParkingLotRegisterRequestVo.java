@@ -18,4 +18,5 @@ public class ParkingLotRegisterRequestVo {
     private double longitude;
     private Boolean isEvChargingAvailable;
     private String extraInfo;
+    private String thumbnailUrl;
 }
