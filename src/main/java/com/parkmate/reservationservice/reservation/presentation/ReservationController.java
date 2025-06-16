@@ -22,6 +22,7 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
+    private static final String USER_UUID_HEADER = "X-User-UUID";
 
     @Operation(
             summary = "예약 생성",
@@ -30,7 +31,7 @@ public class ReservationController {
             tags = {"RESERVATION-SERVICE"}
     )
     @PostMapping
-    public ApiResponse<String> reserve(@RequestHeader("X-User-UUID") String userUuid,
+    public ApiResponse<String> reserve(@RequestHeader(USER_UUID_HEADER) String userUuid,
                                        @RequestBody ReservationCreateRequestVo reservationCreateRequestVo) {
 
         reservationService.reserve(ReservationCreateRequestDto.of(userUuid, reservationCreateRequestVo));
@@ -44,7 +45,7 @@ public class ReservationController {
             tags = {"RESERVATION-SERVICE"}
     )
     @PutMapping("/{reservationCode}")
-    public ApiResponse<String> modify(@RequestHeader("X-User-UUID") String userUuid,
+    public ApiResponse<String> modify(@RequestHeader(USER_UUID_HEADER) String userUuid,
                                       @PathVariable String reservationCode,
                                       @RequestBody ReservationModifyRequestVo reservationModifyRequestVo) {
 
@@ -60,7 +61,7 @@ public class ReservationController {
             tags = {"RESERVATION-SERVICE"}
     )
     @PutMapping("/{reservationCode}/cancel")
-    public ApiResponse<String> cancel(@RequestHeader("X-User-UUID") String userUuid,
+    public ApiResponse<String> cancel(@RequestHeader(USER_UUID_HEADER) String userUuid,
                                       @PathVariable String reservationCode,
                                       @RequestBody ReservationCancelRequestVo ReservationCancelRequestVo) {
 
@@ -75,7 +76,7 @@ public class ReservationController {
             tags = {"RESERVATION-SERVICE"}
     )
     @GetMapping
-    public ApiResponse<ReservationsResponseVo> getReservations(@RequestHeader("X-User-UUID") String userUuid) {
+    public ApiResponse<ReservationsResponseVo> getReservations(@RequestHeader(USER_UUID_HEADER) String userUuid) {
         return ApiResponse.ok(reservationService.getReservations(userUuid).toVo());
     }
 
@@ -85,7 +86,7 @@ public class ReservationController {
             tags = {"RESERVATION-SERVICE"}
     )
     @GetMapping("/{reservationCode}")
-    public ApiResponse<ReservationResponseVo> getReservation(@RequestHeader("X-User-UUID") String userUuid,
+    public ApiResponse<ReservationResponseVo> getReservation(@RequestHeader(USER_UUID_HEADER) String userUuid,
                                                              @PathVariable String reservationCode) {
         ReservationResponseVo reservation = reservationService.getReservation(
                 ReservationGetRequestDto.of(userUuid, reservationCode)).toVo();
