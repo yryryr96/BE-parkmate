@@ -33,10 +33,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ReservationServiceImpl implements ReservationService {
 
-    private static final int MODIFY_TIME_LIMIT_MINUTES = 60;
     private final ReservationRepository reservationRepository;
     private final ParkingServiceClient parkingServiceClient;
     private final ApplicationEventPublisher eventPublisher;
+
+    private static final int MODIFY_TIME_LIMIT_MINUTES = 60;
 
     @Transactional
     @Override
