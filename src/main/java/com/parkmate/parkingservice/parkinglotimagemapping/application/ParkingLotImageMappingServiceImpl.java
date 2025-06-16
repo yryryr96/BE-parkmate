@@ -22,11 +22,12 @@ public class ParkingLotImageMappingServiceImpl implements ParkingLotImageMapping
     @Override
     public List<ParkingLotImageMappingResponseDto> registerParkingLotImages(ParkingLotImageRegisterRequestDto parkingLotImageRegisterRequestDto) {
 
-        if (parkingLotImageMappingRepository.existsByParkingLotUuid(parkingLotImageRegisterRequestDto.getParkingLotUuid())) {
-            parkingLotImageMappingRepository.deleteByParkingLotUuid(parkingLotImageRegisterRequestDto.getParkingLotUuid());
+        String parkingLotUuid = parkingLotImageRegisterRequestDto.getParkingLotUuid();
+
+        if (parkingLotImageMappingRepository.existsByParkingLotUuid(parkingLotUuid)) {
+            parkingLotImageMappingRepository.deleteByParkingLotUuid(parkingLotUuid);
         }
 
-        String parkingLotUuid = parkingLotImageRegisterRequestDto.getParkingLotUuid();
         List<Image> imageUrls = parkingLotImageRegisterRequestDto.getImageUrls();
         List<ParkingLotImageMapping> parkingLotImageMappingList = new ArrayList<>();
 
@@ -43,16 +44,6 @@ public class ParkingLotImageMappingServiceImpl implements ParkingLotImageMapping
         List<ParkingLotImageMapping> parkingLotImageMappings = parkingLotImageMappingRepository.saveAll(parkingLotImageMappingList);
         return parkingLotImageMappings.stream()
                 .map(ParkingLotImageMappingResponseDto::from)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<String> getImageUrlsByParkingLotUuid(String parkingLotUuid) {
-
-        return parkingLotImageMappingRepository.findAllByParkingLotUuidOrderByImageIndex(parkingLotUuid)
-                .stream()
-                .map(ParkingLotImageMapping::getImageUrl)
                 .toList();
     }
 }

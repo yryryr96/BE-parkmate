@@ -7,7 +7,7 @@ import com.parkmate.parkingservice.parkinglot.application.ParkingLotService;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotDeleteRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotUpdateRequestDto;
 import com.parkmate.parkingservice.parkinglot.vo.request.ParkingLotUpdateRequestVo;
-import com.parkmate.parkingservice.parkinglot.vo.response.ParkingLotHostUuidResponseVo;
+import com.parkmate.parkingservice.parkinglot.vo.response.HostParkingLotResponseVoList;
 import com.parkmate.parkingservice.parkinglot.vo.response.ParkingLotResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -87,13 +87,14 @@ public class ParkingLotController {
     }
 
     @Operation(
-            summary = "주차장 UUID로 호스트 UUID 조회",
-            description = "주차장 UUID를 PathVariable로 받아 해당 주차장의 호스트 UUID를 조회하는 API입니다. " +
-                          "FeignClient를 사용하여 다른 서비스와 통신합니다.",
+            summary = "호스트 UUID로 주차장 정보 조회",
+            description = "호스트 UUID를 PathVariable로 받아 해당 호스트가 관리하는 주차장들의 정보를 조회하는 API입니다.",
             tags = {"PARKING-LOT-SERVICE"}
     )
-    @GetMapping("/{parkingLotUuid}/host")
-    public ParkingLotHostUuidResponseVo getHostUuidByParkingLotUuid(@PathVariable String parkingLotUuid) {
-        return parkingLotService.getHostUuidByParkingLotUuid(parkingLotUuid).toVo();
+    @GetMapping
+    public ApiResponse<HostParkingLotResponseVoList> getParkingLotsByHostUuid(@RequestHeader("X-Host-UUID") String hostUuid) {
+        return ApiResponse.ok(
+                parkingLotFacade.getHostParkingLots(hostUuid).toVo()
+        );
     }
 }

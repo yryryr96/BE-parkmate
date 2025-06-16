@@ -8,6 +8,4 @@ import java.util.List;
 public interface ParkingLotImageMappingService {
 
     List<ParkingLotImageMappingResponseDto> registerParkingLotImages(ParkingLotImageRegisterRequestDto parkingLotImageRegisterRequestDto);
-
-    List<String> getImageUrlsByParkingLotUuid(String parkingLotUuid);
 }

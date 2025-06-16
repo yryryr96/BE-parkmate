@@ -21,6 +21,7 @@ public class ParkingSpotRegisterRequestDto {
     private ParkingSpotRegisterRequestDto(String parkingLotUuid,
                                           List<ChargeableSpotRegisterVo> chargeable,
                                           List<NonChargeableSpotRegisterVo> nonChargeable) {
+
         this.parkingLotUuid = parkingLotUuid;
         this.chargeable = chargeable;
         this.nonChargeable = nonChargeable;
@@ -32,14 +33,6 @@ public class ParkingSpotRegisterRequestDto {
                 .parkingLotUuid(parkingLotUuid)
                 .chargeable(parkingSpotRegisterRequestVo.getChargeable())
                 .nonChargeable(parkingSpotRegisterRequestVo.getNonChargeable())
-                .build();
-    }
-
-    public ParkingSpotRegisterRequestDto withParkingLotUuid(String parkingLotUuid) {
-        return ParkingSpotRegisterRequestDto.builder()
-                .parkingLotUuid(parkingLotUuid)
-                .chargeable(this.chargeable)
-                .nonChargeable(this.nonChargeable)
                 .build();
     }
 }

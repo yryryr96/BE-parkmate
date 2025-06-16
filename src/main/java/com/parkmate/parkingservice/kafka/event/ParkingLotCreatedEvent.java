@@ -35,6 +35,7 @@ public class ParkingLotCreatedEvent {
     private Boolean isEvChargingAvailable;
     private Set<EvChargeType> evChargeTypes;
     private String extraInfo;
+    private String thumbnailUrl;
     private List<Image> imageUrls;
     private List<ParkingLotOptionResponseDto> options;
     private LocalDateTime timestamp;
@@ -53,6 +54,7 @@ public class ParkingLotCreatedEvent {
                                    Boolean isEvChargingAvailable,
                                    Set<EvChargeType> evChargeTypes,
                                    String extraInfo,
+                                   String thumbnailUrl,
                                    List<Image> imageUrls,
                                    List<ParkingLotOptionResponseDto> options) {
         this.parkingLotUuid = parkingLotUuid;
@@ -68,6 +70,7 @@ public class ParkingLotCreatedEvent {
         this.isEvChargingAvailable = isEvChargingAvailable;
         this.evChargeTypes = evChargeTypes;
         this.extraInfo = extraInfo;
+        this.thumbnailUrl = thumbnailUrl;
         this.imageUrls = imageUrls;
         this.options = options;
         this.timestamp = LocalDateTime.now();
@@ -108,6 +111,7 @@ public class ParkingLotCreatedEvent {
                 .extraInfo(parkingLot.getExtraInfo())
                 .evChargeTypes(evChargeTypes)
                 .parkingSpotTypes(parkingSpotTypes)
+                .thumbnailUrl(parkingLot.getThumbnailUrl())
                 .imageUrls(sortedImages)
                 .options(options)
                 .build();

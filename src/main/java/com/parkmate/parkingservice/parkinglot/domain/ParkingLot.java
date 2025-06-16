@@ -70,6 +70,10 @@ public class ParkingLot extends BaseEntity {
     @Column(nullable = false)
     private String extraInfo;
 
+    @Comment("썸네일 이미지 URL")
+    @Column(nullable = true)
+    private String thumbnailUrl;
+
     @Builder
     private ParkingLot(Long id,
                        String parkingLotUuid,
@@ -84,7 +88,8 @@ public class ParkingLot extends BaseEntity {
                        double latitude,
                        double longitude,
                        Boolean isEvChargingAvailable,
-                       String extraInfo) {
+                       String extraInfo,
+                       String thumbnailUrl) {
         this.id = id;
         this.parkingLotUuid = parkingLotUuid;
         this.hostUuid = hostUuid;
@@ -99,5 +104,6 @@ public class ParkingLot extends BaseEntity {
         this.longitude = longitude;
         this.isEvChargingAvailable = isEvChargingAvailable;
         this.extraInfo = extraInfo;
+        this.thumbnailUrl = thumbnailUrl;
     }
 }

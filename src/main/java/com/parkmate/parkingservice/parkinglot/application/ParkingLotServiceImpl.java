@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ParkingLotServiceImpl implements ParkingLotService {
@@ -64,6 +66,12 @@ public class ParkingLotServiceImpl implements ParkingLotService {
                 parkingLotRepository.findHostUuidByParkingLotUuid(parkingLotUuid)
                         .orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND))
         );
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<ParkingLot> getHostParkingLotsByHostUuid(String hostUuid) {
+        return parkingLotRepository.findAllByHostUuid(hostUuid);
     }
 
     private ParkingLot createUpdatedParkingLotEntity(ParkingLot entity,
