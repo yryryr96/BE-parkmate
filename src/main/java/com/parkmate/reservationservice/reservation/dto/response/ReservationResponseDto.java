@@ -65,16 +65,16 @@ public class ReservationResponseDto {
 
     public ReservationResponseVo toVo() {
         return ReservationResponseVo.builder()
-                .reservationCode(this.reservationCode)
-                .userUuid(this.userUuid)
-                .parkingSpotId(this.parkingSpotId)
-                .parkingLotUuid(this.parkingLotUuid)
-                .vehicleNumber(this.vehicleNumber)
-                .entryTime(this.entryTime)
-                .exitTime(this.exitTime)
-                .amount(this.amount)
-                .reservationStatus(this.reservationStatus)
-                .paymentType(this.paymentType)
+                .reservationCode(reservationCode)
+                .userUuid(userUuid)
+                .parkingSpotId(parkingSpotId)
+                .parkingLotUuid(parkingLotUuid)
+                .vehicleNumber(vehicleNumber)
+                .entryTime(entryTime)
+                .exitTime(exitTime)
+                .amount(amount)
+                .reservationStatus(reservationStatus)
+                .paymentType(paymentType)
                 .build();
     }
 }

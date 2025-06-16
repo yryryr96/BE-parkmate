@@ -27,11 +27,12 @@ public class ReservationModifyRequestDto {
         this.newExitTime = newExitTime;
     }
 
-    public static ReservationModifyRequestDto of(String reservationCode,
+    public static ReservationModifyRequestDto of(String userUuid,
+                                                 String reservationCode,
                                                  ReservationModifyRequestVo reservationModifyRequestVo) {
         return ReservationModifyRequestDto.builder()
                 .reservationCode(reservationCode)
-                .userUuid(reservationModifyRequestVo.getUserUuid())
+                .userUuid(userUuid)
                 .newEntryTime(reservationModifyRequestVo.getNewEntryTime())
                 .newExitTime(reservationModifyRequestVo.getNewExitTime())
                 .build();

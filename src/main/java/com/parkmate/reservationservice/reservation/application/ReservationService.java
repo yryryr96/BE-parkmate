@@ -5,6 +5,7 @@ import com.parkmate.reservationservice.reservation.dto.request.ReservationGetReq
 import com.parkmate.reservationservice.reservation.dto.request.ReservationModifyRequestDto;
 import com.parkmate.reservationservice.reservation.dto.request.ReservationCreateRequestDto;
 import com.parkmate.reservationservice.reservation.dto.response.ReservationResponseDto;
+import com.parkmate.reservationservice.reservation.dto.response.ReservationsResponseDto;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public interface ReservationService {
 
     void modify(ReservationModifyRequestDto reservationModifyRequestDto);
 
-    List<ReservationResponseDto> getReservations(String userUuid);
+    ReservationsResponseDto getReservations(String userUuid);
 
     ReservationResponseDto getReservation(ReservationGetRequestDto reservationGetRequestDto);
 }

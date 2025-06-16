@@ -22,11 +22,12 @@ public class ReservationCancelRequestDto {
         this.cancelReason = cancelReason;
     }
 
-    public static ReservationCancelRequestDto from(String reservationCode,
-                                                   ReservationCancelRequestVo reservationCancelRequestVo) {
+    public static ReservationCancelRequestDto of(String userUuid,
+                                                 String reservationCode,
+                                                 ReservationCancelRequestVo reservationCancelRequestVo) {
         return ReservationCancelRequestDto.builder()
                 .reservationCode(reservationCode)
-                .userUuid(reservationCancelRequestVo.getUserUuid())
+                .userUuid(userUuid)
                 .cancelReason(reservationCancelRequestVo.getCancelReason())
                 .build();
     }

@@ -10,6 +10,7 @@ import com.parkmate.reservationservice.reservation.dto.request.ReservationCreate
 import com.parkmate.reservationservice.reservation.dto.request.ReservationGetRequestDto;
 import com.parkmate.reservationservice.reservation.dto.request.ReservationModifyRequestDto;
 import com.parkmate.reservationservice.reservation.dto.response.ReservationResponseDto;
+import com.parkmate.reservationservice.reservation.dto.response.ReservationsResponseDto;
 import com.parkmate.reservationservice.reservation.infrastructure.client.ParkingServiceClient;
 import com.parkmate.reservationservice.reservation.infrastructure.client.request.ParkingSpotRequest;
 import com.parkmate.reservationservice.reservation.infrastructure.client.response.ParkingSpotResponse;
@@ -32,11 +33,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ReservationServiceImpl implements ReservationService {
 
+    private static final int MODIFY_TIME_LIMIT_MINUTES = 60;
     private final ReservationRepository reservationRepository;
     private final ParkingServiceClient parkingServiceClient;
     private final ApplicationEventPublisher eventPublisher;
-
-    private static final int MODIFY_TIME_LIMIT_MINUTES = 60;
 
     @Transactional
     @Override
@@ -53,7 +53,7 @@ public class ReservationServiceImpl implements ReservationService {
         ParkingSpot availableSpot = findFirstAvailableSpot(clientResponse.getParkingSpots(),
                 unAvailableParkingSpotIds);
 
-        Reservation reservation = reservationCreateRequestDto.toEntity(availableSpot.getId());
+        Reservation reservation = reservationCreateRequestDto.toEntity(availableSpot);
 
         reservationRepository.save(reservation);
 
@@ -149,12 +149,13 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<ReservationResponseDto> getReservations(String userUuid) {
+    public ReservationsResponseDto getReservations(String userUuid) {
 
-        return reservationRepository.findAllByUserUuid(userUuid)
-                .stream()
+        List<ReservationResponseDto> reservations = reservationRepository.findAllByUserUuid(userUuid).stream()
                 .map(ReservationResponseDto::from)
                 .toList();
+
+        return ReservationsResponseDto.from(reservations);
     }
 
     @Transactional(readOnly = true)

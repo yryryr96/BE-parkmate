@@ -18,8 +18,8 @@ public class ReservationGetRequestDto {
         this.userUuid = userUuid;
     }
 
-    public static ReservationGetRequestDto of(String reservationCode,
-                                              String userUuid) {
+    public static ReservationGetRequestDto of(String userUuid,
+                                              String reservationCode) {
         return ReservationGetRequestDto.builder()
                 .reservationCode(reservationCode)
                 .userUuid(userUuid)
