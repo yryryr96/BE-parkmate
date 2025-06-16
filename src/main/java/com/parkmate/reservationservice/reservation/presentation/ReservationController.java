@@ -11,6 +11,7 @@ import com.parkmate.reservationservice.reservation.vo.request.ReservationCreateR
 import com.parkmate.reservationservice.reservation.vo.request.ReservationModifyRequestVo;
 import com.parkmate.reservationservice.reservation.vo.response.ReservationResponseVo;
 import com.parkmate.reservationservice.reservation.vo.response.ReservationsResponseVo;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,13 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
+
+    @Operation(
+            summary = "예약 생성",
+            description = "사용자가 주차 공간을 예약합니다. 예약 시 주차 공간의 가용성을 확인하고, 예약이 성공하면 예약 정보를 반환합니다." +
+                    "Header에 X-User-UUID를 포함해야 합니다.",
+            tags = {"RESERVATION-SERVICE"}
+    )
     @PostMapping
     public ApiResponse<String> reserve(@RequestHeader("X-User-UUID") String userUuid,
                                        @RequestBody ReservationCreateRequestVo reservationCreateRequestVo) {
@@ -29,6 +37,12 @@ public class ReservationController {
         return ApiResponse.created("예약이 완료되었습니다.");
     }
 
+    @Operation(
+            summary = "예약 수정",
+            description = "사용자가 예약을 수정합니다. 수정 시 예약 코드와 함께 변경할 정보를 포함해야 합니다." +
+                    "Header에 X-User-UUID를 포함해야 합니다.",
+            tags = {"RESERVATION-SERVICE"}
+    )
     @PutMapping("/{reservationCode}")
     public ApiResponse<String> modify(@RequestHeader("X-User-UUID") String userUuid,
                                       @PathVariable String reservationCode,
@@ -39,6 +53,12 @@ public class ReservationController {
         return ApiResponse.ok("예약이 수정되었습니다.");
     }
 
+    @Operation(
+            summary = "예약 취소",
+            description = "사용자가 예약을 취소합니다. 취소 시 예약 코드와 함께 취소 사유를 포함해야 합니다." +
+                    "Header에 X-User-UUID를 포함해야 합니다.",
+            tags = {"RESERVATION-SERVICE"}
+    )
     @PutMapping("/{reservationCode}/cancel")
     public ApiResponse<String> cancel(@RequestHeader("X-User-UUID") String userUuid,
                                       @PathVariable String reservationCode,
@@ -49,11 +69,21 @@ public class ReservationController {
         return ApiResponse.ok("예약이 취소되었습니다.");
     }
 
+    @Operation(
+            summary = "예약 조회",
+            description = "사용자가 자신의 예약 목록을 조회합니다. Header에 X-User-UUID를 포함해야 합니다.",
+            tags = {"RESERVATION-SERVICE"}
+    )
     @GetMapping
     public ApiResponse<ReservationsResponseVo> getReservations(@RequestHeader("X-User-UUID") String userUuid) {
         return ApiResponse.ok(reservationService.getReservations(userUuid).toVo());
     }
 
+    @Operation(
+            summary = "예약 상세 조회",
+            description = "사용자가 특정 예약의 상세 정보를 조회합니다. Header에 X-User-UUID를 포함해야 합니다.",
+            tags = {"RESERVATION-SERVICE"}
+    )
     @GetMapping("/{reservationCode}")
     public ApiResponse<ReservationResponseVo> getReservation(@RequestHeader("X-User-UUID") String userUuid,
                                                              @PathVariable String reservationCode) {
