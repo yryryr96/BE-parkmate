@@ -1,16 +1,15 @@
 package com.parkmate.reservationservice.reservation.presentation;
 
 import com.parkmate.reservationservice.common.response.ApiResponse;
+import com.parkmate.reservationservice.common.response.CursorPage;
 import com.parkmate.reservationservice.reservation.application.ReservationService;
-import com.parkmate.reservationservice.reservation.dto.request.ReservationCancelRequestDto;
-import com.parkmate.reservationservice.reservation.dto.request.ReservationCreateRequestDto;
-import com.parkmate.reservationservice.reservation.dto.request.ReservationGetRequestDto;
-import com.parkmate.reservationservice.reservation.dto.request.ReservationModifyRequestDto;
+import com.parkmate.reservationservice.reservation.dto.request.*;
+import com.parkmate.reservationservice.reservation.dto.response.ReservationResponseDto;
 import com.parkmate.reservationservice.reservation.vo.request.ReservationCancelRequestVo;
 import com.parkmate.reservationservice.reservation.vo.request.ReservationCreateRequestVo;
+import com.parkmate.reservationservice.reservation.vo.request.ReservationCursorGetRequestVo;
 import com.parkmate.reservationservice.reservation.vo.request.ReservationModifyRequestVo;
 import com.parkmate.reservationservice.reservation.vo.response.ReservationResponseVo;
-import com.parkmate.reservationservice.reservation.vo.response.ReservationsResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +19,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ReservationController {
 
-    private final ReservationService reservationService;
-
     private static final String USER_UUID_HEADER = "X-User-UUID";
+    private final ReservationService reservationService;
 
     @Operation(
             summary = "예약 생성",
@@ -76,8 +74,14 @@ public class ReservationController {
             tags = {"RESERVATION-SERVICE"}
     )
     @GetMapping
-    public ApiResponse<ReservationsResponseVo> getReservations(@RequestHeader(USER_UUID_HEADER) String userUuid) {
-        return ApiResponse.ok(reservationService.getReservations(userUuid).toVo());
+    public ApiResponse<CursorPage<ReservationResponseVo>> getReservations(
+            @RequestHeader(USER_UUID_HEADER) String userUuid,
+            @ModelAttribute ReservationCursorGetRequestVo reservationCursorGetRequestVo) {
+
+        return ApiResponse.ok(
+                reservationService.getReservations(ReservationCursorGetRequestDto.of(userUuid, reservationCursorGetRequestVo))
+                        .map(ReservationResponseDto::toVo)
+        );
     }
 
     @Operation(

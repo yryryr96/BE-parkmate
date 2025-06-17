@@ -1,16 +1,13 @@
 package com.parkmate.reservationservice.reservation.application;
 
 import com.parkmate.reservationservice.common.exception.BaseException;
+import com.parkmate.reservationservice.common.response.CursorPage;
 import com.parkmate.reservationservice.common.response.ResponseStatus;
 import com.parkmate.reservationservice.kafka.event.ReservationCreateEvent;
 import com.parkmate.reservationservice.reservation.domain.Reservation;
 import com.parkmate.reservationservice.reservation.domain.ReservationStatus;
-import com.parkmate.reservationservice.reservation.dto.request.ReservationCancelRequestDto;
-import com.parkmate.reservationservice.reservation.dto.request.ReservationCreateRequestDto;
-import com.parkmate.reservationservice.reservation.dto.request.ReservationGetRequestDto;
-import com.parkmate.reservationservice.reservation.dto.request.ReservationModifyRequestDto;
+import com.parkmate.reservationservice.reservation.dto.request.*;
 import com.parkmate.reservationservice.reservation.dto.response.ReservationResponseDto;
-import com.parkmate.reservationservice.reservation.dto.response.ReservationsResponseDto;
 import com.parkmate.reservationservice.reservation.infrastructure.client.ParkingServiceClient;
 import com.parkmate.reservationservice.reservation.infrastructure.client.request.ParkingSpotRequest;
 import com.parkmate.reservationservice.reservation.infrastructure.client.response.*;
@@ -34,11 +31,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ReservationServiceImpl implements ReservationService {
 
+    private static final int MODIFY_TIME_LIMIT_MINUTES = 60;
     private final ReservationRepository reservationRepository;
     private final ParkingServiceClient parkingServiceClient;
     private final ApplicationEventPublisher eventPublisher;
-
-    private static final int MODIFY_TIME_LIMIT_MINUTES = 60;
 
     @Transactional
     @Override
@@ -96,9 +92,11 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Transactional(readOnly = true)
     @Override
-    public ReservationsResponseDto getReservations(String userUuid) {
+    public CursorPage<ReservationResponseDto> getReservations(
+            ReservationCursorGetRequestDto reservationCursorGetRequestDto) {
 
-        List<Reservation> reservations = reservationRepository.findAllByUserUuid(userUuid);
+        CursorPage<Reservation> results = reservationRepository.getReservations(reservationCursorGetRequestDto);
+        List<Reservation> reservations = results.getContent();
 
         List<String> parkingLotUuids = reservations.stream()
                 .map(Reservation::getParkingLotUuid)
@@ -110,9 +108,11 @@ public class ReservationServiceImpl implements ReservationService {
                 .distinct()
                 .toList();
 
-        ReservedParkingLotsResponse clientResponse = parkingServiceClient.getReservedParkingSpots(parkingLotUuids, parkingSpotIds);
+        ReservedParkingLotsResponse clientResponse = parkingServiceClient.getReservedParkingSpots(parkingLotUuids,
+                parkingSpotIds);
 
-        return getReservationInfo(clientResponse, reservations);
+        List<ReservationResponseDto> reservationInfo = getReservationInfo(clientResponse, reservations);
+        return CursorPage.of(reservationInfo, results.getHasNext(), results.getNextCursor());
     }
 
     @Transactional(readOnly = true)
@@ -145,9 +145,7 @@ public class ReservationServiceImpl implements ReservationService {
         );
 
         ParkingSpotResponse clientResponse = parkingServiceClient.getParkingSpots(parkingSpotRequest)
-                .orElseThrow(
-                        () -> new BaseException(ResponseStatus.PARKING_LOT_NOT_AVAILABLE)
-                );
+                .orElseThrow(() -> new BaseException(ResponseStatus.PARKING_LOT_NOT_AVAILABLE));
 
         if (clientResponse.getParkingSpots() == null || clientResponse.getParkingSpots().isEmpty()) {
             throw new BaseException(ResponseStatus.PARKING_LOT_NOT_AVAILABLE);
@@ -187,25 +185,25 @@ public class ReservationServiceImpl implements ReservationService {
         return now.isBefore(reservation.getEntryTime().minusMinutes(MODIFY_TIME_LIMIT_MINUTES));
     }
 
-    private static ReservationsResponseDto getReservationInfo(ReservedParkingLotsResponse clientResponse,
-                                                              List<Reservation> reservations) {
+    private List<ReservationResponseDto> getReservationInfo(ReservedParkingLotsResponse clientResponse,
+                                                            List<Reservation> reservations) {
 
         Map<String, ReservedParkingLotSimpleResponse> parkingLotMap = clientResponse.getParkingLots().stream()
-                .collect(Collectors.toMap(ReservedParkingLotSimpleResponse::getParkingLotUuid, parkingLot -> parkingLot));
+                .collect(Collectors.toMap(ReservedParkingLotSimpleResponse::getParkingLotUuid,
+                        parkingLot -> parkingLot));
 
         Map<Long, ReservedParkingSpotSimpleResponse> parkingSpotMap = clientResponse.getParkingSpots().stream()
                 .collect(Collectors.toMap(ReservedParkingSpotSimpleResponse::getId, parkingSpot -> parkingSpot));
 
-        List<ReservationResponseDto> result = reservations.stream()
+        return reservations.stream()
                 .map(reservation -> {
 
-                    ReservedParkingLotSimpleResponse parkingLotInfo = parkingLotMap.get(reservation.getParkingLotUuid());
+                    ReservedParkingLotSimpleResponse parkingLotInfo = parkingLotMap.get(
+                            reservation.getParkingLotUuid());
                     ReservedParkingSpotSimpleResponse spotInfo = parkingSpotMap.get(reservation.getParkingSpotId());
 
                     return ReservationResponseDto.from(reservation, parkingLotInfo, spotInfo);
                 })
                 .collect(Collectors.toList());
-
-        return ReservationsResponseDto.from(result);
     }
 }
