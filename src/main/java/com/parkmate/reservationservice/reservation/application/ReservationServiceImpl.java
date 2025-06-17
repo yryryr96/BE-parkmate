@@ -13,7 +13,7 @@ import com.parkmate.reservationservice.reservation.dto.response.ReservationRespo
 import com.parkmate.reservationservice.reservation.dto.response.ReservationsResponseDto;
 import com.parkmate.reservationservice.reservation.infrastructure.client.ParkingServiceClient;
 import com.parkmate.reservationservice.reservation.infrastructure.client.request.ParkingSpotRequest;
-import com.parkmate.reservationservice.reservation.infrastructure.client.response.ParkingSpotResponse;
+import com.parkmate.reservationservice.reservation.infrastructure.client.response.*;
 import com.parkmate.reservationservice.reservation.infrastructure.repository.ReservationRepository;
 import com.parkmate.reservationservice.reservation.vo.ParkingSpot;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -59,6 +60,76 @@ public class ReservationServiceImpl implements ReservationService {
         reservationRepository.save(reservation);
 
         eventPublisher.publishEvent(ReservationCreateEvent.from(clientResponse.getHostUuid(), reservation));
+    }
+
+    @Transactional
+    @Override
+    public void cancel(ReservationCancelRequestDto reservationCancelRequestDto) {
+
+        Reservation reservation = reservationRepository.findByReservationCodeAndUserUuid(
+                reservationCancelRequestDto.getReservationCode(),
+                reservationCancelRequestDto.getUserUuid()
+        ).orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
+
+        reservation.cancel();
+    }
+
+    @Transactional
+    @Override
+    public void modify(ReservationModifyRequestDto reservationModifyRequestDto) {
+
+        Reservation reservation = reservationRepository.findByReservationCodeAndUserUuid(
+                reservationModifyRequestDto.getReservationCode(),
+                reservationModifyRequestDto.getUserUuid()
+        ).orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
+
+        if (canModified(reservation)) {
+            reservation.modify(reservationModifyRequestDto.getNewEntryTime(),
+                    reservationModifyRequestDto.getNewExitTime()
+            );
+
+            return;
+        }
+
+        throw new BaseException(ResponseStatus.MODIFY_TIME_LIMIT_EXCEEDED);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public ReservationsResponseDto getReservations(String userUuid) {
+
+        List<Reservation> reservations = reservationRepository.findAllByUserUuid(userUuid);
+
+        List<String> parkingLotUuids = reservations.stream()
+                .map(Reservation::getParkingLotUuid)
+                .distinct()
+                .toList();
+
+        List<Long> parkingSpotIds = reservations.stream()
+                .map(Reservation::getParkingSpotId)
+                .distinct()
+                .toList();
+
+        ReservedParkingLotsResponse clientResponse = parkingServiceClient.getReservedParkingSpots(parkingLotUuids, parkingSpotIds);
+
+        return getReservationInfo(clientResponse, reservations);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public ReservationResponseDto getReservation(ReservationGetRequestDto reservationGetRequestDto) {
+
+        Reservation reservation = reservationRepository.findByReservationCodeAndUserUuid(
+                        reservationGetRequestDto.getReservationCode(),
+                        reservationGetRequestDto.getUserUuid())
+                .orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
+
+        ReservedParkingSpotResponse spotInfo = parkingServiceClient.getReservedParkingSpot(
+                reservation.getParkingLotUuid(),
+                reservation.getParkingSpotId()
+        );
+
+        return ReservationResponseDto.from(reservation, spotInfo);
     }
 
     private ParkingSpotResponse fetchPotentialParkingSpots(ReservationCreateRequestDto reservationCreateRequestDto) {
@@ -110,63 +181,31 @@ public class ReservationServiceImpl implements ReservationService {
                 .orElseThrow(() -> new BaseException(ResponseStatus.PARKING_LOT_NOT_AVAILABLE));
     }
 
-    @Transactional
-    @Override
-    public void cancel(ReservationCancelRequestDto reservationCancelRequestDto) {
-
-        Reservation reservation = reservationRepository.findByReservationCodeAndUserUuid(
-                reservationCancelRequestDto.getReservationCode(),
-                reservationCancelRequestDto.getUserUuid()
-        ).orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
-
-        reservation.cancel();
-    }
-
-    @Transactional
-    @Override
-    public void modify(ReservationModifyRequestDto reservationModifyRequestDto) {
-
-        Reservation reservation = reservationRepository.findByReservationCodeAndUserUuid(
-                reservationModifyRequestDto.getReservationCode(),
-                reservationModifyRequestDto.getUserUuid()
-        ).orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
-
-        if (canModified(reservation)) {
-            reservation.modify(reservationModifyRequestDto.getNewEntryTime(),
-                    reservationModifyRequestDto.getNewExitTime()
-            );
-
-            return;
-        }
-
-        throw new BaseException(ResponseStatus.MODIFY_TIME_LIMIT_EXCEEDED);
-    }
-
     private boolean canModified(Reservation reservation) {
 
         LocalDateTime now = LocalDateTime.now();
         return now.isBefore(reservation.getEntryTime().minusMinutes(MODIFY_TIME_LIMIT_MINUTES));
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    public ReservationsResponseDto getReservations(String userUuid) {
+    private static ReservationsResponseDto getReservationInfo(ReservedParkingLotsResponse clientResponse,
+                                                              List<Reservation> reservations) {
 
-        List<ReservationResponseDto> reservations = reservationRepository.findAllByUserUuid(userUuid).stream()
-                .map(ReservationResponseDto::from)
-                .toList();
+        Map<String, ReservedParkingLotSimpleResponse> parkingLotMap = clientResponse.getParkingLots().stream()
+                .collect(Collectors.toMap(ReservedParkingLotSimpleResponse::getParkingLotUuid, parkingLot -> parkingLot));
 
-        return ReservationsResponseDto.from(reservations);
-    }
+        Map<Long, ReservedParkingSpotSimpleResponse> parkingSpotMap = clientResponse.getParkingSpots().stream()
+                .collect(Collectors.toMap(ReservedParkingSpotSimpleResponse::getId, parkingSpot -> parkingSpot));
 
-    @Transactional(readOnly = true)
-    @Override
-    public ReservationResponseDto getReservation(ReservationGetRequestDto reservationGetRequestDto) {
-        Reservation reservation = reservationRepository.findByReservationCodeAndUserUuid(
-                        reservationGetRequestDto.getReservationCode(),
-                        reservationGetRequestDto.getUserUuid())
-                .orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
+        List<ReservationResponseDto> result = reservations.stream()
+                .map(reservation -> {
 
-        return ReservationResponseDto.from(reservation);
+                    ReservedParkingLotSimpleResponse parkingLotInfo = parkingLotMap.get(reservation.getParkingLotUuid());
+                    ReservedParkingSpotSimpleResponse spotInfo = parkingSpotMap.get(reservation.getParkingSpotId());
+
+                    return ReservationResponseDto.from(reservation, parkingLotInfo, spotInfo);
+                })
+                .collect(Collectors.toList());
+
+        return ReservationsResponseDto.from(result);
     }
 }

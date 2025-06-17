@@ -14,8 +14,11 @@ public class ReservationResponseVo {
 
     private String reservationCode;
     private String userUuid;
+    private String parkingLotThumbnailUrl;
     private Long parkingSpotId;
+    private String parkingSpotName;
     private String parkingLotUuid;
+    private String parkingLotName;
     private String vehicleNumber;
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
@@ -25,19 +28,25 @@ public class ReservationResponseVo {
 
     @Builder
     private ReservationResponseVo(String reservationCode,
-                                 String userUuid,
-                                 Long parkingSpotId,
-                                 String parkingLotUuid,
-                                 String vehicleNumber,
-                                 LocalDateTime entryTime,
-                                 LocalDateTime exitTime,
-                                 double amount,
-                                 ReservationStatus reservationStatus,
-                                 PaymentType paymentType) {
+                                  String userUuid,
+                                  String parkingLotThumbnailUrl,
+                                  Long parkingSpotId,
+                                  String parkingSpotName,
+                                  String parkingLotUuid,
+                                  String parkingLotName,
+                                  String vehicleNumber,
+                                  LocalDateTime entryTime,
+                                  LocalDateTime exitTime,
+                                  double amount,
+                                  ReservationStatus reservationStatus,
+                                  PaymentType paymentType) {
         this.reservationCode = reservationCode;
         this.userUuid = userUuid;
+        this.parkingLotThumbnailUrl = parkingLotThumbnailUrl;
         this.parkingSpotId = parkingSpotId;
+        this.parkingSpotName = parkingSpotName;
         this.parkingLotUuid = parkingLotUuid;
+        this.parkingLotName = parkingLotName;
         this.vehicleNumber = vehicleNumber;
         this.entryTime = entryTime;
         this.exitTime = exitTime;
