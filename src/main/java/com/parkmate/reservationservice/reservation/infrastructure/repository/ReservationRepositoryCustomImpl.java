@@ -1,7 +1,6 @@
 package com.parkmate.reservationservice.reservation.infrastructure.repository;
 
 import com.parkmate.reservationservice.common.response.CursorPage;
-import com.parkmate.reservationservice.reservation.domain.QReservation;
 import com.parkmate.reservationservice.reservation.domain.Reservation;
 import com.parkmate.reservationservice.reservation.dto.request.ReservationCursorGetRequestDto;
 import com.querydsl.core.BooleanBuilder;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.parkmate.reservationservice.reservation.domain.QReservation.*;
+import static com.parkmate.reservationservice.reservation.domain.QReservation.reservation;
 
 @Repository
 @RequiredArgsConstructor

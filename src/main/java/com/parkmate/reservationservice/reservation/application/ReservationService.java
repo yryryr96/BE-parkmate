@@ -3,7 +3,6 @@ package com.parkmate.reservationservice.reservation.application;
 import com.parkmate.reservationservice.common.response.CursorPage;
 import com.parkmate.reservationservice.reservation.dto.request.*;
 import com.parkmate.reservationservice.reservation.dto.response.ReservationResponseDto;
-import com.parkmate.reservationservice.reservation.dto.response.ReservationsResponseDto;
 
 public interface ReservationService {
 
