@@ -4,6 +4,7 @@ import com.parkmate.reservationservice.common.generator.ReservationCodeGenerator
 import com.parkmate.reservationservice.reservation.domain.PaymentType;
 import com.parkmate.reservationservice.reservation.domain.Reservation;
 import com.parkmate.reservationservice.reservation.domain.ReservationStatus;
+import com.parkmate.reservationservice.reservation.vo.ParkingSpot;
 import com.parkmate.reservationservice.reservation.vo.request.ReservationCreateRequestVo;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,9 +44,10 @@ public class ReservationCreateRequestDto {
         this.paymentType = paymentType;
     }
 
-    public static ReservationCreateRequestDto from(ReservationCreateRequestVo reservationCreateRequestVo) {
+    public static ReservationCreateRequestDto of(String userUuid,
+                                                 ReservationCreateRequestVo reservationCreateRequestVo) {
         return ReservationCreateRequestDto.builder()
-                .userUuid(reservationCreateRequestVo.getUserUuid())
+                .userUuid(userUuid)
                 .parkingLotUuid(reservationCreateRequestVo.getParkingLotUuid())
                 .parkingSpotType(reservationCreateRequestVo.getParkingSpotType())
                 .vehicleNumber(reservationCreateRequestVo.getVehicleNumber())
@@ -56,17 +58,17 @@ public class ReservationCreateRequestDto {
                 .build();
     }
 
-    public Reservation toEntity(Long parkingSpotId) {
+    public Reservation toEntity(ParkingSpot parkingSpot) {
         return Reservation.builder()
                 .reservationCode(ReservationCodeGenerator.generate())
-                .userUuid(this.userUuid)
-                .parkingLotUuid(this.parkingLotUuid)
-                .parkingSpotId(parkingSpotId)
-                .vehicleNumber(this.vehicleNumber)
-                .entryTime(this.entryTime)
-                .exitTime(this.exitTime)
-                .amount(this.amount)
-                .paymentType(this.paymentType)
+                .userUuid(userUuid)
+                .parkingLotUuid(parkingLotUuid)
+                .parkingSpotId(parkingSpot.getId())
+                .vehicleNumber(vehicleNumber)
+                .entryTime(entryTime)
+                .exitTime(exitTime)
+                .amount(amount)
+                .paymentType(paymentType)
                 .status(ReservationStatus.CONFIRMED)
                 .build();
     }

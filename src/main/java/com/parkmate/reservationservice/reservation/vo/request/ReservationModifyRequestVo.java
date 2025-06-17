@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 @Getter
 public class ReservationModifyRequestVo {
 
-    private String userUuid;
     private LocalDateTime newEntryTime;
     private LocalDateTime newExitTime;
 }

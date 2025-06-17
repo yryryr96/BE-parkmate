@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 @Getter
 public class ReservationCreateRequestVo {
 
-    private String userUuid;
     private String parkingSpotType;
     private String parkingLotUuid;
     private String vehicleNumber;
