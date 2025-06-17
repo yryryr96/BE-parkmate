@@ -52,11 +52,9 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 
     @Transactional(readOnly = true)
     @Override
-    public ParkingLotResponseDto findByUuid(String parkingLotUuid) {
-        return ParkingLotResponseDto.from(
-                parkingLotRepository.findByParkingLotUuid(parkingLotUuid)
-                        .orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND))
-        );
+    public ParkingLot findByUuid(String parkingLotUuid) {
+        return parkingLotRepository.findByParkingLotUuid(parkingLotUuid)
+                .orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
@@ -72,6 +70,12 @@ public class ParkingLotServiceImpl implements ParkingLotService {
     @Override
     public List<ParkingLot> getHostParkingLotsByHostUuid(String hostUuid) {
         return parkingLotRepository.findAllByHostUuid(hostUuid);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<ParkingLot> findByUuids(List<String> parkingLotUuids) {
+        return parkingLotRepository.findAllByParkingLotUuidIn(parkingLotUuids);
     }
 
     private ParkingLot createUpdatedParkingLotEntity(ParkingLot entity,

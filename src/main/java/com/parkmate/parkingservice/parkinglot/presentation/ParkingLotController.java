@@ -22,6 +22,8 @@ public class ParkingLotController {
     private final ParkingLotFacade parkingLotFacade;
     private final ParkingLotService parkingLotService;
 
+    private static final String HOST_UUID_HEADER = "X-Host-UUID";
+
     @Operation(
             summary = "주차장 등록",
             description = "parkingLot, parkingSpot, parkingLotImage 요청을 받아 주차장을 등록하는 API입니다. " +
@@ -48,7 +50,7 @@ public class ParkingLotController {
     )
     @PutMapping("/{parkingLotUuid}")
     public ApiResponse<String> updateParkingLot(@PathVariable String parkingLotUuid,
-                                                @RequestHeader("X-Host-UUID") String hostUuid,
+                                                @RequestHeader(HOST_UUID_HEADER) String hostUuid,
                                                 @RequestBody ParkingLotUpdateRequestVo parkingLotUpdateRequestVo) {
 
         parkingLotService.update(ParkingLotUpdateRequestDto.from(parkingLotUuid, hostUuid, parkingLotUpdateRequestVo));
@@ -66,7 +68,7 @@ public class ParkingLotController {
     )
     @DeleteMapping("/{parkingLotUuid}")
     public ApiResponse<String> deleteParkingLot(@PathVariable String parkingLotUuid,
-                                                @RequestHeader("X-Host-UUID") String hostUuid) {
+                                                @RequestHeader(HOST_UUID_HEADER) String hostUuid) {
         parkingLotService.delete(ParkingLotDeleteRequestDto.of(parkingLotUuid, hostUuid));
         return ApiResponse.of(
                 HttpStatus.NO_CONTENT,
@@ -82,7 +84,7 @@ public class ParkingLotController {
     @GetMapping("/{parkingLotUuid}")
     public ApiResponse<ParkingLotResponseVo> getParkingLotByUuid(@PathVariable String parkingLotUuid) {
         return ApiResponse.ok(
-                parkingLotService.findByUuid(parkingLotUuid).toVo()
+                ParkingLotResponseVo.from(parkingLotService.findByUuid(parkingLotUuid))
         );
     }
 

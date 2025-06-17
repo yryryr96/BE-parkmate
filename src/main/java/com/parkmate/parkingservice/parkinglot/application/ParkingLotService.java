@@ -17,9 +17,11 @@ public interface ParkingLotService {
 
     void delete(ParkingLotDeleteRequestDto parkingLotDeleteRequestDto);
 
-    ParkingLotResponseDto findByUuid(String parkingLotUuid);
+    ParkingLot findByUuid(String parkingLotUuid);
 
     ParkingLotHostUuidResponseDto getHostUuidByParkingLotUuid(String parkingLotUuid);
 
     List<ParkingLot> getHostParkingLotsByHostUuid(String hostUuid);
+
+    List<ParkingLot> findByUuids(List<String> parkingLotUuids);
 }

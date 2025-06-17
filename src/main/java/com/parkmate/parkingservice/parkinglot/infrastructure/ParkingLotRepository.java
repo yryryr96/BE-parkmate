@@ -20,4 +20,6 @@ public interface ParkingLotRepository extends JpaRepository<ParkingLot, Long> {
     Optional<String> findHostUuidByParkingLotUuid(String parkingLotUuid);
 
     List<ParkingLot> findAllByHostUuid(String hostUuid);
+
+    List<ParkingLot> findAllByParkingLotUuidIn(List<String> parkingLotUuids);
 }
