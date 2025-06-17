@@ -1,5 +1,6 @@
 package com.parkmate.parkingservice.parkingspot.application;
 
+import com.parkmate.parkingservice.parkingspot.domain.ParkingSpot;
 import com.parkmate.parkingservice.parkingspot.domain.ParkingSpotType;
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotDeleteRequestDto;
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotGetRequestDto;
@@ -24,4 +25,8 @@ public interface ParkingSpotService {
 
     List<ParkingSpotSimpleResponseDto> getParkingSpotsByParkingLotUuidAndType(String parkingLotUuid,
                                                                               ParkingSpotType parkingSpotType);
+
+    ParkingSpot findById(Long id);
+
+    List<ParkingSpot> findByIds(List<Long> parkingSpotIds);
 }

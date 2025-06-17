@@ -97,4 +97,16 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
                 .map(ParkingSpotSimpleResponseDto::from)
                 .toList();
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public ParkingSpot findById(Long id) {
+        return parkingSpotRepository.findById(id).orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<ParkingSpot> findByIds(List<Long> parkingSpotIds) {
+        return parkingSpotRepository.findALlByIdIn(parkingSpotIds);
+    }
 }

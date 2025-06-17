@@ -1,5 +1,6 @@
 package com.parkmate.parkingservice.parkinglot.vo.response;
 
+import com.parkmate.parkingservice.parkinglot.domain.ParkingLot;
 import com.parkmate.parkingservice.parkinglot.domain.ParkingLotType;
 import lombok.Builder;
 import lombok.Getter;
@@ -47,5 +48,22 @@ public class ParkingLotResponseVo {
         this.longitude = longitude;
         this.isEvChargingAvailable = isEvChargingAvailable;
         this.extraInfo = extraInfo;
+    }
+
+    public static ParkingLotResponseVo from(ParkingLot parkingLot) {
+        return ParkingLotResponseVo.builder()
+                .hostUuid(parkingLot.getHostUuid())
+                .parkingLotType(parkingLot.getParkingLotType())
+                .name(parkingLot.getName())
+                .phoneNumber(parkingLot.getPhoneNumber())
+                .capacity(parkingLot.getCapacity())
+                .registeredCapacity(parkingLot.getRegisteredCapacity())
+                .mainAddress(parkingLot.getMainAddress())
+                .detailAddress(parkingLot.getDetailAddress())
+                .latitude(parkingLot.getLatitude())
+                .longitude(parkingLot.getLongitude())
+                .isEvChargingAvailable(parkingLot.getIsEvChargingAvailable())
+                .extraInfo(parkingLot.getExtraInfo())
+                .build();
     }
 }
