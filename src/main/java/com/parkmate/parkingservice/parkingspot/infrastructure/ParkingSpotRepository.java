@@ -21,6 +21,6 @@ public interface ParkingSpotRepository extends JpaRepository<ParkingSpot, Long> 
     List<ParkingSpot> findAllByParkingLotUuidAndType(String parkingLotUuid,
                                         ParkingSpotType parkingSpotType);
 
-    List<ParkingSpot> findALlByIdIn(List<Long> parkingSpotIds);
+    List<ParkingSpot> findAllByIdIn(List<Long> parkingSpotIds);
 
 }

@@ -107,6 +107,6 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
     @Transactional(readOnly = true)
     @Override
     public List<ParkingSpot> findByIds(List<Long> parkingSpotIds) {
-        return parkingSpotRepository.findALlByIdIn(parkingSpotIds);
+        return parkingSpotRepository.findAllByIdIn(parkingSpotIds);
     }
 }
