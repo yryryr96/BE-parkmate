@@ -20,11 +20,11 @@ public class GeoParkingLotSchedule {
     private final ParkingLotReadService parkingLotReadService;
     private final RedisUtil<String, String> redisUtil;
 
-    private static final String GEO_KEY = "geopoints";
-    private static final String NEXT_GEO_KEY = "next_geopoints";
-
     @Scheduled(fixedDelay = 60000)
     public void syncGeoParkingLots() {
+
+        final String GEO_KEY = "geopoints";
+        final String NEXT_GEO_KEY = "next_geopoints";
 
         List<GeoPointAddRequestDto> parkingLots = parkingLotReadService.findAll().stream()
                 .map(parkingLot -> GeoPointAddRequestDto.builder()
