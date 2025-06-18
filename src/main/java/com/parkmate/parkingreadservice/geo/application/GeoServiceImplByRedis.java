@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +35,18 @@ public class GeoServiceImplByRedis implements GeoService {
         double longitude = geoPointAddRequestDto.getLongitude();
 
         geoOperations.add(GEO_KEY, new Point(longitude, latitude), parkingLotUuid);
+    }
+
+    @Override
+    public void addParkingLot(String key, List<GeoPointAddRequestDto> geoPointAddRequestDtos) {
+
+        Map<String, Point> locationMap = geoPointAddRequestDtos.stream()
+                .collect(Collectors.toMap(
+                        GeoPointAddRequestDto::getParkingLotUuid,
+                        dto -> new Point(dto.getLongitude(), dto.getLatitude())
+                ));
+
+        geoOperations.add(key, locationMap);
     }
 
     @Override
