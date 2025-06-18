@@ -3,6 +3,7 @@ package com.parkmate.parkingreadservice.parkinglotread.application;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotCreateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotMetadataUpdateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotReactionsUpdateEvent;
+import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
 import com.parkmate.parkingreadservice.parkinglotread.dto.response.ParkingLotReadResponseDto;
 
 import java.util.List;
@@ -18,4 +19,6 @@ public interface ParkingLotReadService {
     void syncParkingLotReactions(List<ParkingLotReactionsUpdateEvent> parkingLotReactionsUpdateEventList);
 
     List<ParkingLotReadResponseDto> getParkingLotsByUuids(List<String> parkingLotUuids);
+
+    List<ParkingLotRead> findAllBySequenceAndLimit(int sequence, int limit);
 }

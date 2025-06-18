@@ -1,5 +1,6 @@
 package com.parkmate.parkingreadservice.geo.application;
 
+import com.parkmate.parkingreadservice.geo.dto.request.GeoPointAddRequestDto;
 import com.parkmate.parkingreadservice.geo.dto.request.InBoxParkingLotRequestDto;
 import com.parkmate.parkingreadservice.geo.dto.request.NearbyParkingLotRequestDto;
 import com.parkmate.parkingreadservice.geo.dto.response.GeoSearchResult;
@@ -25,9 +26,11 @@ public class GeoServiceImplByRedis implements GeoService {
     private static final double DISTANCE_PRECISION_FACTOR = 10.0;
 
     @Override
-    public void addParkingLot(String parkingLotUuid,
-                              double latitude,
-                              double longitude) {
+    public void addParkingLot(GeoPointAddRequestDto geoPointAddRequestDto) {
+
+        String parkingLotUuid = geoPointAddRequestDto.getParkingLotUuid();
+        double latitude = geoPointAddRequestDto.getLatitude();
+        double longitude = geoPointAddRequestDto.getLongitude();
 
         geoOperations.add(GEO_KEY, new Point(longitude, latitude), parkingLotUuid);
     }

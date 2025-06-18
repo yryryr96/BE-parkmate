@@ -6,9 +6,11 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableKafka
 @EnableAsync
+@EnableScheduling
 @EnableDiscoveryClient
 @EnableMongoRepositories(basePackages = "com.parkmate.parkingreadservice")
 @SpringBootApplication

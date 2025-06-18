@@ -1,6 +1,7 @@
 package com.parkmate.parkingreadservice.kafka.eventmanager;
 
 import com.parkmate.parkingreadservice.geo.application.GeoService;
+import com.parkmate.parkingreadservice.geo.dto.request.GeoPointAddRequestDto;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotCreateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotMetadataUpdateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotReactionsUpdateEvent;
@@ -20,7 +21,13 @@ public class ParkingLotEventManager {
     public void handleParkingLotCreatedEvent(ParkingLotCreateEvent event) {
 
         parkingLotReadService.createParkingLot(event);
-        geoService.addParkingLot(event.getParkingLotUuid(), event.getLatitude(), event.getLongitude());
+        geoService.addParkingLot(
+                GeoPointAddRequestDto.builder()
+                        .parkingLotUuid(event.getParkingLotUuid())
+                        .latitude(event.getLatitude())
+                        .longitude(event.getLongitude())
+                        .build()
+        );
     }
 
     public void handleParkingLotMetadataUpdatedEvent(ParkingLotMetadataUpdateEvent event) {
