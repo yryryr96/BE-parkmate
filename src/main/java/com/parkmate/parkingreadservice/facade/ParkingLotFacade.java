@@ -93,8 +93,12 @@ public class ParkingLotFacade {
     private List<ParkingLotReadResponseDto> filterByEvChargingCondition(Boolean isEvChargingAvailable,
                                                                         List<ParkingLotReadResponseDto> parkingLots) {
 
+        if (Boolean.FALSE.equals(isEvChargingAvailable)) {
+            return parkingLots;
+        }
+
         return parkingLots.stream()
-                .filter(p -> p.getIsEvChargingAvailable().equals(isEvChargingAvailable))
+                .filter(p -> Boolean.TRUE.equals(p.getIsEvChargingAvailable()))
                 .toList();
     }
 
