@@ -76,4 +76,20 @@ public class RedisUtil<K,V> {
             throw new RedisException(e.getMessage());
         }
     }
+
+    public void delete(K key) {
+        try {
+            this.redisTemplate.delete(key);
+        } catch (Exception e) {
+            throw new RedisException(e.getMessage());
+        }
+    }
+
+    public void rename(K oldKey, K newKey) {
+        try {
+            this.redisTemplate.rename(oldKey, newKey);
+        } catch (Exception e) {
+            throw new RedisException(e.getMessage());
+        }
+    }
 }

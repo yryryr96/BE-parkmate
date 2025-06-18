@@ -58,7 +58,7 @@ public class ParkingLotReadServiceImpl implements ParkingLotReadService {
     }
 
     @Override
-    public List<ParkingLotRead> findAllBySequenceAndLimit(int sequence, int limit) {
-        return parkingLotReadRepository.findAllBySequenceAndLimit(sequence, limit);
+    public List<ParkingLotRead> findAll() {
+        return parkingLotReadRepository.findAll();
     }
 }

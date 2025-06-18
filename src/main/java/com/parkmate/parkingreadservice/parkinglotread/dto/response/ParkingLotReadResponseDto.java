@@ -17,7 +17,6 @@ public class ParkingLotReadResponseDto {
 
     private String parkingLotUuid;
     private String hostUuid;
-    private Image thumbnailUrl;
     private String name;
     private String phoneNumber;
     private String address;
@@ -27,6 +26,7 @@ public class ParkingLotReadResponseDto {
     private Boolean isEvChargingAvailable;
     private Set<String> evChargeTypes;
     private String extraInfo;
+    private String thumbnailUrl;
     private List<Image> imageUrls;
     private List<ParkingLotOption> options;
     private int likeCount;
@@ -35,7 +35,7 @@ public class ParkingLotReadResponseDto {
     @Builder
     private ParkingLotReadResponseDto(String parkingLotUuid,
                                       String hostUuid,
-                                      Image thumbnailUrl,
+                                      String thumbnailUrl,
                                       String name,
                                       String phoneNumber,
                                       String address,

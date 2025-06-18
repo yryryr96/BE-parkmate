@@ -1,10 +1,11 @@
 package com.parkmate.parkingreadservice.scheduler;
 
+import com.parkmate.parkingreadservice.common.utils.RedisUtil;
 import com.parkmate.parkingreadservice.geo.application.GeoService;
 import com.parkmate.parkingreadservice.geo.dto.request.GeoPointAddRequestDto;
 import com.parkmate.parkingreadservice.parkinglotread.application.ParkingLotReadService;
-import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -12,34 +13,33 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class GeoParkingLotSchedule {
 
     private final GeoService geoService;
     private final ParkingLotReadService parkingLotReadService;
+    private final RedisUtil<String, String> redisUtil;
 
-    @Scheduled(fixedDelay = 60 * 10 * 10)
+    private static final String GEO_KEY = "geopoints";
+    private static final String NEXT_GEO_KEY = "next_geopoints";
+
+    @Scheduled(fixedDelay = 60000)
     public void syncGeoParkingLots() {
 
-        int sequence = 0;
-        int limit = 20;
-
-        while (true) {
-
-            List<ParkingLotRead> parkingLots = parkingLotReadService.findAllBySequenceAndLimit(sequence, limit);
-            parkingLots.forEach(parkingLot -> {
-
-                GeoPointAddRequestDto request = GeoPointAddRequestDto.builder()
+        List<GeoPointAddRequestDto> parkingLots = parkingLotReadService.findAll().stream()
+                .map(parkingLot -> GeoPointAddRequestDto.builder()
                         .parkingLotUuid(parkingLot.getParkingLotUuid())
                         .latitude(parkingLot.getLatitude())
                         .longitude(parkingLot.getLongitude())
-                        .build();
+                        .build())
+                .toList();
 
-                geoService.addParkingLot(request);
-            });
+        log.info("sync 작업 시작: {}개 주차장", parkingLots.size());
 
-            if (parkingLots.size() < limit) {
-                return;
-            }
-        }
+        redisUtil.delete(NEXT_GEO_KEY);
+        geoService.addParkingLot(NEXT_GEO_KEY, parkingLots);
+
+        redisUtil.rename(NEXT_GEO_KEY, GEO_KEY);
+
     }
 }

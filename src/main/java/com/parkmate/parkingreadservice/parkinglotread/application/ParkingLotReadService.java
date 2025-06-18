@@ -20,5 +20,5 @@ public interface ParkingLotReadService {
 
     List<ParkingLotReadResponseDto> getParkingLotsByUuids(List<String> parkingLotUuids);
 
-    List<ParkingLotRead> findAllBySequenceAndLimit(int sequence, int limit);
+    List<ParkingLotRead> findAll();
 }

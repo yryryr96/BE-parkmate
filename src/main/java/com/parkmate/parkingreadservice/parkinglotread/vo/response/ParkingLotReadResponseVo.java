@@ -15,7 +15,7 @@ public class ParkingLotReadResponseVo {
 
     private String parkingLotUuid;
     private String hostUuid;
-    private Image thumbnailUrl;
+    private String thumbnailUrl;
     private String name;
     private String phoneNumber;
     private String address;
@@ -33,7 +33,7 @@ public class ParkingLotReadResponseVo {
     @Builder
     private ParkingLotReadResponseVo(String parkingLotUuid,
                                      String hostUuid,
-                                     Image thumbnailUrl,
+                                     String thumbnailUrl,
                                      String name,
                                      String phoneNumber,
                                      String address,
