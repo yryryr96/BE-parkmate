@@ -11,7 +11,7 @@ public interface GeoService {
 
     void addParkingLot(GeoPointAddRequestDto geoPointAddRequestDto);
 
-    void addParkingLot(String key, List<GeoPointAddRequestDto> geoPointAddRequestDtos);
+    void addParkingLot(String key, List<GeoPointAddRequestDto> geoPointAddRequestsDto);
 
     List<GeoSearchResult> getParkingLotsNearby(NearbyParkingLotRequestDto nearbyParkingLotRequestDto);
 

@@ -38,9 +38,9 @@ public class GeoServiceImplByRedis implements GeoService {
     }
 
     @Override
-    public void addParkingLot(String key, List<GeoPointAddRequestDto> geoPointAddRequestDtos) {
+    public void addParkingLot(String key, List<GeoPointAddRequestDto> geoPointAddRequestsDto) {
 
-        Map<String, Point> locationMap = geoPointAddRequestDtos.stream()
+        Map<String, Point> locationMap = geoPointAddRequestsDto.stream()
                 .collect(Collectors.toMap(
                         GeoPointAddRequestDto::getParkingLotUuid,
                         dto -> new Point(dto.getLongitude(), dto.getLatitude())

@@ -4,7 +4,9 @@ import io.lettuce.core.RedisException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,6 +66,19 @@ public class RedisUtil<K,V> {
         }
         try {
             this.redisTemplate.opsForValue().multiSet(keyValueMap);
+        } catch (Exception e) {
+            throw new RedisException(e.getMessage());
+        }
+    }
+
+    public void multiInsertWithTtl(Map<K, V> keyValueMap, long timeout, TimeUnit unit) {
+        if (keyValueMap == null || keyValueMap.isEmpty()) {
+            return;
+        }
+        try {
+            keyValueMap.forEach((key, value) -> {
+                this.redisTemplate.opsForValue().set(key, value, timeout, unit);
+            });
         } catch (Exception e) {
             throw new RedisException(e.getMessage());
         }

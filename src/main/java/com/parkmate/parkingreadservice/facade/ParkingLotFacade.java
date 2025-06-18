@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,16 +56,16 @@ public class ParkingLotFacade {
     public InBoxParkingLotResponseDtoList getParkingLotsInBox(InBoxParkingLotRequestDto inBoxParkingLotRequestDto) {
 
         List<GeoSearchResult> parkingLotsInBox = geoService.getParkingLotsInBox(inBoxParkingLotRequestDto);
-        List<ParkingLotReadResponseDto> parkingLotReadResponseDtos = resolveParkingLotDetails(parkingLotsInBox);
+        List<ParkingLotReadResponseDto> parkingLotReadsResponseDto = resolveParkingLotDetails(parkingLotsInBox);
 
         LocalDateTime startDateTime = inBoxParkingLotRequestDto.getStartDateTime();
         LocalDateTime endDateTime = inBoxParkingLotRequestDto.getEndDateTime();
 
-        parkingLotReadResponseDtos = filterByEvChargingCondition(inBoxParkingLotRequestDto.getIsEvChargingAvailable(),
-                parkingLotReadResponseDtos);
+        parkingLotReadsResponseDto = filterByEvChargingCondition(inBoxParkingLotRequestDto.getIsEvChargingAvailable(),
+                parkingLotReadsResponseDto);
 
         List<ParkingLotReadResponseDto> filteredParkingLotsByOperation = filterByOperations(
-                parkingLotReadResponseDtos,
+                parkingLotReadsResponseDto,
                 startDateTime,
                 endDateTime
         );
@@ -173,8 +174,7 @@ public class ParkingLotFacade {
         for (int idx = 0; idx < allUuids.size(); idx++) {
             ParkingLotReadResponseDto dto = cachedParkingLots.get(idx);
             if (dto != null) {
-                resultMap.put(allUuids.get(idx),
-                        dto);
+                resultMap.put(allUuids.get(idx), dto);
             } else {
                 nonCachedUuids.add(allUuids.get(idx));
             }
@@ -193,7 +193,7 @@ public class ParkingLotFacade {
                 );
 
         resultMap.putAll(nonCachedMap);
-        redisUtil.multiInsert(nonCachedMap);
+        redisUtil.multiInsertWithTtl(nonCachedMap, 1, TimeUnit.DAYS);
 
         return new ArrayList<>(resultMap.values());
     }
