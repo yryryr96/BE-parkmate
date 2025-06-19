@@ -41,6 +41,9 @@ dependencies {
 	testImplementation 'io.projectreactor:reactor-test'
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	implementation group: 'nl.martijndwars', name: 'web-push', version: '5.1.1'
+
 }
 
 dependencyManagement {
