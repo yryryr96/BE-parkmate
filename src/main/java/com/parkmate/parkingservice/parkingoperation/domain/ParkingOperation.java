@@ -29,7 +29,7 @@ public class ParkingOperation extends BaseEntity {
 
     @Comment("운영 날짜")
     @Column(nullable = false)
-    private LocalDate operationDate;
+    private LocalDateTime operationDate;
 
     @Comment("유효 시작 시간")
     @Column(nullable = false)
@@ -62,7 +62,7 @@ public class ParkingOperation extends BaseEntity {
     @Builder
     private ParkingOperation(String parkingOperationUuid,
                              String parkingLotUuid,
-                             LocalDate operationDate,
+                             LocalDateTime operationDate,
                              LocalDateTime validStartTime,
                              LocalDateTime validEndTime,
                              int baseIntervalMinutes,

@@ -2,6 +2,7 @@ package com.parkmate.parkingservice.parkingoperation.application;
 
 import com.parkmate.parkingservice.parkingoperation.dto.request.*;
 import com.parkmate.parkingservice.parkingoperation.dto.response.ParkingOperationResponseDto;
+import com.parkmate.parkingservice.parkingoperation.dto.response.WeeklyOperationResponseDto;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface ParkingOperationService {
     void update(ParkingOperationUpdateRequestDto parkingOperationUpdateRequestDto);
 
     void delete(ParkingOperationDeleteRequestDto parkingOperationDeleteRequestDto);
+
+    List<WeeklyOperationResponseDto> getWeeklyOperations(String parkingLotUuid);
 }

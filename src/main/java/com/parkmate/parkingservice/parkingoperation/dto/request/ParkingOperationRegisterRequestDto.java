@@ -1,7 +1,7 @@
 package com.parkmate.parkingservice.parkingoperation.dto.request;
 
 import com.parkmate.parkingservice.parkingoperation.domain.ParkingOperation;
-import com.parkmate.parkingservice.parkingoperation.vo.ParkingOperationRegisterRequestVo;
+import com.parkmate.parkingservice.parkingoperation.vo.request.ParkingOperationRegisterRequestVo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class ParkingOperationRegisterRequestDto {
 
     private String parkingLotUuid;
-    private LocalDate operationDate;
+    private LocalDateTime operationDate;
     private LocalDateTime validStartTime;
     private LocalDateTime validEndTime;
     private int baseIntervalMinutes;
@@ -25,7 +25,7 @@ public class ParkingOperationRegisterRequestDto {
 
     @Builder
     private ParkingOperationRegisterRequestDto(String parkingLotUuid,
-                                               LocalDate operationDate,
+                                               LocalDateTime operationDate,
                                                LocalDateTime validStartTime,
                                                LocalDateTime validEndTime,
                                                int baseIntervalMinutes,
@@ -48,7 +48,7 @@ public class ParkingOperationRegisterRequestDto {
                                                         ParkingOperationRegisterRequestVo parkingOperationRegisterRequestVo) {
         return ParkingOperationRegisterRequestDto.builder()
                 .parkingLotUuid(parkingLotUuid)
-                .operationDate(parkingOperationRegisterRequestVo.getOperationDate())
+                .operationDate(parkingOperationRegisterRequestVo.getOperationDate().atStartOfDay())
                 .validStartTime(parkingOperationRegisterRequestVo.getValidStartTime())
                 .validEndTime(parkingOperationRegisterRequestVo.getValidEndTime())
                 .baseIntervalMinutes(parkingOperationRegisterRequestVo.getBaseIntervalMinutes())

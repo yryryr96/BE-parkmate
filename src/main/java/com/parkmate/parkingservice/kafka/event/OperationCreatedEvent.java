@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class OperationCreatedEvent {
 
     private String parkingLotUuid;
-    private LocalDate operationDate;
+    private LocalDateTime operationDate;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private int baseIntervalMinutes;
@@ -24,7 +24,7 @@ public class OperationCreatedEvent {
 
     @Builder
     private OperationCreatedEvent(String parkingLotUuid,
-                                 LocalDate operationDate,
+                                  LocalDateTime operationDate,
                                  LocalDateTime startDateTime,
                                  LocalDateTime endDateTime,
                                  int baseIntervalMinutes,
