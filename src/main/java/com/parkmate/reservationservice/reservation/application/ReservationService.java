@@ -1,13 +1,8 @@
 package com.parkmate.reservationservice.reservation.application;
 
-import com.parkmate.reservationservice.reservation.dto.request.ReservationCancelRequestDto;
-import com.parkmate.reservationservice.reservation.dto.request.ReservationGetRequestDto;
-import com.parkmate.reservationservice.reservation.dto.request.ReservationModifyRequestDto;
-import com.parkmate.reservationservice.reservation.dto.request.ReservationCreateRequestDto;
+import com.parkmate.reservationservice.common.response.CursorPage;
+import com.parkmate.reservationservice.reservation.dto.request.*;
 import com.parkmate.reservationservice.reservation.dto.response.ReservationResponseDto;
-import com.parkmate.reservationservice.reservation.dto.response.ReservationsResponseDto;
-
-import java.util.List;
 
 public interface ReservationService {
 
@@ -17,7 +12,7 @@ public interface ReservationService {
 
     void modify(ReservationModifyRequestDto reservationModifyRequestDto);
 
-    ReservationsResponseDto getReservations(String userUuid);
+    CursorPage<ReservationResponseDto> getReservations(ReservationCursorGetRequestDto reservationCursorGetRequestDto);
 
     ReservationResponseDto getReservation(ReservationGetRequestDto reservationGetRequestDto);
 }
