@@ -20,6 +20,8 @@ public class ParkingLotReadResponseDto {
     private String name;
     private String phoneNumber;
     private String address;
+    private double latitude;
+    private double longitude;
     private int capacity;
     private String parkingLotType;
     private Set<String> parkingSpotTypes;
@@ -39,6 +41,8 @@ public class ParkingLotReadResponseDto {
                                       String name,
                                       String phoneNumber,
                                       String address,
+                                      double latitude,
+                                      double longitude,
                                       int capacity,
                                       String parkingLotType,
                                       Set<String> parkingSpotTypes,
@@ -55,6 +59,8 @@ public class ParkingLotReadResponseDto {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.capacity = capacity;
         this.parkingLotType = parkingLotType;
         this.parkingSpotTypes = parkingSpotTypes;
@@ -75,6 +81,8 @@ public class ParkingLotReadResponseDto {
                 .name(parkingLotRead.getName())
                 .phoneNumber(parkingLotRead.getPhoneNumber())
                 .address(parkingLotRead.getAddress())
+                .latitude(parkingLotRead.getLatitude())
+                .longitude(parkingLotRead.getLongitude())
                 .capacity(parkingLotRead.getCapacity())
                 .parkingLotType(parkingLotRead.getParkingLotType())
                 .parkingSpotTypes(parkingLotRead.getParkingSpotTypes())
@@ -96,10 +104,11 @@ public class ParkingLotReadResponseDto {
                 .name(name)
                 .phoneNumber(phoneNumber)
                 .address(address)
+                .latitude(latitude)
+                .longitude(longitude)
                 .capacity(capacity)
                 .parkingLotType(parkingLotType)
                 .parkingSpotTypes(parkingSpotTypes)
-                .isEvChargingAvailable(isEvChargingAvailable)
                 .evChargeTypes(evChargeTypes)
                 .extraInfo(extraInfo)
                 .imageUrls(imageUrls)
