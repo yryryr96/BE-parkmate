@@ -1,6 +1,5 @@
 package com.parkmate.parkingreadservice.common.config;
 
-import com.mongodb.client.MongoClient;
 import com.parkmate.parkingreadservice.common.converter.DateToLocalDateTimeKstConverter;
 import com.parkmate.parkingreadservice.common.converter.LocalDateTimeToDateKstConverter;
 import org.springframework.context.annotation.Bean;
@@ -10,11 +9,13 @@ import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.convert.*;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import java.util.List;
 
 @Configuration
 @EnableMongoAuditing
+@EnableMongoRepositories(basePackages = "com.parkmate.parkingreadservice")
 public class MongoConfig {
 
     @Bean
