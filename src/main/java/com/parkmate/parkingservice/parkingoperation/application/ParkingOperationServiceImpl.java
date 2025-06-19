@@ -6,13 +6,19 @@ import com.parkmate.parkingservice.kafka.event.OperationCreatedEvent;
 import com.parkmate.parkingservice.parkingoperation.domain.ParkingOperation;
 import com.parkmate.parkingservice.parkingoperation.dto.request.*;
 import com.parkmate.parkingservice.parkingoperation.dto.response.ParkingOperationResponseDto;
+import com.parkmate.parkingservice.parkingoperation.dto.response.WeeklyOperationResponseDto;
 import com.parkmate.parkingservice.parkingoperation.infrastructure.ParkingOperationMongoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -87,6 +93,41 @@ public class ParkingOperationServiceImpl implements ParkingOperationService {
         ).orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
 
         return ParkingOperationResponseDto.from(parkingOperation);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<WeeklyOperationResponseDto> getWeeklyOperations(String parkingLotUuid) {
+
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = startDate.plusDays(6);
+
+        List<LocalDate> dates = startDate.datesUntil(endDate).sorted(Comparator.comparing(localDate -> localDate)).toList();
+
+        List<ParkingOperation> operations = parkingOperationMongoRepository.findAllByParkingLotUuidAndOperationDateBetween(
+                parkingLotUuid,
+                startDate,
+                endDate
+        );
+
+        return dates.stream().map(date -> {
+
+            String dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.KOREAN);
+            int dayOfMonth = date.getDayOfMonth();
+
+            for (ParkingOperation operation : operations) {
+                if (date.equals(operation.getOperationDate().toLocalDate())) {
+                    return WeeklyOperationResponseDto.from(
+                            dayOfWeek,
+                            dayOfMonth,
+                            operation.getValidStartTime().toLocalTime(),
+                            operation.getValidEndTime().toLocalTime()
+                    );
+                }
+            }
+
+            return WeeklyOperationResponseDto.from(dayOfWeek, dayOfMonth);
+        }).toList();
     }
 
     private ParkingOperation createUpdatedParkingOperationEntity(

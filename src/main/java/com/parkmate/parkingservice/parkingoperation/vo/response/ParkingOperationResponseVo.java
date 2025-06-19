@@ -1,4 +1,4 @@
-package com.parkmate.parkingservice.parkingoperation.vo;
+package com.parkmate.parkingservice.parkingoperation.vo.response;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +13,7 @@ public class ParkingOperationResponseVo {
 
     private String parkingOperationUuid;
     private String parkingLotUuid;
-    private LocalDate operationDate;
+    private LocalDateTime operationDate;
     private LocalDateTime validStartTime;
     private LocalDateTime validEndTime;
     private int baseIntervalMinutes;
@@ -25,7 +25,7 @@ public class ParkingOperationResponseVo {
     @Builder
     private ParkingOperationResponseVo(String parkingOperationUuid,
                                        String parkingLotUuid,
-                                       LocalDate operationDate,
+                                       LocalDateTime operationDate,
                                        LocalDateTime validStartTime,
                                        LocalDateTime validEndTime,
                                        int baseIntervalMinutes,

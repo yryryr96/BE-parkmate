@@ -1,4 +1,4 @@
-package com.parkmate.parkingservice.parkingoperation.vo;
+package com.parkmate.parkingservice.parkingoperation.vo.request;
 
 import lombok.Getter;
 
