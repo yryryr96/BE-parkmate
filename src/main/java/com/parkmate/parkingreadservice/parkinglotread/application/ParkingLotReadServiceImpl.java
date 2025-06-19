@@ -56,4 +56,9 @@ public class ParkingLotReadServiceImpl implements ParkingLotReadService {
                 .map(ParkingLotReadResponseDto::from)
                 .toList();
     }
+
+    @Override
+    public List<ParkingLotRead> findAll() {
+        return parkingLotReadRepository.findAll();
+    }
 }

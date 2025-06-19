@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +30,7 @@ public class ParkingLotFacade {
     private final GeoService geoService;
     private final RedisUtil<String, ParkingLotReadResponseDto> redisUtil;
 
+    private static final String PARKING_LOT_TOPIC_PREFIX = "parkinglot:";
 
     public NearbyParkingLotResponseDtoList getParkingLotsNearby(NearbyParkingLotRequestDto nearbyParkingLotRequestDto) {
 
@@ -55,16 +57,16 @@ public class ParkingLotFacade {
     public InBoxParkingLotResponseDtoList getParkingLotsInBox(InBoxParkingLotRequestDto inBoxParkingLotRequestDto) {
 
         List<GeoSearchResult> parkingLotsInBox = geoService.getParkingLotsInBox(inBoxParkingLotRequestDto);
-        List<ParkingLotReadResponseDto> parkingLotReadResponseDtos = resolveParkingLotDetails(parkingLotsInBox);
+        List<ParkingLotReadResponseDto> parkingLotReadsResponseDto = resolveParkingLotDetails(parkingLotsInBox);
 
         LocalDateTime startDateTime = inBoxParkingLotRequestDto.getStartDateTime();
         LocalDateTime endDateTime = inBoxParkingLotRequestDto.getEndDateTime();
 
-        parkingLotReadResponseDtos = filterByEvChargingCondition(inBoxParkingLotRequestDto.getIsEvChargingAvailable(),
-                parkingLotReadResponseDtos);
+        parkingLotReadsResponseDto = filterByEvChargingCondition(inBoxParkingLotRequestDto.getIsEvChargingAvailable(),
+                parkingLotReadsResponseDto);
 
         List<ParkingLotReadResponseDto> filteredParkingLotsByOperation = filterByOperations(
-                parkingLotReadResponseDtos,
+                parkingLotReadsResponseDto,
                 startDateTime,
                 endDateTime
         );
@@ -93,8 +95,12 @@ public class ParkingLotFacade {
     private List<ParkingLotReadResponseDto> filterByEvChargingCondition(Boolean isEvChargingAvailable,
                                                                         List<ParkingLotReadResponseDto> parkingLots) {
 
+        if (Boolean.FALSE.equals(isEvChargingAvailable)) {
+            return parkingLots;
+        }
+
         return parkingLots.stream()
-                .filter(p -> p.getIsEvChargingAvailable().equals(isEvChargingAvailable))
+                .filter(p -> Boolean.TRUE.equals(p.getIsEvChargingAvailable()))
                 .toList();
     }
 
@@ -158,21 +164,27 @@ public class ParkingLotFacade {
             return Collections.emptyList();
         }
 
-        List<String> allUuids = geoSearchResults.stream()
+        List<String> rawUuids = geoSearchResults.stream()
                 .map(GeoSearchResult::getParkingLotUuid)
                 .toList();
 
-        List<ParkingLotReadResponseDto> cachedParkingLots = redisUtil.nullableMultiSelect(allUuids);
+        List<String> redisKeys = rawUuids.stream()
+                .map(this::generateParkingLotRedisKey)
+                .toList();
+
+        List<ParkingLotReadResponseDto> cachedParkingLots = redisUtil.nullableMultiSelect(redisKeys);
+
         Map<String, ParkingLotReadResponseDto> resultMap = new HashMap<>();
         List<String> nonCachedUuids = new ArrayList<>();
+        for (int i = 0; i < rawUuids.size(); i++) {
 
-        for (int idx = 0; idx < allUuids.size(); idx++) {
-            ParkingLotReadResponseDto dto = cachedParkingLots.get(idx);
+            ParkingLotReadResponseDto dto = cachedParkingLots.get(i);
+            String uuid = rawUuids.get(i);
+
             if (dto != null) {
-                resultMap.put(allUuids.get(idx),
-                        dto);
+                resultMap.put(uuid, dto);
             } else {
-                nonCachedUuids.add(allUuids.get(idx));
+                nonCachedUuids.add(uuid);
             }
         }
 
@@ -180,18 +192,22 @@ public class ParkingLotFacade {
             return new ArrayList<>(resultMap.values());
         }
 
-        List<ParkingLotReadResponseDto> nonCachedParkingLots = parkingLotReadService.getParkingLotsByUuids(nonCachedUuids);
+        List<ParkingLotReadResponseDto> nonCachedParkingLots = parkingLotReadService.getParkingLotsByUuids(
+                nonCachedUuids);
+
         Map<String, ParkingLotReadResponseDto> nonCachedMap = nonCachedParkingLots.stream()
                 .collect(Collectors.toMap(
-                                ParkingLotReadResponseDto::getParkingLotUuid,
-                                parkingLotReadResponseDto -> parkingLotReadResponseDto
-                        )
-                );
+                        p -> generateParkingLotRedisKey(p.getParkingLotUuid()),
+                        p -> p
+                ));
 
-        resultMap.putAll(nonCachedMap);
-        redisUtil.multiInsert(nonCachedMap);
+        redisUtil.multiInsertWithTtl(nonCachedMap, 1, TimeUnit.DAYS);
+        nonCachedParkingLots.forEach(p -> resultMap.put(p.getParkingLotUuid(), p));
 
-        return new ArrayList<>(resultMap.values());
+        return rawUuids.stream()
+                .map(resultMap::get)
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     private List<EnrichedParkingLot> enrichParkingLotsWithGeoData(
@@ -211,6 +227,10 @@ public class ParkingLotFacade {
                             geoInfo);
                 })
                 .toList();
+    }
+
+    private String generateParkingLotRedisKey(String uuid) {
+        return PARKING_LOT_TOPIC_PREFIX + uuid;
     }
 
     private record EnrichedParkingLot(ParkingLotReadResponseDto parkingLots, GeoSearchResult geoSearchResult) {

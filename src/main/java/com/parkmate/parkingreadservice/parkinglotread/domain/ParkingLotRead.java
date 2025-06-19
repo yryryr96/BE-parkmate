@@ -22,7 +22,7 @@ public class ParkingLotRead {
     @TextIndexed
     private String parkingLotUuid;
     private String hostUuid;
-    private Image thumbnailUrl;
+    private String thumbnailUrl;
     private String name;
     private String phoneNumber;
     private String address;
@@ -43,7 +43,7 @@ public class ParkingLotRead {
     private ParkingLotRead(String id,
                            String parkingLotUuid,
                            String hostUuid,
-                           Image thumbnailUrl,
+                           String thumbnailUrl,
                            String name,
                            String phoneNumber,
                            String address,

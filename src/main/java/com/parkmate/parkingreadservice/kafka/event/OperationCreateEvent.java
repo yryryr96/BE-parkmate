@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class OperationCreateEvent {
 
     private String parkingLotUuid;
-    private LocalDate operationDate;
+    private LocalDateTime operationDate;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private int baseIntervalMinutes;
@@ -26,7 +26,7 @@ public class OperationCreateEvent {
     public ParkingLotOperationRead toEntity() {
         return ParkingLotOperationRead.builder()
                 .parkingLotUuid(parkingLotUuid)
-                .operationDate(startDateTime.toLocalDate().atStartOfDay())
+                .operationDate(operationDate)
                 .startDateTime(startDateTime)
                 .endDateTime(endDateTime)
                 .baseIntervalMinutes(baseIntervalMinutes)

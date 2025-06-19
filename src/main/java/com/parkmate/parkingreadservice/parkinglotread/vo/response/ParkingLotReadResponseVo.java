@@ -15,14 +15,15 @@ public class ParkingLotReadResponseVo {
 
     private String parkingLotUuid;
     private String hostUuid;
-    private Image thumbnailUrl;
+    private String thumbnailUrl;
     private String name;
     private String phoneNumber;
     private String address;
+    private double latitude;
+    private double longitude;
     private int capacity;
     private String parkingLotType;
     private Set<String> parkingSpotTypes;
-    private Boolean isEvChargingAvailable;
     private Set<String> evChargeTypes;
     private String extraInfo;
     private List<Image> imageUrls;
@@ -33,14 +34,15 @@ public class ParkingLotReadResponseVo {
     @Builder
     private ParkingLotReadResponseVo(String parkingLotUuid,
                                      String hostUuid,
-                                     Image thumbnailUrl,
+                                     String thumbnailUrl,
                                      String name,
                                      String phoneNumber,
                                      String address,
+                                     double latitude,
+                                     double longitude,
                                      int capacity,
                                      String parkingLotType,
                                      Set<String> parkingSpotTypes,
-                                     Boolean isEvChargingAvailable,
                                      Set<String> evChargeTypes,
                                      String extraInfo,
                                      List<Image> imageUrls,
@@ -53,10 +55,11 @@ public class ParkingLotReadResponseVo {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.capacity = capacity;
         this.parkingLotType = parkingLotType;
         this.parkingSpotTypes = parkingSpotTypes;
-        this.isEvChargingAvailable = isEvChargingAvailable;
         this.evChargeTypes = evChargeTypes;
         this.extraInfo = extraInfo;
         this.imageUrls = imageUrls;
