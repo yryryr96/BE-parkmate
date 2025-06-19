@@ -27,18 +27,18 @@ public class WeeklyOperationResponseDto {
         this.endTime = endTime;
     }
 
-    public static WeeklyOperationResponseDto from(String dayOfWeek,
-                                                  int dayOfMonth) {
+    public static WeeklyOperationResponseDto of(String dayOfWeek,
+                                                int dayOfMonth) {
         return WeeklyOperationResponseDto.builder()
                 .dayOfWeek(dayOfWeek)
                 .dayOfMonth(dayOfMonth)
                 .build();
     }
 
-    public static WeeklyOperationResponseDto from(String dayOfWeek,
-                                                  int dayOfMonth,
-                                                  LocalTime startTime,
-                                                  LocalTime endTime) {
+    public static WeeklyOperationResponseDto of(String dayOfWeek,
+                                                int dayOfMonth,
+                                                LocalTime startTime,
+                                                LocalTime endTime) {
         return WeeklyOperationResponseDto.builder()
                 .dayOfWeek(dayOfWeek)
                 .dayOfMonth(dayOfMonth)

@@ -13,12 +13,12 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -99,10 +99,10 @@ public class ParkingOperationServiceImpl implements ParkingOperationService {
     @Override
     public List<WeeklyOperationResponseDto> getWeeklyOperations(String parkingLotUuid) {
 
-        LocalDate startDate = LocalDate.now();
-        LocalDate endDate = startDate.plusDays(6);
+        final int DEFAULT_DAY_RANGE = 7;
 
-        List<LocalDate> dates = startDate.datesUntil(endDate).sorted(Comparator.comparing(localDate -> localDate)).toList();
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = startDate.plusDays(DEFAULT_DAY_RANGE);
 
         List<ParkingOperation> operations = parkingOperationMongoRepository.findAllByParkingLotUuidAndOperationDateBetween(
                 parkingLotUuid,
@@ -110,24 +110,32 @@ public class ParkingOperationServiceImpl implements ParkingOperationService {
                 endDate
         );
 
-        return dates.stream().map(date -> {
+        Map<LocalDate, ParkingOperation> operationMap = operations.stream()
+                .collect(Collectors.toMap(
+                        op -> op.getOperationDate().toLocalDate(),
+                        op -> op
+                ));
 
-            String dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.KOREAN);
-            int dayOfMonth = date.getDayOfMonth();
 
-            for (ParkingOperation operation : operations) {
-                if (date.equals(operation.getOperationDate().toLocalDate())) {
-                    return WeeklyOperationResponseDto.from(
-                            dayOfWeek,
-                            dayOfMonth,
-                            operation.getValidStartTime().toLocalTime(),
-                            operation.getValidEndTime().toLocalTime()
-                    );
-                }
-            }
+        return startDate.datesUntil(endDate)
+                .map(date -> {
+                    String dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.KOREAN);
+                    int dayOfMonth = date.getDayOfMonth();
 
-            return WeeklyOperationResponseDto.from(dayOfWeek, dayOfMonth);
-        }).toList();
+                    ParkingOperation operation = operationMap.get(date);
+
+                    if (operation != null) {
+                        return WeeklyOperationResponseDto.of(
+                                dayOfWeek,
+                                dayOfMonth,
+                                operation.getValidStartTime().toLocalTime(),
+                                operation.getValidEndTime().toLocalTime()
+                        );
+                    } else {
+                        return WeeklyOperationResponseDto.of(dayOfWeek, dayOfMonth);
+                    }
+                })
+                .toList();
     }
 
     private ParkingOperation createUpdatedParkingOperationEntity(
