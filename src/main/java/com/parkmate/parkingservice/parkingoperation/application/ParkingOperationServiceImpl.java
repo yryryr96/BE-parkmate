@@ -110,12 +110,37 @@ public class ParkingOperationServiceImpl implements ParkingOperationService {
                 endDate
         );
 
+        return createWeeklyOperationResponses(startDate, endDate, operations);
+    }
+
+    private ParkingOperation createUpdatedParkingOperationEntity(
+            ParkingOperation entity,
+            ParkingOperationUpdateRequestDto parkingOperationUpdateRequestDto) {
+
+        return ParkingOperation.builder()
+                .parkingOperationUuid(entity.getParkingOperationUuid())
+                .parkingLotUuid(entity.getParkingLotUuid())
+                .parkingOperationUuid(entity.getParkingOperationUuid())
+                .operationDate(entity.getOperationDate())
+                .validStartTime(parkingOperationUpdateRequestDto.getValidStartTime())
+                .validEndTime(parkingOperationUpdateRequestDto.getValidEndTime())
+                .baseIntervalMinutes(parkingOperationUpdateRequestDto.getBaseIntervalMinutes())
+                .baseFee(parkingOperationUpdateRequestDto.getBaseFee())
+                .extraIntervalMinutes(parkingOperationUpdateRequestDto.getExtraIntervalMinutes())
+                .extraFee(parkingOperationUpdateRequestDto.getExtraFee())
+                .discountRate(parkingOperationUpdateRequestDto.getDiscountRate())
+                .build();
+    }
+
+    private List<WeeklyOperationResponseDto> createWeeklyOperationResponses(LocalDate startDate,
+                                                                            LocalDate endDate,
+                                                                            List<ParkingOperation> operations) {
+
         Map<LocalDate, ParkingOperation> operationMap = operations.stream()
                 .collect(Collectors.toMap(
                         op -> op.getOperationDate().toLocalDate(),
                         op -> op
                 ));
-
 
         return startDate.datesUntil(endDate)
                 .map(date -> {
@@ -136,24 +161,5 @@ public class ParkingOperationServiceImpl implements ParkingOperationService {
                     }
                 })
                 .toList();
-    }
-
-    private ParkingOperation createUpdatedParkingOperationEntity(
-            ParkingOperation entity,
-            ParkingOperationUpdateRequestDto parkingOperationUpdateRequestDto) {
-
-        return ParkingOperation.builder()
-                .parkingOperationUuid(entity.getParkingOperationUuid())
-                .parkingLotUuid(entity.getParkingLotUuid())
-                .parkingOperationUuid(entity.getParkingOperationUuid())
-                .operationDate(entity.getOperationDate())
-                .validStartTime(parkingOperationUpdateRequestDto.getValidStartTime())
-                .validEndTime(parkingOperationUpdateRequestDto.getValidEndTime())
-                .baseIntervalMinutes(parkingOperationUpdateRequestDto.getBaseIntervalMinutes())
-                .baseFee(parkingOperationUpdateRequestDto.getBaseFee())
-                .extraIntervalMinutes(parkingOperationUpdateRequestDto.getExtraIntervalMinutes())
-                .extraFee(parkingOperationUpdateRequestDto.getExtraFee())
-                .discountRate(parkingOperationUpdateRequestDto.getDiscountRate())
-                .build();
     }
 }
