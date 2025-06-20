@@ -1,35 +1,28 @@
 package com.parkmate.notificationservice.notification.application;
 
-import com.parkmate.notificationservice.notification.dto.NotificationEventDto;
+import com.parkmate.notificationservice.notification.domain.Notification;
+import com.parkmate.notificationservice.notification.domain.NotificationEventDispatcher;
 import com.parkmate.notificationservice.notification.dto.response.NotificationResponseDto;
-import com.parkmate.notificationservice.notification.infrastructure.NotificationRestRepository;
+import com.parkmate.notificationservice.notification.event.NotificationEvent;
+import com.parkmate.notificationservice.notification.infrastructure.NotificationRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class NotificationServiceImpl implements NotificationService {
 
-    private final NotificationRestRepository notificationRestRepository;
+    private final NotificationRepository notificationRepository;
 
-    @Transactional
     @Override
-    public void createNotification(NotificationEventDto notificationEventDto) {
-        notificationRestRepository.save(notificationEventDto.toEntity());
-        log.info("Notification created: {}", notificationEventDto);
+    public Mono<Void> create(Notification notification) {
+        return notificationRepository.save(notification).then();
     }
 
-    @Transactional
     @Override
-    public List<NotificationResponseDto> getNotificationsByReceiverUuid(String receiverUuid) {
-        return notificationRestRepository.findAllByReceiverUuid(receiverUuid)
-                .stream()
-                .map(NotificationResponseDto::from)
-                .toList();
+    public Flux<NotificationResponseDto> getNotificationsByReceiverUuid(String receiverUuid) {
+        return null;
     }
 }

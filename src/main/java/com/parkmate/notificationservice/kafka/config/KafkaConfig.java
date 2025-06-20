@@ -1,4 +1,4 @@
-package com.parkmate.notificationservice.common.config;
+package com.parkmate.notificationservice.kafka.config;
 
 import com.parkmate.notificationservice.notification.event.NotificationEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
