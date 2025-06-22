@@ -18,9 +18,17 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationRepository notificationRepository;
 
+    @Transactional
     @Override
     public Notification create(Notification notification) {
         return notificationRepository.save(notification);
+    }
+
+    @Transactional
+    @Override
+    public void updateNotificationStatus(Notification notification, NotificationStatus status) {
+        notification.updateStatus(status);
+        notificationRepository.save(notification);
     }
 
     @Transactional(readOnly = true)
@@ -31,12 +39,5 @@ public class NotificationServiceImpl implements NotificationService {
         return notifications.stream()
                 .map(NotificationResponseDto::from)
                 .toList();
-    }
-
-    @Transactional
-    @Override
-    public void updateNotificationStatus(Notification notification, NotificationStatus status) {
-        notification.updateStatus(status);
-        notificationRepository.save(notification);
     }
 }
