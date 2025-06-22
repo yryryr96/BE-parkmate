@@ -1,13 +1,16 @@
 package com.parkmate.notificationservice.notification.application;
 
 import com.parkmate.notificationservice.notification.domain.Notification;
+import com.parkmate.notificationservice.notification.domain.NotificationStatus;
 import com.parkmate.notificationservice.notification.dto.response.NotificationResponseDto;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 public interface NotificationService {
 
-    Mono<Void> create(Notification notification);
+    Notification create(Notification notification);
 
-    Flux<NotificationResponseDto> getNotificationsByReceiverUuid(String receiverUuid);
+    List<NotificationResponseDto> getNotificationsByReceiverUuid(String receiverUuid);
+
+    void updateNotificationStatus(Notification notification, NotificationStatus status);
 }

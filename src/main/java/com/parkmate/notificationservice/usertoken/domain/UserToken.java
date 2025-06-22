@@ -1,26 +1,25 @@
 package com.parkmate.notificationservice.usertoken.domain;
 
 import com.parkmate.notificationservice.common.entity.BaseEntity;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
 
-@Table(name = "user_token")
+@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserToken extends BaseEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column("user_uuid")
+    @Column(name = "user_uuid", nullable = false, unique = true)
     private String userUuid;
 
-    @Column("token")
+    @Column(name = "token", nullable = false, unique = true)
     private String token;
 
     @Builder
