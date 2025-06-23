@@ -37,6 +37,7 @@ public class NotificationController {
             description = """
                     - 알림 리스트를 조회합니다. 요청 헤더에 `X-User-UUID` 또는 `X-Host-UUID`를 포함해야 합니다.
                     - `receiverType`은 `user` 또는 `host` 중 하나를 선택해야 합니다.
+                    - status가 `SENT`, `READ` 인 알림만 조회됩니다.
                     """
     )
     @GetMapping("/{receiverType}")
