@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
+
 @Document(collection = "notification")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,18 +20,25 @@ public class Notification extends BaseEntity {
     private String receiverUuid;
     private String title;
     private String content;
-    private boolean isRead;
+    private NotificationType type;
+    private NotificationStatus status;
+    private LocalDateTime sendAt;
+    private Boolean isRead;
 
     @Builder
-    private Notification(String id,
-                        String receiverUuid,
-                        String title,
-                        String content,
-                        boolean isRead) {
+    private Notification(String id, String receiverUuid, String title, String content, NotificationType type,
+                        NotificationStatus status, LocalDateTime sendAt, Boolean isRead) {
         this.id = id;
         this.receiverUuid = receiverUuid;
         this.title = title;
         this.content = content;
+        this.type = type;
+        this.status = status;
+        this.sendAt = sendAt;
         this.isRead = isRead;
+    }
+
+    public void updateStatus(NotificationStatus status) {
+        this.status = status;
     }
 }
