@@ -1,6 +1,7 @@
 package com.parkmate.notificationservice.notification.dto.response;
 
 import com.parkmate.notificationservice.notification.domain.Notification;
+import com.parkmate.notificationservice.notification.domain.NotificationStatus;
 import com.parkmate.notificationservice.notification.vo.response.NotificationResponseVo;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,35 +13,40 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class NotificationResponseDto {
 
+    private String notificationId;
     private String title;
     private String content;
     private LocalDateTime sendAt;
-    private Boolean isRead;
+    private NotificationStatus status;
 
     @Builder
-    private NotificationResponseDto(String title, String content, LocalDateTime sendAt, Boolean isRead) {
+    private NotificationResponseDto(String notificationId, String title, String content, LocalDateTime sendAt,
+                                    NotificationStatus status) {
+        this.notificationId = notificationId;
         this.title = title;
         this.content = content;
         this.sendAt = sendAt;
-        this.isRead = isRead;
+        this.status = status;
     }
 
 
     public static NotificationResponseDto from(Notification notification) {
         return NotificationResponseDto.builder()
+                .notificationId(notification.getId())
                 .title(notification.getTitle())
                 .content(notification.getContent())
                 .sendAt(notification.getSendAt())
-                .isRead(notification.getIsRead())
+                .status(notification.getStatus())
                 .build();
     }
 
     public NotificationResponseVo toVo() {
         return NotificationResponseVo.builder()
+                .notificationId(notificationId)
                 .title(title)
                 .content(content)
                 .sendAt(sendAt)
-                .isRead(isRead)
+                .status(status)
                 .build();
     }
 }

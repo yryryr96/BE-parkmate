@@ -9,6 +9,7 @@ public enum NotificationStatus {
     SENT("전송됨"),
     FAILED("전송 실패"),
     READ("읽음"),
+    DELETED("삭제됨")
     ;
 
     private final String description;

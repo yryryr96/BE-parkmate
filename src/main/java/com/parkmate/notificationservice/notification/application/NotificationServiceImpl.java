@@ -1,7 +1,14 @@
 package com.parkmate.notificationservice.notification.application;
 
+import com.parkmate.notificationservice.common.exception.BaseException;
+import com.parkmate.notificationservice.common.exception.ResponseStatus;
+import com.parkmate.notificationservice.common.response.CursorPage;
 import com.parkmate.notificationservice.notification.domain.Notification;
 import com.parkmate.notificationservice.notification.domain.NotificationStatus;
+import com.parkmate.notificationservice.notification.dto.request.NotificationDeleteRequestDto;
+import com.parkmate.notificationservice.notification.dto.request.NotificationReadRequestDto;
+import com.parkmate.notificationservice.notification.dto.request.NotificationsGetRequestDto;
+import com.parkmate.notificationservice.notification.dto.response.NotificationReadResponseDto;
 import com.parkmate.notificationservice.notification.dto.response.NotificationResponseDto;
 import com.parkmate.notificationservice.notification.infrastructure.NotificationRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,11 +40,26 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<NotificationResponseDto> getNotificationsByReceiverUuid(String receiverUuid) {
+    public CursorPage<NotificationResponseDto> getNotificationsByReceiverUuid(
+            NotificationsGetRequestDto notificationsGetRequestDto) {
 
-        List<Notification> notifications = notificationRepository.findByReceiverUuid(receiverUuid);
-        return notifications.stream()
-                .map(NotificationResponseDto::from)
-                .toList();
+        CursorPage<Notification> notifications = notificationRepository.getNotificationsByReceiverUuid(
+                notificationsGetRequestDto);
+        return notifications.map(NotificationResponseDto::from);
+    }
+
+    @Transactional
+    @Override
+    public NotificationReadResponseDto readNotificationById(NotificationReadRequestDto notificationReadRequestDto) {
+
+        Notification notification = notificationRepository.readNotification(notificationReadRequestDto);
+        return NotificationReadResponseDto.from(notification);
+    }
+
+    @Transactional
+    @Override
+    public void delete(NotificationDeleteRequestDto notificationDeleteRequestDto) {
+
+        notificationRepository.delete(notificationDeleteRequestDto);
     }
 }
