@@ -20,8 +20,8 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Transactional
     @Override
-    public Notification create(Notification notification) {
-        return notificationRepository.save(notification);
+    public List<Notification> create(List<Notification> notifications) {
+        return notificationRepository.saveAll(notifications);
     }
 
     @Transactional

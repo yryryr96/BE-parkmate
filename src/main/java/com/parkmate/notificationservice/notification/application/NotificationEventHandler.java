@@ -29,7 +29,12 @@ public class NotificationEventHandler {
                 .thenCompose(notification -> {
                     return CompletableFuture.supplyAsync(() -> notificationService.create(notification), dbThreadPool);
                 })
-                .thenCompose(scheduler::addSchedule)
+                .thenAccept(notifications -> {
+                    notifications.forEach(notification -> {
+                        log.info("알림 생성 완료: {}", notification);
+                        scheduler.addSchedule(notification);
+                    });
+                })
                 .exceptionally(ex -> {
                     log.error("알림 생성 또는 스케줄링 처리 중 예외 발생: event={}", event, ex);
                     return null;

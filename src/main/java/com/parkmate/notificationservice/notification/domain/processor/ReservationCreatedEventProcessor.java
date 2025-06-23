@@ -7,13 +7,17 @@ import com.parkmate.notificationservice.notification.domain.event.NotificationEv
 import com.parkmate.notificationservice.notification.domain.event.ReservationCreatedEvent;
 import com.parkmate.notificationservice.notification.infrastructure.client.parkinglot.ParkingLotClient;
 import com.parkmate.notificationservice.notification.infrastructure.client.parkinglot.response.ParkingLotAndSpotResponse;
+import com.parkmate.notificationservice.notification.infrastructure.client.parkinglot.response.ParkingLotHostResponse;
 import com.parkmate.notificationservice.notification.infrastructure.client.reservation.ReservationClient;
 import com.parkmate.notificationservice.notification.infrastructure.client.reservation.response.ReservationResponse;
+import com.parkmate.notificationservice.notification.infrastructure.client.user.UserClient;
+import com.parkmate.notificationservice.notification.infrastructure.client.user.response.UserNameResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
@@ -23,6 +27,7 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
 
     private final ReservationClient reservationClient;
     private final ParkingLotClient parkingLotClient;
+    private final UserClient userClient;
 
     private static final long LAZY_TIME_SECONDS = 10L;
     private static final String TITLE = "예약 완료";
@@ -42,23 +47,29 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
     }
 
     @Override
-    public CompletableFuture<Notification> create(ReservationCreatedEvent event) {
+    public CompletableFuture<List<Notification>> create(ReservationCreatedEvent event) {
+
+        String userUuid = event.getUserUuid();
 
         CompletableFuture<ApiResponse<ReservationResponse>> reservationFuture = reservationClient.getReservationDetails(
-                event.getReservationUuid(), event.getUserUuid());
-
+                event.getReservationUuid(), userUuid);
         CompletableFuture<ParkingLotAndSpotResponse> parkingLotAndSpotFuture = parkingLotClient.getParkingLotAndParkingSpotDetails(
                 event.getParkingLotUuid(), event.getParkingSpotId()
         );
+        CompletableFuture<ApiResponse<UserNameResponse>> userNameFuture = userClient.getUserName(userUuid);
+        CompletableFuture<ParkingLotHostResponse> hostUuidFuture = parkingLotClient.getParkingLotHostUuid(event.getParkingLotUuid());
 
-        return CompletableFuture.allOf(reservationFuture, parkingLotAndSpotFuture).thenApplyAsync(v -> {
+        return CompletableFuture.allOf(reservationFuture, parkingLotAndSpotFuture, userNameFuture, hostUuidFuture)
+                .thenApplyAsync(v -> {
 
                     ReservationResponse reservationResponse = reservationFuture.join().getData();
                     ParkingLotAndSpotResponse parkingLotAndSpotResponse = parkingLotAndSpotFuture.join();
+                    UserNameResponse userNameResponse = userNameFuture.join().getData();
+                    String hostUuid = hostUuidFuture.join().getHostUuid();
 
                     String content = String.format(
                             CONTENT_FORMAT,
-                            "username",
+                            userNameResponse.getName(),
                             reservationResponse.getVehicleNumber(),
                             parkingLotAndSpotResponse.getParkingLotName(),
                             parkingLotAndSpotResponse.getParkingSpotName(),
@@ -66,20 +77,27 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
                             reservationResponse.getExitTime()
                     );
 
-                    return Notification.builder()
+                    Notification userNotification = Notification.builder()
                             .title(TITLE)
                             .content(content)
-                            .receiverUuid(event.getUserUuid())
+                            .receiverUuid(userUuid)
                             .isRead(false)
                             .sendAt(LocalDateTime.now().plusSeconds(LAZY_TIME_SECONDS))
                             .status(NotificationStatus.PENDING)
                             .type(event.getNotificationType())
                             .build();
-                }
-        ).exceptionally(
-                ex -> {
-                    log.error("예약 생성 이벤트 처리 중 오류 발생: {}", ex.getMessage());
-                    return null;
+
+                    Notification hostNotification = Notification.builder()
+                            .title(TITLE)
+                            .content(content)
+                            .receiverUuid(hostUuid)
+                            .isRead(false)
+                            .sendAt(LocalDateTime.now().plusSeconds(LAZY_TIME_SECONDS))
+                            .status(NotificationStatus.PENDING)
+                            .type(event.getNotificationType())
+                            .build();
+
+                    return List.of(userNotification, hostNotification);
                 }
         );
     }

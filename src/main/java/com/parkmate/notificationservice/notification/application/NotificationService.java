@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface NotificationService {
 
-    Notification create(Notification notification);
+    List<Notification> create(List<Notification> notifications);
 
     List<NotificationResponseDto> getNotificationsByReceiverUuid(String receiverUuid);
 

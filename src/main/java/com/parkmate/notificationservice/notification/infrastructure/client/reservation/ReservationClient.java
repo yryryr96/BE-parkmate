@@ -17,13 +17,14 @@ public class ReservationClient {
 
     private final WebClient webClient;
 
-    private static final String BASE_URL = "http://localhost:8200/api/v1";
+//    private static final String BASE_URL = "http://localhost:8200/api/v1";
+    private static final String BASE_URL = "http://reservation-service";
     private static final String USER_UUID_HEADER = "X-User-UUID";
 
     public CompletableFuture<ApiResponse<ReservationResponse>> getReservationDetails(String reservationUuid, String userUuid) {
 
         return webClient.get()
-                .uri(BASE_URL + "/reservations/{reservationUuid}", reservationUuid)
+                .uri(BASE_URL + "/api/v1/reservations/{reservationUuid}", reservationUuid)
                 .header(USER_UUID_HEADER, userUuid)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<ApiResponse<ReservationResponse>>() {})
