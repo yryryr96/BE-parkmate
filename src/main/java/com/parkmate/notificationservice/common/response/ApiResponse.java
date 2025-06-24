@@ -1,5 +1,6 @@
 package com.parkmate.notificationservice.common.response;
 
+import com.parkmate.notificationservice.common.exception.ResponseStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,5 +43,9 @@ public class ApiResponse<T> {
 
     public static <T> ApiResponse<T> error(ResponseStatus status) {
         return of(status.getHttpStatus(), status.getMessage(), null);
+    }
+
+    public static <T> ApiResponse<T> error(ResponseStatus status, String message) {
+        return of(status.getHttpStatus(), message, null);
     }
 }

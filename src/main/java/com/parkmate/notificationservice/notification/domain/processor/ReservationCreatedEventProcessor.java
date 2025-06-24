@@ -31,6 +31,8 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
 
     private static final long LAZY_TIME_SECONDS = 10L;
     private static final String TITLE = "예약 완료";
+    private static final String USER_BASE_REDIRECT_URL = "http://localhost:3000/user/reservations";
+    private static final String HOST_BASE_REDIRECT_URL = "http://localhost:3000/host/reservations";
     private static final String CONTENT_FORMAT = """
             예약이 완료되었습니다.\s
             예약자: %s
@@ -50,9 +52,10 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
     public CompletableFuture<List<Notification>> create(ReservationCreatedEvent event) {
 
         String userUuid = event.getUserUuid();
+        String reservationUuid = event.getReservationUuid();
 
         CompletableFuture<ApiResponse<ReservationResponse>> reservationFuture = reservationClient.getReservationDetails(
-                event.getReservationUuid(), userUuid);
+                reservationUuid, userUuid);
         CompletableFuture<ParkingLotAndSpotResponse> parkingLotAndSpotFuture = parkingLotClient.getParkingLotAndParkingSpotDetails(
                 event.getParkingLotUuid(), event.getParkingSpotId()
         );
@@ -78,9 +81,10 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
                     );
 
                     Notification userNotification = Notification.builder()
+                            .receiverUuid(userUuid)
                             .title(TITLE)
                             .content(content)
-                            .receiverUuid(userUuid)
+                            .redirectUrl(USER_BASE_REDIRECT_URL + reservationUuid)
                             .isRead(false)
                             .sendAt(LocalDateTime.now().plusSeconds(LAZY_TIME_SECONDS))
                             .status(NotificationStatus.PENDING)
@@ -88,9 +92,10 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
                             .build();
 
                     Notification hostNotification = Notification.builder()
+                            .receiverUuid(hostUuid)
                             .title(TITLE)
                             .content(content)
-                            .receiverUuid(hostUuid)
+                            .redirectUrl(HOST_BASE_REDIRECT_URL + reservationUuid)
                             .isRead(false)
                             .sendAt(LocalDateTime.now().plusSeconds(LAZY_TIME_SECONDS))
                             .status(NotificationStatus.PENDING)

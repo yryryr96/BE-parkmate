@@ -20,18 +20,20 @@ public class Notification extends BaseEntity {
     private String receiverUuid;
     private String title;
     private String content;
+    private String redirectUrl;
     private NotificationType type;
     private NotificationStatus status;
     private LocalDateTime sendAt;
     private Boolean isRead;
 
     @Builder
-    private Notification(String id, String receiverUuid, String title, String content, NotificationType type,
-                        NotificationStatus status, LocalDateTime sendAt, Boolean isRead) {
+    private Notification(String id, String receiverUuid, String title, String content, String redirectUrl,
+                         NotificationType type, NotificationStatus status, LocalDateTime sendAt, Boolean isRead) {
         this.id = id;
         this.receiverUuid = receiverUuid;
         this.title = title;
         this.content = content;
+        this.redirectUrl = redirectUrl;
         this.type = type;
         this.status = status;
         this.sendAt = sendAt;
