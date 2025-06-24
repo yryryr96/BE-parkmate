@@ -3,7 +3,9 @@ package com.parkmate.parkingservice.parkingoperation.application;
 import com.parkmate.parkingservice.parkingoperation.dto.request.*;
 import com.parkmate.parkingservice.parkingoperation.dto.response.ParkingOperationResponseDto;
 import com.parkmate.parkingservice.parkingoperation.dto.response.WeeklyOperationResponseDto;
+import com.parkmate.parkingservice.parkingoperation.vo.response.ParkingOperationResponseVo;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ParkingOperationService {
@@ -19,4 +21,6 @@ public interface ParkingOperationService {
     void delete(ParkingOperationDeleteRequestDto parkingOperationDeleteRequestDto);
 
     List<WeeklyOperationResponseDto> getWeeklyOperations(String parkingLotUuid);
+
+    ParkingOperationResponseDto getDailyOperation(String parkingLotUuid, LocalDate date);
 }

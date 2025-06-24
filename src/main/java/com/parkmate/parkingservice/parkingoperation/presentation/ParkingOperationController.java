@@ -14,8 +14,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/parkingLots/")
@@ -134,6 +136,28 @@ public class ParkingOperationController {
                 operations.stream()
                         .map(WeeklyOperationResponseDto::toVo)
                         .toList()
+        );
+    }
+
+    @Operation(
+            summary = "일일 운영시간 조회",
+            description = "주차장의 특정 날짜의 운영시간 정보를 조회하는 API입니다. " +
+                          "주차장 UUID와 날짜를 요청 파라미터로 전달합니다. " +
+                          "날짜는 ISO 8601 형식(예: 2023-10-01)으로 전달되어야 합니다." +
+                          "date 파라미터가 제공되지 않으면 현재 날짜로 설정됩니다.",
+            tags = {"PARKING-OPERATION-SERVICE"}
+    )
+    @GetMapping("/{parkingLotUuid}/operations/daily")
+    public ApiResponse<ParkingOperationResponseVo> getOperationsByDate(
+            @PathVariable String parkingLotUuid,
+            @RequestParam(required = false) LocalDate date
+    ) {
+
+        date = Optional.ofNullable(date).orElseGet(LocalDate::now);
+
+        return ApiResponse.ok(
+                "주차장 운영시간 조회에 성공했습니다.",
+                parkingOperationService.getDailyOperation(parkingLotUuid, date).toVo()
         );
     }
 }

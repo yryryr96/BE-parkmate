@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+import java.util.Optional;
+
 @Getter
 @NoArgsConstructor
 public class ApiResponse<T> {
@@ -42,5 +44,10 @@ public class ApiResponse<T> {
 
     public static <T> ApiResponse<T> error(ResponseStatus status) {
         return of(status.getHttpStatus(), status.getMessage(), null);
+    }
+
+    public static <T> ApiResponse<T> error(ResponseStatus status, String message) {
+        String msg = Optional.ofNullable(message).orElseGet(status::getMessage);
+        return of(status.getHttpStatus(), msg, null);
     }
 }
