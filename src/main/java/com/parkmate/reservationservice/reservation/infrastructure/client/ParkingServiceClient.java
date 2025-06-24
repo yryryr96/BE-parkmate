@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@FeignClient(name = "parking-service", url = "${parking.service.url}")
+//@FeignClient(name = "parking-service", url = "${parking.service.url}")
+@FeignClient(name = "parking-service")
 public interface ParkingServiceClient {
 
     @PostMapping("/internal/parkingSpots/search")

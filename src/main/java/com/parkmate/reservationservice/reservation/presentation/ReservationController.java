@@ -70,8 +70,12 @@ public class ReservationController {
 
     @Operation(
             summary = "예약 조회",
-            description = "사용자가 자신의 예약 목록을 조회합니다. Header에 X-User-UUID를 포함해야 합니다. " +
-                    "예약 내역 조회는 커서 기반 페이징으로 조회 가능합니다.",
+            description = """
+                    - 사용자가 자신의 예약 목록을 조회합니다. Header에 X-User-UUID를 포함해야 합니다.
+                    - 예약 내역 조회는 커서 기반 페이징으로 조회 가능합니다.
+                    - reservationStatus는 WAITING, CONFIRMED, CANCELLED, EXPIRED 가 있습니다.
+                    - paymentType은 PG, POINT 가 있습니다.
+                    """,
             tags = {"RESERVATION-SERVICE"}
     )
     @GetMapping
