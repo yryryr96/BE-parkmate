@@ -8,6 +8,7 @@ import com.parkmate.parkingservice.parkingoperation.dto.request.*;
 import com.parkmate.parkingservice.parkingoperation.dto.response.ParkingOperationResponseDto;
 import com.parkmate.parkingservice.parkingoperation.dto.response.WeeklyOperationResponseDto;
 import com.parkmate.parkingservice.parkingoperation.infrastructure.ParkingOperationMongoRepository;
+import com.parkmate.parkingservice.parkingoperation.vo.response.ParkingOperationResponseVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -111,6 +112,18 @@ public class ParkingOperationServiceImpl implements ParkingOperationService {
         );
 
         return createWeeklyOperationResponses(startDate, endDate, operations);
+    }
+
+    @Override
+    public ParkingOperationResponseDto getDailyOperation(String parkingLotUuid,
+                                                        LocalDate date) {
+
+        ParkingOperation operation = parkingOperationMongoRepository.findByParkingLotUuidAndOperationDate(
+                parkingLotUuid,
+                date.atStartOfDay()
+        ).orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
+
+        return ParkingOperationResponseDto.from(operation);
     }
 
     private ParkingOperation createUpdatedParkingOperationEntity(

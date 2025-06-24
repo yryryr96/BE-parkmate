@@ -19,13 +19,13 @@ public class BaseExceptionHandler {
 
         if (ResponseStatus.RESOURCE_NOT_FOUND.equals(e.getStatus())) {
             return new ResponseEntity<>(
-                    ApiResponse.error(e.getStatus()),
+                    ApiResponse.error(e.getStatus(), e.getMessage()),
                     HttpStatus.OK
             );
         }
 
         return new ResponseEntity<>(
-                ApiResponse.error(e.getStatus()),
+                ApiResponse.error(e.getStatus(), e.getMessage()),
                 status
         );
     }

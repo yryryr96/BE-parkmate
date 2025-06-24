@@ -1,5 +1,6 @@
 package com.parkmate.parkingservice.parkingoperation.vo.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,8 +14,11 @@ public class ParkingOperationResponseVo {
 
     private String parkingOperationUuid;
     private String parkingLotUuid;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime operationDate;
+    @JsonFormat(pattern = "HH:mm")
     private LocalDateTime validStartTime;
+    @JsonFormat(pattern = "HH:mm")
     private LocalDateTime validEndTime;
     private int baseIntervalMinutes;
     private int baseFee;
