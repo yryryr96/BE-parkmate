@@ -18,8 +18,8 @@ public class ParkingLotCreateEvent {
 
     private String parkingLotUuid;
     private String hostUuid;
-    private String parkingLotType; // PUBLIC, PRIVATE, COMMERCIAL 등
-    private Set<String> parkingSpotTypes; // 소형, 중형, 대형, 경차 등
+    private String parkingLotType;
+    private Set<String> parkingSpotTypes;
     private String name;
     private String phoneNumber;
     private String address;
@@ -29,6 +29,7 @@ public class ParkingLotCreateEvent {
     private Boolean isEvChargingAvailable;
     private Set<String> evChargeTypes;
     private String extraInfo;
+    private String thumbnailUrl;
     private List<Image> imageUrls;
     private List<ParkingLotOption> options;
 }
