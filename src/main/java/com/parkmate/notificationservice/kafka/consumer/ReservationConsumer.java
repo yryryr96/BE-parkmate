@@ -2,7 +2,7 @@ package com.parkmate.notificationservice.kafka.consumer;
 
 import com.parkmate.notificationservice.kafka.constant.KafkaTopics;
 import com.parkmate.notificationservice.notification.application.NotificationEventHandler;
-import com.parkmate.notificationservice.notification.domain.event.ReservationCreatedEvent;
+import com.parkmate.notificationservice.notification.domain.event.reservation.ReservationCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;

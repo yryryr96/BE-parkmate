@@ -4,7 +4,7 @@ import com.parkmate.notificationservice.common.response.ApiResponse;
 import com.parkmate.notificationservice.notification.domain.Notification;
 import com.parkmate.notificationservice.notification.domain.NotificationStatus;
 import com.parkmate.notificationservice.notification.domain.event.NotificationEvent;
-import com.parkmate.notificationservice.notification.domain.event.ReservationCreatedEvent;
+import com.parkmate.notificationservice.notification.domain.event.reservation.ReservationCreatedEvent;
 import com.parkmate.notificationservice.notification.infrastructure.client.parkinglot.ParkingLotClient;
 import com.parkmate.notificationservice.notification.infrastructure.client.parkinglot.response.ParkingLotAndSpotResponse;
 import com.parkmate.notificationservice.notification.infrastructure.client.parkinglot.response.ParkingLotHostResponse;
