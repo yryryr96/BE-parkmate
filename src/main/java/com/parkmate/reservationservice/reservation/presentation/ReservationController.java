@@ -71,10 +71,14 @@ public class ReservationController {
     @Operation(
             summary = "예약 조회",
             description = """
-                    - 사용자가 자신의 예약 목록을 조회합니다. Header에 X-User-UUID를 포함해야 합니다.
-                    - 예약 내역 조회는 커서 기반 페이징으로 조회 가능합니다.
-                    - reservationStatus는 WAITING, CONFIRMED, CANCELLED, EXPIRED 가 있습니다.
-                    - paymentType은 PG, POINT 가 있습니다.
+                    사용자가 자신의 예약 목록을 조회합니다. Header에 X-User-UUID를 포함해야 합니다.
+                    - 예약 목록은 페이징 처리되어 있으며, CursorPage 형태로 반환됩니다.
+                    - 요청 파라미터로는 페이지 크기, cursor, 예약 상태를 포함할 수 있습니다.
+                    - cursor는 다음 페이지의 시작점을 나타내며, null일 경우 첫 페이지를 조회합니다.
+                    - 예약 상태(status)는 `WAITING(대기중)`, `CONFIRMED(예약 확정)`, `CANCELLED(예약 취소)`
+                    - `EXPIRED(예약 만료)`, `IN_USE(사용중)`, `COMPLETED(사용 완료)` 중 하나를 선택할 수 있습니다.
+                    - 예약 상태를 지정하지 않으면 모든 예약 상태의 예약을 조회합니다.
+                    - 응답 paymentType에는 `PG`, `POINT` 가 있습니다.
                     """,
             tags = {"RESERVATION-SERVICE"}
     )
@@ -84,7 +88,8 @@ public class ReservationController {
             @ModelAttribute ReservationCursorGetRequestVo reservationCursorGetRequestVo) {
 
         return ApiResponse.ok(
-                reservationService.getReservations(ReservationCursorGetRequestDto.of(userUuid, reservationCursorGetRequestVo))
+                reservationService.getReservations(
+                                ReservationCursorGetRequestDto.of(userUuid, reservationCursorGetRequestVo))
                         .map(ReservationResponseDto::toVo)
         );
     }

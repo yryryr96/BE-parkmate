@@ -2,6 +2,7 @@ package com.parkmate.reservationservice.reservation.infrastructure.repository;
 
 import com.parkmate.reservationservice.common.response.CursorPage;
 import com.parkmate.reservationservice.reservation.domain.Reservation;
+import com.parkmate.reservationservice.reservation.domain.ReservationStatus;
 import com.parkmate.reservationservice.reservation.dto.request.ReservationCursorGetRequestDto;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -40,6 +41,7 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
         JPAQuery<Reservation> query = queryFactory.selectFrom(reservation)
                 .where(
                         userUuidEq(reservationCursorGetRequestDto.getUserUuid()),
+                        statusEq(reservationCursorGetRequestDto.getStatus()),
                         builder
                 )
                 .offset(offset)
@@ -66,5 +68,9 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
 
     private BooleanExpression userUuidEq(String userUuid) {
         return userUuid != null ? reservation.userUuid.eq(userUuid) : null;
+    }
+
+    private BooleanExpression statusEq(ReservationStatus status) {
+        return status != null ? reservation.status.eq(status) : null;
     }
 }
