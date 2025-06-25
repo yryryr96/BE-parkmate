@@ -1,6 +1,7 @@
 package com.parkmate.parkingservice.facade.parkingspot;
 
 import com.parkmate.parkingservice.parkinglot.application.ParkingLotService;
+import com.parkmate.parkingservice.parkinglot.domain.ParkingLot;
 import com.parkmate.parkingservice.parkingspot.application.ParkingSpotService;
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotClientRequest;
 import com.parkmate.parkingservice.parkingspot.dto.response.ParkingSpotClientResponse;
@@ -25,11 +26,10 @@ public class ParkingSpotFacade {
                 parkingSpotClientRequest.getParkingSpotType()
         );
 
-        String hostUuid = parkingLotService.findByUuid(parkingLotUuid).getHostUuid();
+        ParkingLot parkingLot = parkingLotService.findByUuid(parkingLotUuid);
 
         return ParkingSpotClientResponse.of(
-                hostUuid,
-                parkingLotUuid,
+                parkingLot,
                 parkingSpots
         );
     }
