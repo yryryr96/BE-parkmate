@@ -31,9 +31,17 @@ public class Reservation extends BaseEntity {
     @Column(nullable = false)
     private Long parkingSpotId;
 
+    @Comment("주차 공간 이름")
+    @Column(nullable = false)
+    private String parkingSpotName;
+
     @Comment("주차장 UUID")
     @Column(nullable = false)
     private String parkingLotUuid;
+
+    @Comment("주차장 이름")
+    @Column(nullable = false)
+    private String parkingLotName;
 
     @Comment("차량 번호")
     @Column(nullable = false)
@@ -63,21 +71,25 @@ public class Reservation extends BaseEntity {
 
     @Builder
     private Reservation(Long id,
-                       String reservationCode,
-                       String userUuid,
-                       Long parkingSpotId,
-                       String parkingLotUuid,
-                       String vehicleNumber,
-                       LocalDateTime entryTime,
-                       LocalDateTime exitTime,
-                       double amount,
-                       ReservationStatus status,
-                       PaymentType paymentType) {
+                        String reservationCode,
+                        String userUuid,
+                        Long parkingSpotId,
+                        String parkingSpotName,
+                        String parkingLotUuid,
+                        String parkingLotName,
+                        String vehicleNumber,
+                        LocalDateTime entryTime,
+                        LocalDateTime exitTime,
+                        double amount,
+                        ReservationStatus status,
+                        PaymentType paymentType) {
         this.id = id;
         this.reservationCode = reservationCode;
         this.userUuid = userUuid;
         this.parkingSpotId = parkingSpotId;
+        this.parkingSpotName = parkingSpotName;
         this.parkingLotUuid = parkingLotUuid;
+        this.parkingLotName = parkingLotName;
         this.vehicleNumber = vehicleNumber;
         this.entryTime = entryTime;
         this.exitTime = exitTime;
@@ -90,7 +102,8 @@ public class Reservation extends BaseEntity {
         this.status = ReservationStatus.CANCELLED;
     }
 
-    public void modify(LocalDateTime newEntryTime, LocalDateTime newExitTime) {
+    public void modify(LocalDateTime newEntryTime,
+                       LocalDateTime newExitTime) {
         this.entryTime = newEntryTime;
         this.exitTime = newExitTime;
     }

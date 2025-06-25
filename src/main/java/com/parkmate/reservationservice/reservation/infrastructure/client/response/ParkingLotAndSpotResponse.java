@@ -8,9 +8,10 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class ParkingSpotResponse {
+public class ParkingLotAndSpotResponse {
 
     private String hostUuid;
     private String parkingLotUuid;
+    private String parkingLotName;
     private List<ParkingSpot> parkingSpots;
 }

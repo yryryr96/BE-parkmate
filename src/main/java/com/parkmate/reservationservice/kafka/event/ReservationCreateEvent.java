@@ -12,44 +12,61 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ReservationCreateEvent {
 
-    private String reservationUuid;
+    private String reservationCode;
     private String parkingLotUuid;
+    private String parkingLotName;
     private Long parkingSpotId;
+    private String parkingSpotName;
     private String hostUuid;
     private String userUuid;
+    private String vehicleNumber;
+    private double amount;
     private ReservationStatus status;
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
+    private LocalDateTime entryTime;
+    private LocalDateTime exitTime;
 
     @Builder
-    private ReservationCreateEvent(String reservationUuid,
-                                  String parkingLotUuid,
-                                  Long parkingSpotId,
-                                  String hostUuid,
-                                  String userUuid,
-                                  ReservationStatus status,
-                                  LocalDateTime startDateTime,
-                                  LocalDateTime endDateTime) {
-        this.reservationUuid = reservationUuid;
+    private ReservationCreateEvent(String reservationCode,
+                                   String parkingLotUuid,
+                                   String parkingLotName,
+                                   Long parkingSpotId,
+                                   String parkingSpotName,
+                                   String hostUuid,
+                                   String userUuid,
+                                   String vehicleNumber,
+                                   double amount,
+                                   ReservationStatus status,
+                                   LocalDateTime entryTime,
+                                   LocalDateTime exitTime) {
+        this.reservationCode = reservationCode;
         this.parkingLotUuid = parkingLotUuid;
+        this.parkingLotName = parkingLotName;
         this.parkingSpotId = parkingSpotId;
+        this.parkingSpotName = parkingSpotName;
         this.hostUuid = hostUuid;
         this.userUuid = userUuid;
         this.status = status;
-        this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
+        this.amount = amount;
+        this.vehicleNumber = vehicleNumber;
+        this.entryTime = entryTime;
+        this.exitTime = exitTime;
     }
 
-    public static ReservationCreateEvent from(String hostUuid, Reservation reservation) {
+    public static ReservationCreateEvent from(String hostUuid,
+                                              Reservation reservation) {
         return ReservationCreateEvent.builder()
-                .reservationUuid(reservation.getReservationCode())
+                .reservationCode(reservation.getReservationCode())
                 .parkingLotUuid(reservation.getParkingLotUuid())
+                .parkingLotName(reservation.getParkingLotName())
                 .parkingSpotId(reservation.getParkingSpotId())
+                .parkingSpotName(reservation.getParkingSpotName())
                 .hostUuid(hostUuid)
                 .userUuid(reservation.getUserUuid())
                 .status(reservation.getStatus())
-                .startDateTime(reservation.getEntryTime())
-                .endDateTime(reservation.getExitTime())
+                .vehicleNumber(reservation.getVehicleNumber())
+                .amount(reservation.getAmount())
+                .entryTime(reservation.getEntryTime())
+                .entryTime(reservation.getExitTime())
                 .build();
     }
 }

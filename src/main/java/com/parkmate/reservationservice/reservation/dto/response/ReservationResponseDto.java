@@ -73,7 +73,7 @@ public class ReservationResponseDto {
                 .entryTime(reservation.getEntryTime())
                 .exitTime(reservation.getExitTime())
                 .amount(reservation.getAmount())
-                .reservationStatus(reservation.getStatus())
+                .status(reservation.getStatus())
                 .paymentType(reservation.getPaymentType())
                 .build();
     }
@@ -94,7 +94,7 @@ public class ReservationResponseDto {
                 .entryTime(reservation.getEntryTime())
                 .exitTime(reservation.getExitTime())
                 .amount(reservation.getAmount())
-                .reservationStatus(reservation.getStatus())
+                .status(reservation.getStatus())
                 .paymentType(reservation.getPaymentType())
                 .build();
     }
@@ -112,7 +112,7 @@ public class ReservationResponseDto {
                 .entryTime(entryTime)
                 .exitTime(exitTime)
                 .amount(amount)
-                .reservationStatus(status)
+                .status(status)
                 .paymentType(paymentType)
                 .build();
     }
