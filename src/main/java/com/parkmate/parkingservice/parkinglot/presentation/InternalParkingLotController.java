@@ -4,7 +4,6 @@ import com.parkmate.parkingservice.facade.internal.InternalFacade;
 import com.parkmate.parkingservice.facade.internal.request.ReservedParkingLotRequest;
 import com.parkmate.parkingservice.facade.internal.response.ReservedParkingLotResponse;
 import com.parkmate.parkingservice.facade.internal.response.ReservedParkingLotsResponse;
-import com.parkmate.parkingservice.facade.parkinglot.ParkingLotFacade;
 import com.parkmate.parkingservice.parkinglot.application.ParkingLotService;
 import com.parkmate.parkingservice.parkinglot.vo.response.ParkingLotHostUuidResponseVo;
 import io.swagger.v3.oas.annotations.Operation;

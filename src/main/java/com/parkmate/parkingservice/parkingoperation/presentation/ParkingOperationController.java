@@ -6,16 +6,15 @@ import com.parkmate.parkingservice.parkingoperation.dto.request.*;
 import com.parkmate.parkingservice.parkingoperation.dto.response.ParkingOperationResponseDto;
 import com.parkmate.parkingservice.parkingoperation.dto.response.WeeklyOperationResponseDto;
 import com.parkmate.parkingservice.parkingoperation.vo.request.ParkingOperationRegisterRequestVo;
+import com.parkmate.parkingservice.parkingoperation.vo.request.ParkingOperationUpdateRequestVo;
 import com.parkmate.parkingservice.parkingoperation.vo.request.WeeklyOperationResponseVo;
 import com.parkmate.parkingservice.parkingoperation.vo.response.ParkingOperationResponseVo;
-import com.parkmate.parkingservice.parkingoperation.vo.request.ParkingOperationUpdateRequestVo;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 

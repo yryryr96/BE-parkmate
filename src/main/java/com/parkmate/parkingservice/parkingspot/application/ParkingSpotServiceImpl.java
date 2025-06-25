@@ -5,6 +5,7 @@ import com.parkmate.parkingservice.common.response.ResponseStatus;
 import com.parkmate.parkingservice.parkingspot.domain.ParkingSpot;
 import com.parkmate.parkingservice.parkingspot.domain.ParkingSpotFactory;
 import com.parkmate.parkingservice.parkingspot.domain.ParkingSpotType;
+import com.parkmate.parkingservice.parkingspot.dto.SpotIdAndTypeDto;
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotDeleteRequestDto;
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotGetRequestDto;
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotRegisterRequestDto;
@@ -19,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -101,12 +104,22 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
     @Transactional(readOnly = true)
     @Override
     public ParkingSpot findById(Long id) {
-        return parkingSpotRepository.findById(id).orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
+        return parkingSpotRepository.findById(id).orElseThrow(
+                () -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<ParkingSpot> findByIds(List<Long> parkingSpotIds) {
         return parkingSpotRepository.findAllByIdIn(parkingSpotIds);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Map<Long, ParkingSpotType> findSpotIdAndTypes(String parkingLotUuid) {
+
+        List<SpotIdAndTypeDto> spotIdAndTypes = parkingSpotRepository.findSpotIdAndTypes(parkingLotUuid);
+        return spotIdAndTypes.stream()
+                .collect(Collectors.toMap(SpotIdAndTypeDto::getParkingSpotId, SpotIdAndTypeDto::getType));
     }
 }

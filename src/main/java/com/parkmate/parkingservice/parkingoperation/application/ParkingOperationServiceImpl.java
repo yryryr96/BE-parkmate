@@ -8,7 +8,6 @@ import com.parkmate.parkingservice.parkingoperation.dto.request.*;
 import com.parkmate.parkingservice.parkingoperation.dto.response.ParkingOperationResponseDto;
 import com.parkmate.parkingservice.parkingoperation.dto.response.WeeklyOperationResponseDto;
 import com.parkmate.parkingservice.parkingoperation.infrastructure.ParkingOperationMongoRepository;
-import com.parkmate.parkingservice.parkingoperation.vo.response.ParkingOperationResponseVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
