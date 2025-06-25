@@ -3,9 +3,6 @@ package com.parkmate.reservationservice.reservation.dto.response;
 import com.parkmate.reservationservice.reservation.domain.PaymentType;
 import com.parkmate.reservationservice.reservation.domain.Reservation;
 import com.parkmate.reservationservice.reservation.domain.ReservationStatus;
-import com.parkmate.reservationservice.reservation.infrastructure.client.response.ReservedParkingLotSimpleResponse;
-import com.parkmate.reservationservice.reservation.infrastructure.client.response.ReservedParkingSpotResponse;
-import com.parkmate.reservationservice.reservation.infrastructure.client.response.ReservedParkingSpotSimpleResponse;
 import com.parkmate.reservationservice.reservation.vo.response.ReservationResponseVo;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +16,6 @@ public class ReservationResponseDto {
 
     private String reservationCode;
     private String userUuid;
-    private String parkingLotThumbnailUrl;
     private Long parkingSpotId;
     private String parkingSpotName;
     private String parkingLotUuid;
@@ -34,7 +30,6 @@ public class ReservationResponseDto {
     @Builder
     private ReservationResponseDto(String reservationCode,
                                    String userUuid,
-                                      String parkingLotThumbnailUrl,
                                    Long parkingSpotId,
                                    String parkingSpotName,
                                    String parkingLotUuid,
@@ -47,7 +42,6 @@ public class ReservationResponseDto {
                                    PaymentType paymentType) {
         this.reservationCode = reservationCode;
         this.userUuid = userUuid;
-        this.parkingLotThumbnailUrl = parkingLotThumbnailUrl;
         this.parkingSpotId = parkingSpotId;
         this.parkingSpotName = parkingSpotName;
         this.parkingLotUuid = parkingLotUuid;
@@ -60,36 +54,14 @@ public class ReservationResponseDto {
         this.paymentType = paymentType;
     }
 
-    public static ReservationResponseDto from(Reservation reservation, ReservedParkingSpotResponse reservedParkingSpotResponse) {
+    public static ReservationResponseDto from(Reservation reservation) {
         return ReservationResponseDto.builder()
                 .reservationCode(reservation.getReservationCode())
                 .userUuid(reservation.getUserUuid())
-                .parkingLotThumbnailUrl(reservedParkingSpotResponse.getThumbnailUrl())
                 .parkingSpotId(reservation.getParkingSpotId())
-                .parkingSpotName(reservedParkingSpotResponse.getParkingSpotName())
+                .parkingSpotName(reservation.getParkingSpotName())
                 .parkingLotUuid(reservation.getParkingLotUuid())
-                .parkingLotName(reservedParkingSpotResponse.getParkingLotName())
-                .vehicleNumber(reservation.getVehicleNumber())
-                .entryTime(reservation.getEntryTime())
-                .exitTime(reservation.getExitTime())
-                .amount(reservation.getAmount())
-                .status(reservation.getStatus())
-                .paymentType(reservation.getPaymentType())
-                .build();
-    }
-
-    public static ReservationResponseDto from(Reservation reservation,
-                              ReservedParkingLotSimpleResponse parkingLotInfo,
-                              ReservedParkingSpotSimpleResponse spotInfo) {
-
-        return ReservationResponseDto.builder()
-                .reservationCode(reservation.getReservationCode())
-                .userUuid(reservation.getUserUuid())
-                .parkingLotThumbnailUrl(parkingLotInfo.getThumbnailUrl())
-                .parkingSpotId(reservation.getParkingSpotId())
-                .parkingSpotName(spotInfo.getParkingSpotName())
-                .parkingLotUuid(reservation.getParkingLotUuid())
-                .parkingLotName(parkingLotInfo.getParkingLotName())
+                .parkingLotName(reservation.getParkingLotName())
                 .vehicleNumber(reservation.getVehicleNumber())
                 .entryTime(reservation.getEntryTime())
                 .exitTime(reservation.getExitTime())
@@ -103,7 +75,6 @@ public class ReservationResponseDto {
         return ReservationResponseVo.builder()
                 .reservationCode(reservationCode)
                 .userUuid(userUuid)
-                .parkingLotThumbnailUrl(parkingLotThumbnailUrl)
                 .parkingSpotId(parkingSpotId)
                 .parkingSpotName(parkingSpotName)
                 .parkingLotUuid(parkingLotUuid)
