@@ -25,8 +25,8 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
 
     private static final long LAZY_TIME_SECONDS = 10L;
     private static final String TITLE = "예약 완료";
-    private static final String USER_BASE_REDIRECT_URL = "http://localhost:3000/user/reservations/"; // 경로 끝에 '/' 추가
-    private static final String HOST_BASE_REDIRECT_URL = "http://localhost:3000/host/reservations/"; // 경로 끝에 '/' 추가
+    private static final String USER_BASE_REDIRECT_URL = "http://localhost:3000/user/reservations/";
+    private static final String HOST_BASE_REDIRECT_URL = "http://localhost:3000/host/reservations/";
     private static final String CONTENT_TEMPLATE = """
             예약이 완료되었습니다.\s
             예약자: %s
