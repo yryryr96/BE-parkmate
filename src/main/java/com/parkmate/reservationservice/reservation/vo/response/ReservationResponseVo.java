@@ -23,7 +23,7 @@ public class ReservationResponseVo {
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
     private double amount;
-    private ReservationStatus reservationStatus;
+    private ReservationStatus status;
     private PaymentType paymentType;
 
     @Builder
@@ -38,7 +38,7 @@ public class ReservationResponseVo {
                                   LocalDateTime entryTime,
                                   LocalDateTime exitTime,
                                   double amount,
-                                  ReservationStatus reservationStatus,
+                                  ReservationStatus status,
                                   PaymentType paymentType) {
         this.reservationCode = reservationCode;
         this.userUuid = userUuid;
@@ -51,7 +51,7 @@ public class ReservationResponseVo {
         this.entryTime = entryTime;
         this.exitTime = exitTime;
         this.amount = amount;
-        this.reservationStatus = reservationStatus;
+        this.status = status;
         this.paymentType = paymentType;
     }
 }

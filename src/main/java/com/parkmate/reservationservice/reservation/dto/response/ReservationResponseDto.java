@@ -28,7 +28,7 @@ public class ReservationResponseDto {
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
     private double amount;
-    private ReservationStatus reservationStatus;
+    private ReservationStatus status;
     private PaymentType paymentType;
 
     @Builder
@@ -43,7 +43,7 @@ public class ReservationResponseDto {
                                    LocalDateTime entryTime,
                                    LocalDateTime exitTime,
                                    double amount,
-                                   ReservationStatus reservationStatus,
+                                   ReservationStatus status,
                                    PaymentType paymentType) {
         this.reservationCode = reservationCode;
         this.userUuid = userUuid;
@@ -56,7 +56,7 @@ public class ReservationResponseDto {
         this.entryTime = entryTime;
         this.exitTime = exitTime;
         this.amount = amount;
-        this.reservationStatus = reservationStatus;
+        this.status = status;
         this.paymentType = paymentType;
     }
 
@@ -73,7 +73,7 @@ public class ReservationResponseDto {
                 .entryTime(reservation.getEntryTime())
                 .exitTime(reservation.getExitTime())
                 .amount(reservation.getAmount())
-                .reservationStatus(reservation.getStatus())
+                .status(reservation.getStatus())
                 .paymentType(reservation.getPaymentType())
                 .build();
     }
@@ -94,7 +94,7 @@ public class ReservationResponseDto {
                 .entryTime(reservation.getEntryTime())
                 .exitTime(reservation.getExitTime())
                 .amount(reservation.getAmount())
-                .reservationStatus(reservation.getStatus())
+                .status(reservation.getStatus())
                 .paymentType(reservation.getPaymentType())
                 .build();
     }
@@ -112,7 +112,7 @@ public class ReservationResponseDto {
                 .entryTime(entryTime)
                 .exitTime(exitTime)
                 .amount(amount)
-                .reservationStatus(reservationStatus)
+                .status(status)
                 .paymentType(paymentType)
                 .build();
     }

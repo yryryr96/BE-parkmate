@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 public class ReservationServiceImpl implements ReservationService {
 
     private static final int MODIFY_TIME_LIMIT_MINUTES = 60;
+
     private final ReservationRepository reservationRepository;
     private final ParkingServiceClient parkingServiceClient;
     private final ApplicationEventPublisher eventPublisher;
@@ -40,7 +41,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void reserve(ReservationCreateRequestDto reservationCreateRequestDto) {
 
-        ParkingSpotResponse clientResponse = fetchPotentialParkingSpots(reservationCreateRequestDto);
+        ParkingLotAndSpotResponse clientResponse = fetchPotentialParkingSpots(reservationCreateRequestDto);
 
         Set<Long> unAvailableParkingSpotIds = getUnavailableParkingSpotIds(
                 clientResponse.getParkingLotUuid(),
@@ -51,7 +52,7 @@ public class ReservationServiceImpl implements ReservationService {
         ParkingSpot availableSpot = findFirstAvailableSpot(clientResponse.getParkingSpots(),
                 unAvailableParkingSpotIds);
 
-        Reservation reservation = reservationCreateRequestDto.toEntity(availableSpot);
+        Reservation reservation = reservationCreateRequestDto.toEntity(clientResponse, availableSpot);
 
         reservationRepository.save(reservation);
 
@@ -132,7 +133,7 @@ public class ReservationServiceImpl implements ReservationService {
         return ReservationResponseDto.from(reservation, spotInfo);
     }
 
-    private ParkingSpotResponse fetchPotentialParkingSpots(ReservationCreateRequestDto reservationCreateRequestDto) {
+    private ParkingLotAndSpotResponse fetchPotentialParkingSpots(ReservationCreateRequestDto reservationCreateRequestDto) {
 
         List<LocalDate> requestDates = reservationCreateRequestDto.getEntryTime().toLocalDate()
                 .datesUntil(reservationCreateRequestDto.getExitTime().toLocalDate().plusDays(1))
@@ -144,7 +145,7 @@ public class ReservationServiceImpl implements ReservationService {
                 requestDates
         );
 
-        ParkingSpotResponse clientResponse = parkingServiceClient.getParkingSpots(parkingSpotRequest)
+        ParkingLotAndSpotResponse clientResponse = parkingServiceClient.getParkingSpots(parkingSpotRequest)
                 .orElseThrow(() -> new BaseException(ResponseStatus.PARKING_LOT_NOT_AVAILABLE));
 
         if (clientResponse.getParkingSpots() == null || clientResponse.getParkingSpots().isEmpty()) {
