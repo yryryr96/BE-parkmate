@@ -76,8 +76,6 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
         });
     }
 
-    // --- Private Helper Methods ---
-
     /**
      * 알림 내용을 생성합니다.
      * @param event 예약 생성 이벤트
