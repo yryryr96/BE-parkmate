@@ -1,7 +1,6 @@
 package com.parkmate.notificationservice.notification.infrastructure.client.user;
 
 import com.parkmate.notificationservice.common.response.ApiResponse;
-import com.parkmate.notificationservice.notification.infrastructure.client.reservation.response.ReservationResponse;
 import com.parkmate.notificationservice.notification.infrastructure.client.user.response.UserNameResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;

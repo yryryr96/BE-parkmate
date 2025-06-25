@@ -24,11 +24,10 @@ public class Notification extends BaseEntity {
     private NotificationType type;
     private NotificationStatus status;
     private LocalDateTime sendAt;
-    private Boolean isRead;
 
     @Builder
     private Notification(String id, String receiverUuid, String title, String content, String redirectUrl,
-                         NotificationType type, NotificationStatus status, LocalDateTime sendAt, Boolean isRead) {
+                         NotificationType type, NotificationStatus status, LocalDateTime sendAt) {
         this.id = id;
         this.receiverUuid = receiverUuid;
         this.title = title;
@@ -37,7 +36,6 @@ public class Notification extends BaseEntity {
         this.type = type;
         this.status = status;
         this.sendAt = sendAt;
-        this.isRead = isRead;
     }
 
     public void updateStatus(NotificationStatus status) {
