@@ -50,9 +50,7 @@ public class ParkingSpotFacade {
         Map<Long, ParkingSpotType> spotIdAndTypes = parkingSpotService.findSpotIdAndTypes(parkingLotUuid);
         List<Long> parkingSpotIds = reservationClient.getReservations(parkingLotUuid, entryTime, exitTime);
 
-        for (Long parkingSpotId : parkingSpotIds) {
-            spotIdAndTypes.remove(parkingSpotId);
-        }
+        spotIdAndTypes.keySet().removeAll(parkingSpotIds);
 
         return spotIdAndTypes.values().stream()
                 .collect(Collectors.groupingBy(type -> type, Collectors.counting()));
