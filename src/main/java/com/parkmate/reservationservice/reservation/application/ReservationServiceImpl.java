@@ -39,22 +39,24 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void reserve(ReservationCreateRequestDto reservationCreateRequestDto) {
 
-        ParkingLotAndSpotResponse clientResponse = fetchPotentialParkingSpots(reservationCreateRequestDto);
+        ParkingLotAndSpotResponse parkingLot = fetchPotentialParkingSpots(reservationCreateRequestDto);
 
         Set<Long> unAvailableParkingSpotIds = getReservedParkingSpotIds(
-                clientResponse.getParkingLotUuid(),
+                parkingLot.getParkingLotUuid(),
                 reservationCreateRequestDto.getEntryTime(),
                 reservationCreateRequestDto.getExitTime()
         );
 
-        ParkingSpot availableSpot = findFirstAvailableSpot(clientResponse.getParkingSpots(),
-                unAvailableParkingSpotIds);
+        ParkingSpot availableSpot = parkingLot.getParkingSpots().stream()
+                .filter(parkingSpot -> !unAvailableParkingSpotIds.contains(parkingSpot.getId()))
+                .findFirst()
+                .orElseThrow(() -> new BaseException(ResponseStatus.PARKING_LOT_NOT_AVAILABLE));
 
-        Reservation reservation = reservationCreateRequestDto.toEntity(clientResponse, availableSpot);
+        Reservation reservation = reservationCreateRequestDto.toEntity(parkingLot.getParkingLotName(), availableSpot);
 
         reservationRepository.save(reservation);
 
-        eventPublisher.publishEvent(ReservationCreateEvent.from(clientResponse.getHostUuid(), reservation));
+        eventPublisher.publishEvent(ReservationCreateEvent.from(parkingLot.getHostUuid(), reservation));
     }
 
     @Transactional
@@ -113,8 +115,8 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional(readOnly = true)
     @Override
     public Set<Long> getReservedParkingSpotIds(String parkingLotUuid,
-                                                LocalDateTime entryTime,
-                                                LocalDateTime exitTime) {
+                                               LocalDateTime entryTime,
+                                               LocalDateTime exitTime) {
 
         List<Reservation> existingReservations = reservationRepository.findAllByParkingLotUuid(
                 parkingLotUuid,
@@ -148,15 +150,6 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         return clientResponse;
-    }
-
-    private ParkingSpot findFirstAvailableSpot(List<ParkingSpot> parkingSpots,
-                                               Set<Long> unAvailableParkingSpotIds) {
-
-        return parkingSpots.stream()
-                .filter(parkingSpot -> !unAvailableParkingSpotIds.contains(parkingSpot.getId()))
-                .findFirst()
-                .orElseThrow(() -> new BaseException(ResponseStatus.PARKING_LOT_NOT_AVAILABLE));
     }
 
     private boolean canModified(Reservation reservation) {
