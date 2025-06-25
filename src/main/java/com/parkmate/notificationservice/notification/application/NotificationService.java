@@ -22,4 +22,6 @@ public interface NotificationService {
     NotificationReadResponseDto readNotificationById(NotificationReadRequestDto notificationReadRequestDto);
 
     void delete(NotificationDeleteRequestDto notificationDeleteRequestDto);
+
+    long getUnreadNotificationCount(String receiverUuid);
 }

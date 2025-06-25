@@ -101,6 +101,23 @@ public class NotificationController {
         return ApiResponse.of(HttpStatus.NO_CONTENT, "알림이 삭제되었습니다.", null);
     }
 
+    @GetMapping("/{receiverType}/unread-count")
+    @Operation(
+            summary = "읽지 않은 알림 개수 조회 API",
+            description = """
+                    - 특정 사용자의 읽지 않은 알림 개수를 조회합니다. 요청 헤더에 `X-User-UUID` 또는 `X-Host-UUID`를 포함해야 합니다.
+                    - `receiverType`은 `user` 또는 `host` 중 하나를 선택해야 합니다.
+                    """,
+            tags = {"NOTIFICATION-SERVICE"}
+    )
+    private ApiResponse<Long> getUnreadNotificationCount(
+            @PathVariable String receiverType,
+            HttpServletRequest request) {
+
+        String receiverUuid = getReceiverUuidFromHeader(receiverType, request);
+        return ApiResponse.ok(notificationService.getUnreadNotificationCount(receiverUuid));
+    }
+
     private String getReceiverUuidFromHeader(String receiverType, HttpServletRequest request) {
 
         String headerName = RECEIVER_TYPE_HEADER_MAP.get(receiverType);

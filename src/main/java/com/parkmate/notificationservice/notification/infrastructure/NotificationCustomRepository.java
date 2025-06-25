@@ -13,4 +13,6 @@ public interface NotificationCustomRepository {
     Notification readNotification(NotificationReadRequestDto notificationReadRequestDto);
 
     void delete(NotificationDeleteRequestDto notificationDeleteRequestDto);
+
+    long getUnreadNotificationCount(String receiverUuid);
 }

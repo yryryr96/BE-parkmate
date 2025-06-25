@@ -89,4 +89,14 @@ public class NotificationCustomRepositoryImpl implements NotificationCustomRepos
                 .hasNext(hasNext)
                 .build();
     }
+
+    @Override
+    public long getUnreadNotificationCount(String receiverUuid) {
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where(RECEIVER_UUID_FIELD).is(receiverUuid)
+                .and(STATUS_FIELD).is(NotificationStatus.SENT));
+
+        return mongoTemplate.count(query, Notification.class);
+    }
 }
