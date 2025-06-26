@@ -16,7 +16,7 @@ public class BaseExceptionHandler {
     protected ResponseEntity<ApiResponse<Object>> BaseError(BaseException e) {
 
         HttpStatus status = e.getStatus().getHttpStatus();
-
+        log.info("예외 발생 - 상태: {}, 메시지: {}", status, e.getMessage());
         if (ResponseStatus.RESOURCE_NOT_FOUND.equals(e.getStatus())) {
             return new ResponseEntity<>(
                     ApiResponse.error(e.getStatus()),

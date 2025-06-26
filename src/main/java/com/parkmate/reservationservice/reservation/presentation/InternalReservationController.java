@@ -1,11 +1,11 @@
 package com.parkmate.reservationservice.reservation.presentation;
 
+import com.parkmate.reservationservice.common.response.ApiResponse;
 import com.parkmate.reservationservice.reservation.application.ReservationService;
+import com.parkmate.reservationservice.reservation.dto.request.ReservationGetForUseDto;
+import com.parkmate.reservationservice.reservation.dto.response.ReservationResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -17,11 +17,26 @@ public class InternalReservationController {
 
     private final ReservationService reservationService;
 
+    private static final String USER_UUID_HEADER = "X-User-UUID";
+
     @GetMapping("/reservedSpotIds")
     public Set<Long> getReservedParkingSpotIds(@RequestParam String parkingLotUuid,
                                                @RequestParam LocalDateTime entryTime,
                                                @RequestParam LocalDateTime exitTime) {
 
         return reservationService.getReservedParkingSpotIds(parkingLotUuid, entryTime, exitTime);
+    }
+
+    @GetMapping("/{reservationCode}")
+    public ApiResponse<ReservationResponseDto> getReservationForUse(
+            @RequestHeader(USER_UUID_HEADER) String userUuid,
+            @PathVariable String reservationCode,
+            @RequestParam String parkingLotUuid
+    ) {
+        ReservationResponseDto result = reservationService.getReservationForUse(
+                ReservationGetForUseDto.of(userUuid, reservationCode, parkingLotUuid)
+        );
+
+        return ApiResponse.ok(result);
     }
 }

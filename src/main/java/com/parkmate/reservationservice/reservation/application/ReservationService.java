@@ -20,4 +20,6 @@ public interface ReservationService {
     ReservationResponseDto getReservation(ReservationGetRequestDto reservationGetRequestDto);
 
     Set<Long> getReservedParkingSpotIds(String parkingLotUuid, LocalDateTime entryTime, LocalDateTime exitTime);
+
+    ReservationResponseDto getReservationForUse(ReservationGetForUseDto reservationGetForUseDto);
 }

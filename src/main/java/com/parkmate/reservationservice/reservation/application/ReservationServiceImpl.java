@@ -129,6 +129,19 @@ public class ReservationServiceImpl implements ReservationService {
                 .collect(Collectors.toSet());
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public ReservationResponseDto getReservationForUse(ReservationGetForUseDto reservationGetForUseDto) {
+
+        Reservation reservation = reservationRepository.findByUserUuidAndReservationCodeAndParkingLotUuid(
+                reservationGetForUseDto.getUserUuid(),
+                reservationGetForUseDto.getReservationCode(),
+                reservationGetForUseDto.getParkingLotUuid()
+        ).orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
+
+        return ReservationResponseDto.from(reservation);
+    }
+
     private ParkingLotAndSpotResponse fetchPotentialParkingSpots(
             ReservationCreateRequestDto reservationCreateRequestDto) {
 

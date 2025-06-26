@@ -41,7 +41,7 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
         JPAQuery<Reservation> query = queryFactory.selectFrom(reservation)
                 .where(
                         userUuidEq(reservationCursorGetRequestDto.getUserUuid()),
-                        statusEq(reservationCursorGetRequestDto.getStatus()),
+                        statusIn(reservationCursorGetRequestDto.getStatus()),
                         builder
                 )
                 .offset(offset)
@@ -70,7 +70,7 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
         return userUuid != null ? reservation.userUuid.eq(userUuid) : null;
     }
 
-    private BooleanExpression statusEq(ReservationStatus status) {
-        return status != null ? reservation.status.eq(status) : null;
+    private BooleanExpression statusIn(List<ReservationStatus> status) {
+        return status != null ? reservation.status.in(status) : null;
     }
 }
