@@ -10,6 +10,7 @@ import com.parkmate.parkingservice.parkingspot.dto.response.ParkingSpotResponseD
 import com.parkmate.parkingservice.parkingspot.dto.response.ParkingSpotSimpleResponseDto;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ParkingSpotService {
 
@@ -29,4 +30,6 @@ public interface ParkingSpotService {
     ParkingSpot findById(Long id);
 
     List<ParkingSpot> findByIds(List<Long> parkingSpotIds);
+
+    Map<Long, ParkingSpotType> findSpotIdAndTypes(String parkingLotUuid);
 }

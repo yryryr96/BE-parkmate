@@ -1,7 +1,9 @@
 package com.parkmate.parkingservice.parkingspot.presentation;
 
 import com.parkmate.parkingservice.common.response.ApiResponse;
+import com.parkmate.parkingservice.facade.parkingspot.ParkingSpotFacade;
 import com.parkmate.parkingservice.parkingspot.application.ParkingSpotService;
+import com.parkmate.parkingservice.parkingspot.domain.ParkingSpotType;
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotDeleteRequestDto;
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotGetRequestDto;
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotRegisterRequestDto;
@@ -15,13 +17,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/parkingLots/")
 @RequiredArgsConstructor
 public class ParkingSpotController {
 
+    private final ParkingSpotFacade parkingSpotFacade;
     private final ParkingSpotService parkingSpotService;
 
     @Operation(
@@ -42,8 +47,8 @@ public class ParkingSpotController {
             summary = "주차 공간 정보 업데이트",
             description = "주차 공간 정보를 업데이트하는 API입니다. " +
                     "주차 공간 UUID를 PathVariable로 받고, 업데이트할 정보를 RequestBody로 받습니다. " +
-                          "ParkingSpotType은 enum 타입으로 COMPACT, SMALL, MEDIUM, LARGE, EV 중 하나입니다. " +
-                          "evChargeType은 enum 타입으로 AC_SINGLE, DC_COMBO, DC_CHADEMO, AC_THREE_PHASE 중 하나입니다.",
+                    "ParkingSpotType은 enum 타입으로 COMPACT, SMALL, MEDIUM, LARGE, EV 중 하나입니다. " +
+                    "evChargeType은 enum 타입으로 AC_SINGLE, DC_COMBO, DC_CHADEMO, AC_THREE_PHASE 중 하나입니다.",
             tags = {"PARKING-SPOT-SERVICE"}
     )
     @PutMapping("/{parkingLotUuid}/spots/{parkingSpotId}")
@@ -51,7 +56,8 @@ public class ParkingSpotController {
                                                  @PathVariable Long parkingSpotId,
                                                  @RequestBody ParkingSpotUpdateRequestVo parkingSpotUpdateRequestVo) {
 
-        parkingSpotService.update(ParkingSpotUpdateRequestDto.of(parkingLotUuid, parkingSpotId, parkingSpotUpdateRequestVo));
+        parkingSpotService.update(
+                ParkingSpotUpdateRequestDto.of(parkingLotUuid, parkingSpotId, parkingSpotUpdateRequestVo));
         return ApiResponse.of(HttpStatus.OK, "주차 공간 정보가 업데이트되었습니다.");
     }
 
@@ -97,6 +103,24 @@ public class ParkingSpotController {
         return ApiResponse.ok(
                 parkingSpotService.getParkingSpot(ParkingSpotGetRequestDto.of(parkingLotUuid, parkingSpotId))
                         .toVo()
+        );
+    }
+
+    @Operation(
+            summary = "주차 공간 타입별 사용 가능한 공간 수 조회",
+            description = """
+                    특정 주차장에 대해 주어진 입차 및 출차 시간 동안 사용 가능한 주차 공간의 타입별 수를 조회하는 API입니다.
+                    주차장 UUID, 입차 시간, 출차 시간을 Query Parameter로 받습니다.
+                    """,
+            tags = {"PARKING-SPOT-SERVICE"}
+    )
+    @GetMapping("/{parkingLotUuid}/spots/available")
+    public ApiResponse<Map<ParkingSpotType, Long>> getAvailableSpotsPerType(@PathVariable String parkingLotUuid,
+                                                                            @RequestParam LocalDateTime entryTime,
+                                                                            @RequestParam LocalDateTime exitTime) {
+
+        return ApiResponse.ok(
+                parkingSpotFacade.getAvailableSpotsPerType(parkingLotUuid, entryTime, exitTime)
         );
     }
 }

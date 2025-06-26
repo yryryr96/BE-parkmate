@@ -5,7 +5,6 @@ import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotDeleteReques
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotRegisterRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.request.ParkingLotUpdateRequestDto;
 import com.parkmate.parkingservice.parkinglot.dto.response.ParkingLotHostUuidResponseDto;
-import com.parkmate.parkingservice.parkinglot.dto.response.ParkingLotResponseDto;
 
 import java.util.List;
 

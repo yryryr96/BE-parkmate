@@ -3,7 +3,6 @@ package com.parkmate.parkingservice.parkingoperation.application;
 import com.parkmate.parkingservice.parkingoperation.dto.request.*;
 import com.parkmate.parkingservice.parkingoperation.dto.response.ParkingOperationResponseDto;
 import com.parkmate.parkingservice.parkingoperation.dto.response.WeeklyOperationResponseDto;
-import com.parkmate.parkingservice.parkingoperation.vo.response.ParkingOperationResponseVo;
 
 import java.time.LocalDate;
 import java.util.List;

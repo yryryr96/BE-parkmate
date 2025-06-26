@@ -41,6 +41,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
+	// openfeign
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
 	// spring eureka client
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
