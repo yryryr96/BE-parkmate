@@ -17,6 +17,7 @@ public class UserParkingHistory {
 
     @Id
     private String id;
+
     private String userUuid;
     private String parkingLotUuid;
     private String parkingSpotName;
@@ -29,13 +30,13 @@ public class UserParkingHistory {
 
     @Builder
     private UserParkingHistory(String id,
-                              String userUuid,
-                              String parkingLotUuid,
-                              String parkingSpotName,
-                              String reservationCode,
-                              String vehicleNumber,
-                              HistoryType type,
-                              LocalDateTime timestamp) {
+                               String userUuid,
+                               String parkingLotUuid,
+                               String parkingSpotName,
+                               String reservationCode,
+                               String vehicleNumber,
+                               HistoryType type,
+                               LocalDateTime timestamp) {
         this.id = id;
         this.userUuid = userUuid;
         this.parkingLotUuid = parkingLotUuid;
