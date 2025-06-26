@@ -7,38 +7,40 @@ import com.parkmate.parkingservice.parkingoperation.domain.ParkingOperation;
 import com.parkmate.parkingservice.parkingoperation.dto.request.*;
 import com.parkmate.parkingservice.parkingoperation.dto.response.ParkingOperationResponseDto;
 import com.parkmate.parkingservice.parkingoperation.dto.response.WeeklyOperationResponseDto;
-import com.parkmate.parkingservice.parkingoperation.infrastructure.ParkingOperationMongoRepository;
+import com.parkmate.parkingservice.parkingoperation.infrastructure.ParkingOperationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ParkingOperationServiceImpl implements ParkingOperationService {
 
-    private final ParkingOperationMongoRepository parkingOperationMongoRepository;
+    private final ParkingOperationRepository parkingOperationRepository;
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     @Override
     public void register(ParkingOperationRegisterRequestDto parkingOperationCreateRequestDto) {
 
-        parkingOperationMongoRepository.findByParkingLotUuidAndOperationDate(
+        parkingOperationRepository.findByParkingLotUuidAndOperationDate(
                 parkingOperationCreateRequestDto.getParkingLotUuid(),
                 parkingOperationCreateRequestDto.getOperationDate()
         ).ifPresent(parkingOperation -> {
             throw new BaseException(ResponseStatus.DUPLICATE_RESOURCE);
         });
 
-        ParkingOperation operation = parkingOperationMongoRepository.save(
+        ParkingOperation operation = parkingOperationRepository.save(
                 parkingOperationCreateRequestDto.toEntity()
         );
 
@@ -51,12 +53,12 @@ public class ParkingOperationServiceImpl implements ParkingOperationService {
     @Override
     public void update(ParkingOperationUpdateRequestDto parkingOperationUpdateRequestDto) {
 
-        ParkingOperation parkingOperation = parkingOperationMongoRepository.findByParkingLotUuidAndParkingOperationUuid(
+        ParkingOperation parkingOperation = parkingOperationRepository.findByParkingLotUuidAndParkingOperationUuid(
                 parkingOperationUpdateRequestDto.getParkingLotUuid(),
                 parkingOperationUpdateRequestDto.getParkingOperationUuid()
         ).orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
 
-        parkingOperationMongoRepository.save(
+        parkingOperationRepository.save(
                 createUpdatedParkingOperationEntity(parkingOperation, parkingOperationUpdateRequestDto)
         );
     }
@@ -65,7 +67,7 @@ public class ParkingOperationServiceImpl implements ParkingOperationService {
     @Override
     public void delete(ParkingOperationDeleteRequestDto parkingOperationDeleteRequestDto) {
 
-        parkingOperationMongoRepository.deleteByParkingLotUuidAndParkingOperationUuid(
+        parkingOperationRepository.deleteByParkingLotUuidAndParkingOperationUuid(
                 parkingOperationDeleteRequestDto.getParkingLotUuid(),
                 parkingOperationDeleteRequestDto.getParkingOperationUuid()
         );
@@ -75,7 +77,7 @@ public class ParkingOperationServiceImpl implements ParkingOperationService {
     @Override
     public List<ParkingOperationResponseDto> getParkingOperationList(ParkingOperationListGetRequestDto parkingOperationListGetRequestDto) {
 
-        return parkingOperationMongoRepository.findAllByParkingLotUuidAndOperationDateBetween(
+        return parkingOperationRepository.findAllByParkingLotUuidAndOperationDateBetween(
                         parkingOperationListGetRequestDto.getParkingLotUuid(),
                         parkingOperationListGetRequestDto.getStartDate(),
                         parkingOperationListGetRequestDto.getEndDate())
@@ -87,7 +89,7 @@ public class ParkingOperationServiceImpl implements ParkingOperationService {
     @Transactional(readOnly = true)
     @Override
     public ParkingOperationResponseDto getParkingOperation(ParkingOperationGetRequestDto parkingOperationGetRequestDto) {
-        ParkingOperation parkingOperation = parkingOperationMongoRepository.findByParkingLotUuidAndParkingOperationUuid(
+        ParkingOperation parkingOperation = parkingOperationRepository.findByParkingLotUuidAndParkingOperationUuid(
                 parkingOperationGetRequestDto.getParkingLotUuid(),
                 parkingOperationGetRequestDto.getParkingOperationUuid()
         ).orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
@@ -104,7 +106,7 @@ public class ParkingOperationServiceImpl implements ParkingOperationService {
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate.plusDays(DEFAULT_DAY_RANGE);
 
-        List<ParkingOperation> operations = parkingOperationMongoRepository.findAllByParkingLotUuidAndOperationDateBetween(
+        List<ParkingOperation> operations = parkingOperationRepository.findAllByParkingLotUuidAndOperationDateBetween(
                 parkingLotUuid,
                 startDate,
                 endDate
@@ -117,12 +119,18 @@ public class ParkingOperationServiceImpl implements ParkingOperationService {
     public ParkingOperationResponseDto getDailyOperation(String parkingLotUuid,
                                                         LocalDate date) {
 
-        ParkingOperation operation = parkingOperationMongoRepository.findByParkingLotUuidAndOperationDate(
+        ParkingOperation operation = parkingOperationRepository.findByParkingLotUuidAndOperationDate(
                 parkingLotUuid,
                 date.atStartOfDay()
         ).orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
 
         return ParkingOperationResponseDto.from(operation);
+    }
+
+    @Override
+    public List<String> getOpenParkingLotUuids(List<String> parkingLotUuids) {
+        System.out.println("Fetching open parking lots for UUIDs: " + parkingLotUuids);
+        return parkingOperationRepository.getOpenParkingLotUuids(parkingLotUuids, LocalDateTime.now());
     }
 
     private ParkingOperation createUpdatedParkingOperationEntity(

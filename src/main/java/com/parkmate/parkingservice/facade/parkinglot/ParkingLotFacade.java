@@ -16,6 +16,7 @@ import com.parkmate.parkingservice.parkinglotoption.dto.response.ParkingLotOptio
 import com.parkmate.parkingservice.parkinglotoptionmapping.application.ParkingLotOptionMappingService;
 import com.parkmate.parkingservice.parkinglotoptionmapping.dto.request.ParkingLotMappingUpdateRequestDto;
 import com.parkmate.parkingservice.parkinglotoptionmapping.dto.response.ParkingLotOptionMappingResponseDto;
+import com.parkmate.parkingservice.parkingoperation.application.ParkingOperationService;
 import com.parkmate.parkingservice.parkingspot.application.ParkingSpotService;
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotRegisterRequestDto;
 import com.parkmate.parkingservice.parkingspot.dto.response.ParkingSpotResponseDto;
@@ -26,7 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +37,7 @@ public class ParkingLotFacade {
 
     private final ParkingLotService parkingLotService;
     private final ParkingSpotService parkingSpotService;
+    private final ParkingOperationService parkingOperationService;
     private final ParkingLotOptionService parkingLotOptionService;
     private final ParkingLotOptionMappingService parkingLotOptionMappingService;
     private final ParkingLotImageMappingService parkingLotImageMappingService;
@@ -82,8 +86,18 @@ public class ParkingLotFacade {
             throw new BaseException(ResponseStatus.RESOURCE_NOT_FOUND);
         }
 
+        Map<String, Boolean> isOpenMap = parkingLots.stream()
+                .collect(Collectors.toMap(ParkingLot::getParkingLotUuid, parkingLot -> false));
+
+        List<String> openParkingLotUuids = parkingOperationService.getOpenParkingLotUuids(isOpenMap.keySet().stream().toList());
+        for (String openParkingLotUuid : openParkingLotUuids) {
+            isOpenMap.put(openParkingLotUuid, true);
+        }
+
+        System.out.println(openParkingLotUuids.size());
+
         List<HostParkingLotResponseDto> result = parkingLots.stream()
-                .map(HostParkingLotResponseDto::from)
+                .map(p -> HostParkingLotResponseDto.from(p, isOpenMap.get(p.getParkingLotUuid())))
                 .toList();
 
         return HostParkingLotResponseDtoList.from(result);

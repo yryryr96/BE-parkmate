@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface ParkingOperationMongoRepository extends MongoRepository<ParkingOperation, String> {
+public interface ParkingOperationRepository extends MongoRepository<ParkingOperation, String>, CustomOperationRepository {
 
     List<ParkingOperation> findAllByParkingLotUuidAndOperationDateBetween(String parkingLotUuid,
                                                                           LocalDate startDate,

@@ -12,30 +12,30 @@ public class HostParkingLotResponseDto {
 
     private String parkingLotUuid;
     private String name;
-    private String mainAddress;
-    private String detailAddress;
+    private String address;
     private String thumbnailUrl;
+    private boolean isOpen;
 
     @Builder
-    private HostParkingLotResponseDto(String parkingLotUuid,
+    public HostParkingLotResponseDto(String parkingLotUuid,
                                      String name,
-                                     String mainAddress,
-                                     String detailAddress,
-                                     String thumbnailUrl) {
+                                     String address,
+                                     String thumbnailUrl,
+                                     boolean isOpen) {
         this.parkingLotUuid = parkingLotUuid;
         this.name = name;
-        this.mainAddress = mainAddress;
-        this.detailAddress = detailAddress;
+        this.address = address;
         this.thumbnailUrl = thumbnailUrl;
+        this.isOpen = isOpen;
     }
 
-    public static HostParkingLotResponseDto from(ParkingLot parkingLot) {
+    public static HostParkingLotResponseDto from(ParkingLot parkingLot, boolean isOpen) {
         return HostParkingLotResponseDto.builder()
                 .parkingLotUuid(parkingLot.getParkingLotUuid())
                 .name(parkingLot.getName())
-                .mainAddress(parkingLot.getMainAddress())
-                .detailAddress(parkingLot.getDetailAddress())
+                .address(parkingLot.getMainAddress())
                 .thumbnailUrl(parkingLot.getThumbnailUrl())
+                .isOpen(isOpen)
                 .build();
     }
 
@@ -43,9 +43,9 @@ public class HostParkingLotResponseDto {
         return HostParkingLotResponseVo.builder()
                 .parkingLotUuid(parkingLotUuid)
                 .name(name)
-                .mainAddress(mainAddress)
-                .detailAddress(detailAddress)
+                .address(address)
                 .thumbnailUrl(thumbnailUrl)
+                .isOpen(isOpen)
                 .build();
     }
 }
