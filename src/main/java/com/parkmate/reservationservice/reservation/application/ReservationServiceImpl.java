@@ -133,7 +133,6 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public ReservationResponseDto getReservationForUse(ReservationGetForUseDto reservationGetForUseDto) {
 
-        System.out.println("reservationGetForUseDto = " + reservationGetForUseDto.toString());
         Reservation reservation = reservationRepository.findByUserUuidAndReservationCodeAndParkingLotUuid(
                 reservationGetForUseDto.getUserUuid(),
                 reservationGetForUseDto.getReservationCode(),

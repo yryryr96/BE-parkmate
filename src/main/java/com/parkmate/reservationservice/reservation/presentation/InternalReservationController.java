@@ -33,7 +33,6 @@ public class InternalReservationController {
             @PathVariable String reservationCode,
             @RequestParam String parkingLotUuid
     ) {
-        System.out.println("000000000000000000000000");
         ReservationResponseDto result = reservationService.getReservationForUse(
                 ReservationGetForUseDto.of(userUuid, reservationCode, parkingLotUuid)
         );
