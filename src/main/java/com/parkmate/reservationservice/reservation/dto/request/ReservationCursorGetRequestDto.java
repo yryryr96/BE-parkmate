@@ -6,18 +6,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 public class ReservationCursorGetRequestDto {
 
     private String userUuid;
-    private ReservationStatus status;
+    private List<ReservationStatus> status;
     private Integer page;
     private Integer size;
     private Long cursor;
 
     @Builder
-    private ReservationCursorGetRequestDto(String userUuid, ReservationStatus status, Integer page,
+    private ReservationCursorGetRequestDto(String userUuid, List<ReservationStatus> status, Integer page,
                                            Integer size, Long cursor) {
         this.userUuid = userUuid;
         this.status = status;

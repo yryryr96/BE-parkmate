@@ -37,7 +37,6 @@ public class InternalReservationController {
                 ReservationGetForUseDto.of(userUuid, reservationCode, parkingLotUuid)
         );
 
-        System.out.println(result.getReservationCode());
         return ApiResponse.ok(result);
     }
 }
