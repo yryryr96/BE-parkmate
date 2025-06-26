@@ -5,12 +5,11 @@ import com.parkmate.reservationservice.common.response.CursorPage;
 import com.parkmate.reservationservice.common.response.ResponseStatus;
 import com.parkmate.reservationservice.kafka.event.ReservationCreateEvent;
 import com.parkmate.reservationservice.reservation.domain.Reservation;
-import com.parkmate.reservationservice.reservation.domain.ReservationStatus;
 import com.parkmate.reservationservice.reservation.dto.request.*;
 import com.parkmate.reservationservice.reservation.dto.response.ReservationResponseDto;
 import com.parkmate.reservationservice.reservation.infrastructure.client.ParkingServiceClient;
 import com.parkmate.reservationservice.reservation.infrastructure.client.request.ParkingSpotRequest;
-import com.parkmate.reservationservice.reservation.infrastructure.client.response.*;
+import com.parkmate.reservationservice.reservation.infrastructure.client.response.ParkingLotAndSpotResponse;
 import com.parkmate.reservationservice.reservation.infrastructure.repository.ReservationRepository;
 import com.parkmate.reservationservice.reservation.vo.ParkingSpot;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,22 +39,24 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void reserve(ReservationCreateRequestDto reservationCreateRequestDto) {
 
-        ParkingLotAndSpotResponse clientResponse = fetchPotentialParkingSpots(reservationCreateRequestDto);
+        ParkingLotAndSpotResponse parkingLot = fetchPotentialParkingSpots(reservationCreateRequestDto);
 
-        Set<Long> unAvailableParkingSpotIds = getUnavailableParkingSpotIds(
-                clientResponse.getParkingLotUuid(),
+        Set<Long> unAvailableParkingSpotIds = getReservedParkingSpotIds(
+                parkingLot.getParkingLotUuid(),
                 reservationCreateRequestDto.getEntryTime(),
                 reservationCreateRequestDto.getExitTime()
         );
 
-        ParkingSpot availableSpot = findFirstAvailableSpot(clientResponse.getParkingSpots(),
-                unAvailableParkingSpotIds);
+        ParkingSpot availableSpot = parkingLot.getParkingSpots().stream()
+                .filter(parkingSpot -> !unAvailableParkingSpotIds.contains(parkingSpot.getId()))
+                .findFirst()
+                .orElseThrow(() -> new BaseException(ResponseStatus.PARKING_LOT_NOT_AVAILABLE));
 
-        Reservation reservation = reservationCreateRequestDto.toEntity(clientResponse, availableSpot);
+        Reservation reservation = reservationCreateRequestDto.toEntity(parkingLot.getParkingLotName(), availableSpot);
 
         reservationRepository.save(reservation);
 
-        eventPublisher.publishEvent(ReservationCreateEvent.from(clientResponse.getHostUuid(), reservation));
+        eventPublisher.publishEvent(ReservationCreateEvent.from(parkingLot.getHostUuid(), reservation));
     }
 
     @Transactional
@@ -96,24 +96,8 @@ public class ReservationServiceImpl implements ReservationService {
     public CursorPage<ReservationResponseDto> getReservations(
             ReservationCursorGetRequestDto reservationCursorGetRequestDto) {
 
-        CursorPage<Reservation> results = reservationRepository.getReservations(reservationCursorGetRequestDto);
-        List<Reservation> reservations = results.getContent();
-
-        List<String> parkingLotUuids = reservations.stream()
-                .map(Reservation::getParkingLotUuid)
-                .distinct()
-                .toList();
-
-        List<Long> parkingSpotIds = reservations.stream()
-                .map(Reservation::getParkingSpotId)
-                .distinct()
-                .toList();
-
-        ReservedParkingLotsResponse clientResponse = parkingServiceClient.getReservedParkingSpots(parkingLotUuids,
-                parkingSpotIds);
-
-        List<ReservationResponseDto> reservationInfo = getReservationInfo(clientResponse, reservations);
-        return CursorPage.of(reservationInfo, results.getHasNext(), results.getNextCursor());
+        return reservationRepository.getReservations(reservationCursorGetRequestDto)
+                .map(ReservationResponseDto::from);
     }
 
     @Transactional(readOnly = true)
@@ -125,15 +109,28 @@ public class ReservationServiceImpl implements ReservationService {
                         reservationGetRequestDto.getUserUuid())
                 .orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
 
-        ReservedParkingSpotResponse spotInfo = parkingServiceClient.getReservedParkingSpot(
-                reservation.getParkingLotUuid(),
-                reservation.getParkingSpotId()
-        );
-
-        return ReservationResponseDto.from(reservation, spotInfo);
+        return ReservationResponseDto.from(reservation);
     }
 
-    private ParkingLotAndSpotResponse fetchPotentialParkingSpots(ReservationCreateRequestDto reservationCreateRequestDto) {
+    @Transactional(readOnly = true)
+    @Override
+    public Set<Long> getReservedParkingSpotIds(String parkingLotUuid,
+                                               LocalDateTime entryTime,
+                                               LocalDateTime exitTime) {
+
+        List<Reservation> existingReservations = reservationRepository.findAllByParkingLotUuid(
+                parkingLotUuid,
+                entryTime,
+                exitTime
+        );
+
+        return existingReservations.stream()
+                .map(Reservation::getParkingSpotId)
+                .collect(Collectors.toSet());
+    }
+
+    private ParkingLotAndSpotResponse fetchPotentialParkingSpots(
+            ReservationCreateRequestDto reservationCreateRequestDto) {
 
         List<LocalDate> requestDates = reservationCreateRequestDto.getEntryTime().toLocalDate()
                 .datesUntil(reservationCreateRequestDto.getExitTime().toLocalDate().plusDays(1))
@@ -155,56 +152,9 @@ public class ReservationServiceImpl implements ReservationService {
         return clientResponse;
     }
 
-    private Set<Long> getUnavailableParkingSpotIds(String parkingLotUuid,
-                                                   LocalDateTime entryTime,
-                                                   LocalDateTime exitTime) {
-
-        List<Reservation> existingReservations = reservationRepository.findAllByParkingLotUuidAndStatus(
-                parkingLotUuid,
-                entryTime,
-                exitTime,
-                ReservationStatus.CONFIRMED
-        );
-
-        return existingReservations.stream()
-                .map(Reservation::getParkingSpotId)
-                .collect(Collectors.toSet());
-    }
-
-    private ParkingSpot findFirstAvailableSpot(List<ParkingSpot> parkingSpots,
-                                               Set<Long> unAvailableParkingSpotIds) {
-
-        return parkingSpots.stream()
-                .filter(parkingSpot -> !unAvailableParkingSpotIds.contains(parkingSpot.getId()))
-                .findFirst()
-                .orElseThrow(() -> new BaseException(ResponseStatus.PARKING_LOT_NOT_AVAILABLE));
-    }
-
     private boolean canModified(Reservation reservation) {
 
         LocalDateTime now = LocalDateTime.now();
         return now.isBefore(reservation.getEntryTime().minusMinutes(MODIFY_TIME_LIMIT_MINUTES));
-    }
-
-    private List<ReservationResponseDto> getReservationInfo(ReservedParkingLotsResponse clientResponse,
-                                                            List<Reservation> reservations) {
-
-        Map<String, ReservedParkingLotSimpleResponse> parkingLotMap = clientResponse.getParkingLots().stream()
-                .collect(Collectors.toMap(ReservedParkingLotSimpleResponse::getParkingLotUuid,
-                        parkingLot -> parkingLot));
-
-        Map<Long, ReservedParkingSpotSimpleResponse> parkingSpotMap = clientResponse.getParkingSpots().stream()
-                .collect(Collectors.toMap(ReservedParkingSpotSimpleResponse::getId, parkingSpot -> parkingSpot));
-
-        return reservations.stream()
-                .map(reservation -> {
-
-                    ReservedParkingLotSimpleResponse parkingLotInfo = parkingLotMap.get(
-                            reservation.getParkingLotUuid());
-                    ReservedParkingSpotSimpleResponse spotInfo = parkingSpotMap.get(reservation.getParkingSpotId());
-
-                    return ReservationResponseDto.from(reservation, parkingLotInfo, spotInfo);
-                })
-                .collect(Collectors.toList());
     }
 }

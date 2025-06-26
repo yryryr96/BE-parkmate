@@ -59,13 +59,13 @@ public class ReservationCreateRequestDto {
                 .build();
     }
 
-    public Reservation toEntity(ParkingLotAndSpotResponse parkingLotAndSpotResponse,
+    public Reservation toEntity(String parkingLotName,
                                 ParkingSpot parkingSpot) {
         return Reservation.builder()
                 .reservationCode(ReservationCodeGenerator.generate())
                 .userUuid(userUuid)
                 .parkingLotUuid(parkingLotUuid)
-                .parkingLotName(parkingLotAndSpotResponse.getParkingLotName())
+                .parkingLotName(parkingLotName)
                 .parkingSpotId(parkingSpot.getId())
                 .parkingSpotName(parkingSpot.getName())
                 .vehicleNumber(vehicleNumber)

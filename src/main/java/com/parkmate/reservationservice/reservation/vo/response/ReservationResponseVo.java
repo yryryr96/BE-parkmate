@@ -14,7 +14,6 @@ public class ReservationResponseVo {
 
     private String reservationCode;
     private String userUuid;
-    private String parkingLotThumbnailUrl;
     private Long parkingSpotId;
     private String parkingSpotName;
     private String parkingLotUuid;
@@ -29,7 +28,6 @@ public class ReservationResponseVo {
     @Builder
     private ReservationResponseVo(String reservationCode,
                                   String userUuid,
-                                  String parkingLotThumbnailUrl,
                                   Long parkingSpotId,
                                   String parkingSpotName,
                                   String parkingLotUuid,
@@ -42,7 +40,6 @@ public class ReservationResponseVo {
                                   PaymentType paymentType) {
         this.reservationCode = reservationCode;
         this.userUuid = userUuid;
-        this.parkingLotThumbnailUrl = parkingLotThumbnailUrl;
         this.parkingSpotId = parkingSpotId;
         this.parkingSpotName = parkingSpotName;
         this.parkingLotUuid = parkingLotUuid;
