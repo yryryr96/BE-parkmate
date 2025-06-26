@@ -25,10 +25,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -83,21 +80,22 @@ public class ParkingLotFacade {
         List<ParkingLot> parkingLots = parkingLotService.getHostParkingLotsByHostUuid(hostUuid);
 
         if (parkingLots.isEmpty()) {
-            throw new BaseException(ResponseStatus.RESOURCE_NOT_FOUND);
+            return HostParkingLotResponseDtoList.from(Collections.emptyList());
         }
 
-        Map<String, Boolean> isOpenMap = parkingLots.stream()
-                .collect(Collectors.toMap(ParkingLot::getParkingLotUuid, parkingLot -> false));
+        List<String> allParkingLotUuids = parkingLots.stream()
+                .map(ParkingLot::getParkingLotUuid)
+                .toList();
 
-        List<String> openParkingLotUuids = parkingOperationService.getOpenParkingLotUuids(isOpenMap.keySet().stream().toList());
-        for (String openParkingLotUuid : openParkingLotUuids) {
-            isOpenMap.put(openParkingLotUuid, true);
-        }
-
-        System.out.println(openParkingLotUuids.size());
+        Set<String> openParkingLotUuids = new HashSet<>(
+                parkingOperationService.getOpenParkingLotUuids(allParkingLotUuids)
+        );
 
         List<HostParkingLotResponseDto> result = parkingLots.stream()
-                .map(p -> HostParkingLotResponseDto.from(p, isOpenMap.get(p.getParkingLotUuid())))
+                .map(p -> {
+                    boolean isOpen = openParkingLotUuids.contains(p.getParkingLotUuid());
+                    return HostParkingLotResponseDto.from(p, isOpen);
+                })
                 .toList();
 
         return HostParkingLotResponseDtoList.from(result);

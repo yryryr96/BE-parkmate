@@ -129,7 +129,6 @@ public class ParkingOperationServiceImpl implements ParkingOperationService {
 
     @Override
     public List<String> getOpenParkingLotUuids(List<String> parkingLotUuids) {
-        System.out.println("Fetching open parking lots for UUIDs: " + parkingLotUuids);
         return parkingOperationRepository.getOpenParkingLotUuids(parkingLotUuids, LocalDateTime.now());
     }
 

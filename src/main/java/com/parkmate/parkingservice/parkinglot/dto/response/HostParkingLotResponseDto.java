@@ -14,14 +14,14 @@ public class HostParkingLotResponseDto {
     private String name;
     private String address;
     private String thumbnailUrl;
-    private boolean isOpen;
+    private Boolean isOpen;
 
     @Builder
     public HostParkingLotResponseDto(String parkingLotUuid,
                                      String name,
                                      String address,
                                      String thumbnailUrl,
-                                     boolean isOpen) {
+                                     Boolean isOpen) {
         this.parkingLotUuid = parkingLotUuid;
         this.name = name;
         this.address = address;
@@ -29,7 +29,7 @@ public class HostParkingLotResponseDto {
         this.isOpen = isOpen;
     }
 
-    public static HostParkingLotResponseDto from(ParkingLot parkingLot, boolean isOpen) {
+    public static HostParkingLotResponseDto from(ParkingLot parkingLot, Boolean isOpen) {
         return HostParkingLotResponseDto.builder()
                 .parkingLotUuid(parkingLot.getParkingLotUuid())
                 .name(parkingLot.getName())

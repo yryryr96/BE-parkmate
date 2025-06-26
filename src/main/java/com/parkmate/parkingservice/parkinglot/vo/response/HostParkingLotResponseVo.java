@@ -12,14 +12,14 @@ public class HostParkingLotResponseVo {
     private String name;
     private String address;
     private String thumbnailUrl;
-    private boolean isOpen;
+    private Boolean isOpen;
 
     @Builder
     private HostParkingLotResponseVo(String parkingLotUuid,
                                      String name,
                                      String address,
                                      String thumbnailUrl,
-                                     boolean isOpen) {
+                                     Boolean isOpen) {
         this.parkingLotUuid = parkingLotUuid;
         this.name = name;
         this.address = address;

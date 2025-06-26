@@ -1,6 +1,8 @@
 package com.parkmate.parkingservice.parkingoperation.infrastructure;
 
+import com.parkmate.parkingservice.parkingoperation.domain.ParkingOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -15,14 +17,15 @@ public class CustomOperationRepositoryImpl implements CustomOperationRepository 
 
     private final MongoTemplate mongoTemplate;
 
+    private static final String PARKING_LOT_UUID = "parkingLotUuid";
+    private static final String OPERATION_DATE = "operationDate";
+    private static final String START_DATE_TIME = "validStartTime";
+    private static final String END_DATE_TIME = "validEndTime";
+    private static final String COLLECTION_NAME = "parking_operations";
+
     @Override
     public List<String> getOpenParkingLotUuids(List<String> parkingLotUuids,
                                                LocalDateTime now) {
-
-        final String PARKING_LOT_UUID = "parkingLotUuid";
-        final String OPERATION_DATE = "operationDate";
-        final String START_DATE_TIME = "startDateTime";
-        final String END_DATE_TIME = "endDateTime";
 
         Query query = new Query();
         query.addCriteria(Criteria.where(PARKING_LOT_UUID).in(parkingLotUuids)
@@ -30,8 +33,12 @@ public class CustomOperationRepositoryImpl implements CustomOperationRepository 
                 .and(START_DATE_TIME).lte(now)
                 .and(END_DATE_TIME).gte(now));
 
-        query.fields().include(PARKING_LOT_UUID);
+        query.with(Sort.by(Sort.Direction.DESC, PARKING_LOT_UUID));
 
-        return mongoTemplate.find(query, String.class, PARKING_LOT_UUID);
+        List<ParkingOperation> operations = mongoTemplate.find(query, ParkingOperation.class, COLLECTION_NAME);
+        return operations.stream()
+                .map(ParkingOperation::getParkingLotUuid)
+                .distinct()
+                .toList();
     }
 }
