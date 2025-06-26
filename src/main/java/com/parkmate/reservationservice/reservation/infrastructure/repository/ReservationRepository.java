@@ -23,4 +23,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
     List<Reservation> findAllByParkingLotUuid(String parkingLotUuid,
                                               LocalDateTime entryTime,
                                               LocalDateTime exitTime);
+
+    Optional<Reservation> findByUserUuidAndReservationCodeAndParkingLotUuid(String userUuid,
+                                                                       String reservationCode,
+                                                                       String parkingLotUuid);
 }
