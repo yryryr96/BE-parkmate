@@ -27,4 +27,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
     Optional<Reservation> findByUserUuidAndReservationCodeAndParkingLotUuid(String userUuid,
                                                                        String reservationCode,
                                                                        String parkingLotUuid);
+
+    Optional<Reservation> findByReservationCode(String reservationCode);
 }

@@ -1,4 +1,4 @@
-package com.parkmate.reservationservice.kafka.config;
+package com.parkmate.reservationservice.kafka.config.produce;
 
 import com.parkmate.reservationservice.kafka.event.ReservationCreateEvent;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -17,7 +17,7 @@ import java.util.Map;
 
 @EnableKafka
 @Configuration
-public class KafkaConfig {
+public class KafkaProduceConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServer;

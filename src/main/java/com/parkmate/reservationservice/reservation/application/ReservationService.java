@@ -1,6 +1,7 @@
 package com.parkmate.reservationservice.reservation.application;
 
 import com.parkmate.reservationservice.common.response.CursorPage;
+import com.parkmate.reservationservice.reservation.domain.ReservationStatus;
 import com.parkmate.reservationservice.reservation.dto.request.*;
 import com.parkmate.reservationservice.reservation.dto.response.ReservationResponseDto;
 
@@ -22,4 +23,7 @@ public interface ReservationService {
     Set<Long> getReservedParkingSpotIds(String parkingLotUuid, LocalDateTime entryTime, LocalDateTime exitTime);
 
     ReservationResponseDto getReservationForUse(ReservationGetForUseDto reservationGetForUseDto);
+
+    void changeStatus(String reservationCode,
+                      ReservationStatus reservationStatus);
 }
