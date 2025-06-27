@@ -5,6 +5,7 @@ import com.parkmate.reservationservice.common.response.CursorPage;
 import com.parkmate.reservationservice.common.response.ResponseStatus;
 import com.parkmate.reservationservice.kafka.event.ReservationCreateEvent;
 import com.parkmate.reservationservice.reservation.domain.Reservation;
+import com.parkmate.reservationservice.reservation.domain.ReservationStatus;
 import com.parkmate.reservationservice.reservation.dto.request.*;
 import com.parkmate.reservationservice.reservation.dto.response.ReservationResponseDto;
 import com.parkmate.reservationservice.reservation.infrastructure.client.ParkingServiceClient;
@@ -140,6 +141,17 @@ public class ReservationServiceImpl implements ReservationService {
         ).orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
 
         return ReservationResponseDto.from(reservation);
+    }
+
+    @Transactional
+    @Override
+    public void changeStatus(String reservationCode,
+                             ReservationStatus reservationStatus) {
+
+        Reservation reservation = reservationRepository.findByReservationCode(reservationCode)
+                .orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
+
+        reservation.changeStatus(reservationStatus);
     }
 
     private ParkingLotAndSpotResponse fetchPotentialParkingSpots(

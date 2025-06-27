@@ -107,4 +107,8 @@ public class Reservation extends BaseEntity {
         this.entryTime = newEntryTime;
         this.exitTime = newExitTime;
     }
+
+    public void changeStatus(ReservationStatus status) {
+        this.status = status;
+    }
 }
