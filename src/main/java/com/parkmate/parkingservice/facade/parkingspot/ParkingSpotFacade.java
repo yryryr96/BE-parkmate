@@ -13,9 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -44,15 +47,23 @@ public class ParkingSpotFacade {
     }
 
     @Transactional(readOnly = true)
-    public Map<ParkingSpotType, Long> getAvailableSpotsPerType(String parkingLotUuid, LocalDateTime entryTime,
+    public Map<ParkingSpotType, Long> getAvailableSpotsPerType(String parkingLotUuid,
+                                                               LocalDateTime entryTime,
                                                                LocalDateTime exitTime) {
 
         Map<Long, ParkingSpotType> spotIdAndTypes = parkingSpotService.findSpotIdAndTypes(parkingLotUuid);
-        List<Long> parkingSpotIds = reservationClient.getReservations(parkingLotUuid, entryTime, exitTime);
+        List<Long> parkingSpotIds = Optional.ofNullable(
+                reservationClient.getReservations(parkingLotUuid, entryTime, exitTime)
+        ).orElseGet(Collections::emptyList);
 
         parkingSpotIds.forEach(spotIdAndTypes.keySet()::remove);
 
-        return spotIdAndTypes.values().stream()
+        Map<ParkingSpotType, Long> result = spotIdAndTypes.values().stream()
                 .collect(Collectors.groupingBy(type -> type, Collectors.counting()));
+
+        Stream.of(ParkingSpotType.values())
+                .forEach(type -> result.putIfAbsent(type, 0L));
+
+        return result;
     }
 }

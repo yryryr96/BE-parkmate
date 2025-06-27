@@ -5,7 +5,6 @@ import lombok.Getter;
 @Getter
 public enum ParkingSpotType {
 
-    COMPACT("소형차"),
     SMALL("경차"),
     STANDARD("중형차"),
     LARGE("대형차"),
