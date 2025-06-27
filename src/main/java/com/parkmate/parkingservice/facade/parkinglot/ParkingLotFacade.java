@@ -16,6 +16,7 @@ import com.parkmate.parkingservice.parkinglotoption.dto.response.ParkingLotOptio
 import com.parkmate.parkingservice.parkinglotoptionmapping.application.ParkingLotOptionMappingService;
 import com.parkmate.parkingservice.parkinglotoptionmapping.dto.request.ParkingLotMappingUpdateRequestDto;
 import com.parkmate.parkingservice.parkinglotoptionmapping.dto.response.ParkingLotOptionMappingResponseDto;
+import com.parkmate.parkingservice.parkingoperation.application.ParkingOperationService;
 import com.parkmate.parkingservice.parkingspot.application.ParkingSpotService;
 import com.parkmate.parkingservice.parkingspot.dto.request.ParkingSpotRegisterRequestDto;
 import com.parkmate.parkingservice.parkingspot.dto.response.ParkingSpotResponseDto;
@@ -24,9 +25,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +34,7 @@ public class ParkingLotFacade {
 
     private final ParkingLotService parkingLotService;
     private final ParkingSpotService parkingSpotService;
+    private final ParkingOperationService parkingOperationService;
     private final ParkingLotOptionService parkingLotOptionService;
     private final ParkingLotOptionMappingService parkingLotOptionMappingService;
     private final ParkingLotImageMappingService parkingLotImageMappingService;
@@ -79,11 +80,22 @@ public class ParkingLotFacade {
         List<ParkingLot> parkingLots = parkingLotService.getHostParkingLotsByHostUuid(hostUuid);
 
         if (parkingLots.isEmpty()) {
-            throw new BaseException(ResponseStatus.RESOURCE_NOT_FOUND);
+            return HostParkingLotResponseDtoList.from(Collections.emptyList());
         }
 
+        List<String> allParkingLotUuids = parkingLots.stream()
+                .map(ParkingLot::getParkingLotUuid)
+                .toList();
+
+        Set<String> openParkingLotUuids = new HashSet<>(
+                parkingOperationService.getOpenParkingLotUuids(allParkingLotUuids)
+        );
+
         List<HostParkingLotResponseDto> result = parkingLots.stream()
-                .map(HostParkingLotResponseDto::from)
+                .map(p -> {
+                    boolean isOpen = openParkingLotUuids.contains(p.getParkingLotUuid());
+                    return HostParkingLotResponseDto.from(p, isOpen);
+                })
                 .toList();
 
         return HostParkingLotResponseDtoList.from(result);

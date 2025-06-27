@@ -10,20 +10,20 @@ public class HostParkingLotResponseVo {
 
     private String parkingLotUuid;
     private String name;
-    private String mainAddress;
-    private String detailAddress;
+    private String address;
     private String thumbnailUrl;
+    private Boolean isOpen;
 
     @Builder
     private HostParkingLotResponseVo(String parkingLotUuid,
-                                    String name,
-                                    String mainAddress,
-                                    String detailAddress,
-                                    String thumbnailUrl) {
+                                     String name,
+                                     String address,
+                                     String thumbnailUrl,
+                                     Boolean isOpen) {
         this.parkingLotUuid = parkingLotUuid;
         this.name = name;
-        this.mainAddress = mainAddress;
-        this.detailAddress = detailAddress;
+        this.address = address;
         this.thumbnailUrl = thumbnailUrl;
+        this.isOpen = isOpen;
     }
 }

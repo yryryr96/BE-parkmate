@@ -6,6 +6,7 @@ import com.parkmate.parkingservice.parkingoperation.dto.response.WeeklyOperation
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 public interface ParkingOperationService {
 
@@ -22,4 +23,6 @@ public interface ParkingOperationService {
     List<WeeklyOperationResponseDto> getWeeklyOperations(String parkingLotUuid);
 
     ParkingOperationResponseDto getDailyOperation(String parkingLotUuid, LocalDate date);
+
+    List<String> getOpenParkingLotUuids(List<String> parkingLotUuids);
 }
