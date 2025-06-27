@@ -11,8 +11,8 @@ import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class ReservationProducer {
 
     private final KafkaTemplate<String, ReservationCreateEvent> kafkaTemplate;
@@ -20,6 +20,8 @@ public class ReservationProducer {
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void send(ReservationCreateEvent reservationCreateEvent) {
+
         kafkaTemplate.send(KafkaTopics.RESERVATION_CREATED, reservationCreateEvent);
+        log.info("Event sent to topic {}: {}", KafkaTopics.RESERVATION_CREATED, reservationCreateEvent);
     }
 }
