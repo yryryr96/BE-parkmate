@@ -66,4 +66,10 @@ public class NotificationServiceImpl implements NotificationService {
     public long getUnreadNotificationCount(String receiverUuid) {
         return notificationRepository.getUnreadNotificationCount(receiverUuid);
     }
+
+    @Transactional
+    @Override
+    public List<Notification> bulkInsert(List<Notification> notifications) {
+        return notificationRepository.bulkInsert(notifications);
+    }
 }

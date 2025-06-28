@@ -39,6 +39,10 @@ public class ReservationKafkaConfig extends CommonKafkaConfig {
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, ReservationCreatedEvent> reservationCreatedContainerFactory() {
-        return createListenerFactory(ReservationCreatedEvent.class, KafkaConsumerGroups.RESERVATION_CREATED_GROUP);
+        ConcurrentKafkaListenerContainerFactory<String, ReservationCreatedEvent> factory = createListenerFactory(
+                ReservationCreatedEvent.class, KafkaConsumerGroups.RESERVATION_CREATED_GROUP);
+
+        factory.setBatchListener(true);
+        return factory;
     }
 }

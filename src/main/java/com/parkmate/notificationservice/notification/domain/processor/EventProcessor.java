@@ -10,5 +10,5 @@ public interface EventProcessor<E extends NotificationEvent> {
 
     boolean supports(NotificationEvent event);
 
-    CompletableFuture<List<Notification>> create(E event);
+    List<Notification> create(E event);
 }

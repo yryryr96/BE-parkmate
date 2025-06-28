@@ -1,5 +1,6 @@
 package com.parkmate.notificationservice.notification.domain.processor;
 
+import com.parkmate.notificationservice.common.generator.NotificationIdGenerator;
 import com.parkmate.notificationservice.common.response.ApiResponse;
 import com.parkmate.notificationservice.notification.domain.Notification;
 import com.parkmate.notificationservice.notification.domain.NotificationStatus;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @Service
@@ -23,7 +25,7 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
 
     private final UserClient userClient;
 
-    private static final long LAZY_TIME_SECONDS = 10L;
+    private static final long LAZY_TIME_SECONDS = 30L;
     private static final String TITLE = "예약 완료";
     private static final String USER_BASE_REDIRECT_URL = "http://localhost:3000/user/reservations/";
     private static final String HOST_BASE_REDIRECT_URL = "http://localhost:3000/host/reservations/";
@@ -43,7 +45,7 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
     }
 
     @Override
-    public CompletableFuture<List<Notification>> create(ReservationCreatedEvent event) {
+    public List<Notification> create(ReservationCreatedEvent event) {
 
         Objects.requireNonNull(event, "ReservationCreatedEvent must not be null");
 
@@ -56,24 +58,30 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
                     return null;
                 });
 
-        return userNameFuture.thenApplyAsync(userNameResponse -> {
+        try {
+            return userNameFuture.thenApplyAsync(userNameResponse -> {
 
-            String userName;
-            if (userNameResponse == null || userNameResponse.getData() == null) {
-                log.warn("User name response is null or data is missing for UUID {}", userUuid);
-                userName = "회원";
-            } else {
-                userName = userNameResponse.getData().getName();
-            }
+                String userName;
+                if (userNameResponse == null || userNameResponse.getData() == null) {
+                    log.warn("User name response is null or data is missing for UUID {}", userUuid);
+                    userName = "회원";
+                } else {
+                    userName = userNameResponse.getData().getName();
+                }
 
-            String content = getContent(event, userName);
-            LocalDateTime sendAt = LocalDateTime.now().plusSeconds(LAZY_TIME_SECONDS);
+                String content = getContent(event, userName);
+                LocalDateTime sendAt = LocalDateTime.now().plusSeconds(LAZY_TIME_SECONDS);
 
-            Notification userNotification = createUserNotification(event, content, sendAt, reservationCode);
-            Notification hostNotification = createHostNotification(event, content, sendAt, reservationCode);
+                Notification userNotification = createUserNotification(event, content, sendAt, reservationCode);
+                Notification hostNotification = createHostNotification(event, content, sendAt, reservationCode);
 
-            return List.of(userNotification, hostNotification);
-        });
+                return List.of(userNotification, hostNotification);
+            }).get();
+
+        } catch (InterruptedException | ExecutionException e) {
+            log.error("Error while processing ReservationCreatedEvent: {}", e.getMessage());
+            return List.of();
+        }
     }
 
     /**
@@ -104,6 +112,7 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
      */
     private Notification createUserNotification(ReservationCreatedEvent event, String content, LocalDateTime sendAt, String reservationCode) {
         return Notification.builder()
+                .id(NotificationIdGenerator.generate())
                 .receiverUuid(event.getUserUuid())
                 .title(TITLE)
                 .content(content)
@@ -124,6 +133,7 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
      */
     private Notification createHostNotification(ReservationCreatedEvent event, String content, LocalDateTime sendAt, String reservationCode) {
         return Notification.builder()
+                .id(NotificationIdGenerator.generate())
                 .receiverUuid(event.getHostUuid())
                 .title(TITLE)
                 .content(content)

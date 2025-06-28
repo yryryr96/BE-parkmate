@@ -1,5 +1,6 @@
 package com.parkmate.notificationservice.notification.infrastructure;
 
+import com.mongodb.bulk.BulkWriteResult;
 import com.parkmate.notificationservice.common.response.CursorPage;
 import com.parkmate.notificationservice.notification.domain.Notification;
 import com.parkmate.notificationservice.notification.domain.NotificationStatus;
@@ -8,12 +9,14 @@ import com.parkmate.notificationservice.notification.dto.request.NotificationRea
 import com.parkmate.notificationservice.notification.dto.request.NotificationsGetRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -98,5 +101,19 @@ public class NotificationCustomRepositoryImpl implements NotificationCustomRepos
                 .and(STATUS_FIELD).is(NotificationStatus.SENT));
 
         return mongoTemplate.count(query, Notification.class);
+    }
+
+    @Override
+    public List<Notification> bulkInsert(List<Notification> notifications) {
+
+        try {
+            mongoTemplate.bulkOps(BulkOperations.BulkMode.UNORDERED, Notification.class)
+                    .insert(notifications)
+                    .execute();
+            return notifications;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
     }
 }

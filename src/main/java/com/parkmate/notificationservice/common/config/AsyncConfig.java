@@ -11,7 +11,7 @@ public class AsyncConfig {
     public ThreadPoolTaskExecutor dbThreadPool() {
 
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(50);
+        executor.setCorePoolSize(100);
         executor.setThreadNamePrefix("DB-Async-");
 
         return executor;

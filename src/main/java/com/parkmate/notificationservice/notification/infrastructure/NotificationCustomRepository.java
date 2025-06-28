@@ -6,6 +6,8 @@ import com.parkmate.notificationservice.notification.dto.request.NotificationDel
 import com.parkmate.notificationservice.notification.dto.request.NotificationReadRequestDto;
 import com.parkmate.notificationservice.notification.dto.request.NotificationsGetRequestDto;
 
+import java.util.List;
+
 public interface NotificationCustomRepository {
 
     CursorPage<Notification> getNotificationsByReceiverUuid(NotificationsGetRequestDto notificationsGetRequestDto);
@@ -15,4 +17,6 @@ public interface NotificationCustomRepository {
     void delete(NotificationDeleteRequestDto notificationDeleteRequestDto);
 
     long getUnreadNotificationCount(String receiverUuid);
+
+    List<Notification> bulkInsert(List<Notification> notifications);
 }

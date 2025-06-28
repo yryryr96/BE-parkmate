@@ -35,7 +35,7 @@ public class BaseExceptionHandler {
 
         BaseException response = new BaseException(ResponseStatus.INTERNAL_SERVER_ERROR);
         for (StackTraceElement s : e.getStackTrace()) {
-            System.out.println(s);
+            log.error("Exception occurred: {}. Stack trace: {}", e.getMessage(), s);
         }
 
         return new ResponseEntity<>(

@@ -24,4 +24,6 @@ public interface NotificationService {
     void delete(NotificationDeleteRequestDto notificationDeleteRequestDto);
 
     long getUnreadNotificationCount(String receiverUuid);
+
+    List<Notification> bulkInsert(List<Notification> notifications);
 }

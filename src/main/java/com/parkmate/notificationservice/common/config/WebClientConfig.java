@@ -1,7 +1,5 @@
 package com.parkmate.notificationservice.common.config;
 
-//import org.springframework.cloud.client.loadbalancer.LoadBalanced;
-
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;

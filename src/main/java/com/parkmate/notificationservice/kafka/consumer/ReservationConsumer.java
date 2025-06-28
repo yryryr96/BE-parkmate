@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -17,9 +18,10 @@ public class ReservationConsumer {
 
     @KafkaListener(
             topics = KafkaTopics.RESERVATION_CREATED,
-            containerFactory = "reservationCreatedContainerFactory"
+            containerFactory = "reservationCreatedContainerFactory",
+            concurrency = "3"
     )
-    public CompletableFuture<Void> consumeReservationCreatedEvent(ReservationCreatedEvent event) {
-        return eventHandler.handleEvent(event);
+    public CompletableFuture<Void> consumeReservationCreatedEvent(List<ReservationCreatedEvent> events) {
+        return eventHandler.handleEvent(events);
     }
 }
