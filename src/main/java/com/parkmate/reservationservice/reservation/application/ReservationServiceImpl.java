@@ -119,6 +119,7 @@ public class ReservationServiceImpl implements ReservationService {
                                                LocalDateTime entryTime,
                                                LocalDateTime exitTime) {
 
+        log.info("entryTime: {}, exitTime: {}", entryTime, exitTime);
         List<Reservation> existingReservations = reservationRepository.findAllByParkingLotUuid(
                 parkingLotUuid,
                 entryTime,
