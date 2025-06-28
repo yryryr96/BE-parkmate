@@ -4,7 +4,9 @@ import com.parkmate.reservationservice.common.response.ApiResponse;
 import com.parkmate.reservationservice.reservation.application.ReservationService;
 import com.parkmate.reservationservice.reservation.dto.request.ReservationGetForUseDto;
 import com.parkmate.reservationservice.reservation.dto.response.ReservationResponseDto;
+import com.thoughtworks.xstream.converters.extended.ISO8601DateConverter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -21,8 +23,8 @@ public class InternalReservationController {
 
     @GetMapping("/reservedSpotIds")
     public Set<Long> getReservedParkingSpotIds(@RequestParam String parkingLotUuid,
-                                               @RequestParam LocalDateTime entryTime,
-                                               @RequestParam LocalDateTime exitTime) {
+                                               @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime entryTime,
+                                               @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime exitTime) {
 
         return reservationService.getReservedParkingSpotIds(parkingLotUuid, entryTime, exitTime);
     }
