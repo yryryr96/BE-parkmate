@@ -125,7 +125,7 @@ public class ReservationServiceImpl implements ReservationService {
                 entryTime,
                 exitTime
         );
-
+        log.info("existingReservations size: {}", existingReservations.size());
         return existingReservations.stream()
                 .map(Reservation::getParkingSpotId)
                 .collect(Collectors.toSet());
