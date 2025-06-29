@@ -76,4 +76,21 @@ public class ReservationCreateRequestDto {
                 .status(ReservationStatus.CONFIRMED)
                 .build();
     }
+    
+    public Reservation toEntity2() {
+        return Reservation.builder()
+                .reservationCode(ReservationCodeGenerator.generate())
+                .userUuid(userUuid)
+                .parkingLotUuid(parkingLotUuid)
+                .parkingLotName("안녕")
+                .parkingSpotId(100L)
+                .parkingSpotName("주차면1")
+                .vehicleNumber(vehicleNumber)
+                .entryTime(entryTime)
+                .exitTime(exitTime)
+                .amount(amount)
+                .paymentType(paymentType)
+                .status(ReservationStatus.CONFIRMED)
+                .build();
+    }
 }

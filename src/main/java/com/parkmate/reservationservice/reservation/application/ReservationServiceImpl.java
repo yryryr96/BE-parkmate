@@ -40,24 +40,26 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void reserve(ReservationCreateRequestDto reservationCreateRequestDto) {
 
-        ParkingLotAndSpotResponse parkingLot = fetchPotentialParkingSpots(reservationCreateRequestDto);
+//        ParkingLotAndSpotResponse parkingLot = fetchPotentialParkingSpots(reservationCreateRequestDto);
+//
+//        Set<Long> unAvailableParkingSpotIds = getReservedParkingSpotIds(
+//                parkingLot.getParkingLotUuid(),
+//                reservationCreateRequestDto.getEntryTime(),
+//                reservationCreateRequestDto.getExitTime()
+//        );
+//
+//        ParkingSpot availableSpot = parkingLot.getParkingSpots().stream()
+//                .filter(parkingSpot -> !unAvailableParkingSpotIds.contains(parkingSpot.getId()))
+//                .findFirst()
+//                .orElseThrow(() -> new BaseException(ResponseStatus.PARKING_LOT_NOT_AVAILABLE));
+//
+//        Reservation reservation = reservationCreateRequestDto.toEntity(parkingLot.getParkingLotName(), availableSpot);
 
-        Set<Long> unAvailableParkingSpotIds = getReservedParkingSpotIds(
-                parkingLot.getParkingLotUuid(),
-                reservationCreateRequestDto.getEntryTime(),
-                reservationCreateRequestDto.getExitTime()
-        );
-
-        ParkingSpot availableSpot = parkingLot.getParkingSpots().stream()
-                .filter(parkingSpot -> !unAvailableParkingSpotIds.contains(parkingSpot.getId()))
-                .findFirst()
-                .orElseThrow(() -> new BaseException(ResponseStatus.PARKING_LOT_NOT_AVAILABLE));
-
-        Reservation reservation = reservationCreateRequestDto.toEntity(parkingLot.getParkingLotName(), availableSpot);
-
+        Reservation reservation = reservationCreateRequestDto.toEntity2();
         reservationRepository.save(reservation);
 
-        eventPublisher.publishEvent(ReservationCreateEvent.from(parkingLot.getHostUuid(), reservation));
+//        eventPublisher.publishEvent(ReservationCreateEvent.from(parkingLot.getHostUuid(), reservation));
+        eventPublisher.publishEvent(ReservationCreateEvent.from("hostUuid1", reservation));
     }
 
     @Transactional
