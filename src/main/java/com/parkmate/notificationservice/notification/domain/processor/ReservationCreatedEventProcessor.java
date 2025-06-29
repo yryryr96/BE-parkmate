@@ -1,6 +1,5 @@
 package com.parkmate.notificationservice.notification.domain.processor;
 
-import com.parkmate.notificationservice.common.generator.NotificationIdGenerator;
 import com.parkmate.notificationservice.common.response.ApiResponse;
 import com.parkmate.notificationservice.notification.domain.Notification;
 import com.parkmate.notificationservice.notification.domain.NotificationStatus;
@@ -45,7 +44,7 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
     }
 
     @Override
-    public List<Notification> create(ReservationCreatedEvent event) {
+    public CompletableFuture<List<Notification>> create(ReservationCreatedEvent event) {
 
         Objects.requireNonNull(event, "ReservationCreatedEvent must not be null");
 
@@ -58,30 +57,24 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
                     return null;
                 });
 
-        try {
-            return userNameFuture.thenApplyAsync(userNameResponse -> {
+        return userNameFuture.thenApplyAsync(userNameResponse -> {
 
-                String userName;
-                if (userNameResponse == null || userNameResponse.getData() == null) {
-                    log.warn("User name response is null or data is missing for UUID {}", userUuid);
-                    userName = "회원";
-                } else {
-                    userName = userNameResponse.getData().getName();
-                }
+            String userName;
+            if (userNameResponse == null || userNameResponse.getData() == null) {
+                log.warn("User name response is null or data is missing for UUID {}", userUuid);
+                userName = "회원";
+            } else {
+                userName = userNameResponse.getData().getName();
+            }
 
-                String content = getContent(event, userName);
-                LocalDateTime sendAt = LocalDateTime.now().plusSeconds(LAZY_TIME_SECONDS);
+            String content = getContent(event, userName);
+            LocalDateTime sendAt = LocalDateTime.now().plusSeconds(LAZY_TIME_SECONDS);
 
-                Notification userNotification = createUserNotification(event, content, sendAt, reservationCode);
-                Notification hostNotification = createHostNotification(event, content, sendAt, reservationCode);
+            Notification userNotification = createUserNotification(event, content, sendAt, reservationCode);
+            Notification hostNotification = createHostNotification(event, content, sendAt, reservationCode);
 
-                return List.of(userNotification, hostNotification);
-            }).get();
-
-        } catch (InterruptedException | ExecutionException e) {
-            log.error("Error while processing ReservationCreatedEvent: {}", e.getMessage());
-            return List.of();
-        }
+            return List.of(userNotification, hostNotification);
+        });
     }
 
     /**
@@ -112,7 +105,6 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
      */
     private Notification createUserNotification(ReservationCreatedEvent event, String content, LocalDateTime sendAt, String reservationCode) {
         return Notification.builder()
-                .id(NotificationIdGenerator.generate())
                 .receiverUuid(event.getUserUuid())
                 .title(TITLE)
                 .content(content)
@@ -133,7 +125,6 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
      */
     private Notification createHostNotification(ReservationCreatedEvent event, String content, LocalDateTime sendAt, String reservationCode) {
         return Notification.builder()
-                .id(NotificationIdGenerator.generate())
                 .receiverUuid(event.getHostUuid())
                 .title(TITLE)
                 .content(content)

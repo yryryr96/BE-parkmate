@@ -22,7 +22,7 @@ public class NotificationSendScheduler {
     private final NotificationService notificationService;
     private final TaskScheduler scheduler;
 
-    @Async
+    @Async("schedulerExecutor")
     public CompletableFuture<Void> addSchedule(Notification notification) {
 
         scheduler.schedule(() -> {
@@ -34,10 +34,10 @@ public class NotificationSendScheduler {
                                     notification.getTitle(),
                                     ex.getMessage(), ex);
 
-                            notificationService.updateNotificationStatus(notification, NotificationStatus.FAILED);
+//                            notificationService.updateNotificationStatus(notification, NotificationStatus.FAILED);
                         } else {
                             log.info("알림 전송 성공: messageId={}", result);
-                            notificationService.updateNotificationStatus(notification, NotificationStatus.SENT);
+//                            notificationService.updateNotificationStatus(notification, NotificationStatus.SENT);
                         }
                     });
         }, notification.getSendAt().atZone(ZoneId.systemDefault()).toInstant());

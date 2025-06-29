@@ -8,9 +8,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 public class SchedulerConfig {
 
     @Bean
-    public ThreadPoolTaskScheduler taskScheduler() {
+    public ThreadPoolTaskScheduler schedulerExecutor() {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
-        scheduler.setPoolSize(50);
+        scheduler.setPoolSize(200);
         scheduler.setThreadNamePrefix("Scheduler-Async-");
         return scheduler;
     }

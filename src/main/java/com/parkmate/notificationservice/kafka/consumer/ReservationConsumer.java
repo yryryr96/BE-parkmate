@@ -5,6 +5,7 @@ import com.parkmate.notificationservice.notification.application.NotificationEve
 import com.parkmate.notificationservice.notification.domain.event.reservation.ReservationCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class ReservationConsumer {
             containerFactory = "reservationCreatedContainerFactory",
             concurrency = "3"
     )
-    public CompletableFuture<Void> consumeReservationCreatedEvent(List<ReservationCreatedEvent> events) {
-        return eventHandler.handleEvent(events);
+    public void consumeReservationCreatedEvent(List<ReservationCreatedEvent> events) {
+        eventHandler.handleEvent(events);
     }
 }

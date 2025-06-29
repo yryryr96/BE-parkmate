@@ -1,6 +1,7 @@
 package com.parkmate.notificationservice.notification.domain;
 
 import com.parkmate.notificationservice.common.entity.BaseEntity;
+import com.parkmate.notificationservice.common.generator.NotificationIdGenerator;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,9 +27,9 @@ public class Notification extends BaseEntity {
     private LocalDateTime sendAt;
 
     @Builder
-    private Notification(String id, String receiverUuid, String title, String content, String redirectUrl,
+    private Notification(String receiverUuid, String title, String content, String redirectUrl,
                          NotificationType type, NotificationStatus status, LocalDateTime sendAt) {
-        this.id = id;
+        this.id = NotificationIdGenerator.generate();
         this.receiverUuid = receiverUuid;
         this.title = title;
         this.content = content;
