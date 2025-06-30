@@ -41,6 +41,8 @@ public class FCMService implements NotificationSender {
         Message message = Message.builder()
                 .setToken(token)
                 .setNotification(fcmNotification)
+                .putData("type", notification.getType().toString())
+                .putData("redirectUrl", notification.getRedirectUrl())
                 .build();
 
         ApiFuture<String> sendResultFuture = FirebaseMessaging.getInstance().sendAsync(message);

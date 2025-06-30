@@ -13,6 +13,7 @@ import com.parkmate.notificationservice.notification.vo.request.NotificationsGet
 import com.parkmate.notificationservice.notification.vo.response.NotificationReadResponseVo;
 import com.parkmate.notificationservice.notification.vo.response.NotificationResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/notifications")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "X-User-UUID")
+@SecurityRequirement(name = "X-Host-UUID")
 public class NotificationController {
 
     private static final Map<String, String> RECEIVER_TYPE_HEADER_MAP = Map.of(
