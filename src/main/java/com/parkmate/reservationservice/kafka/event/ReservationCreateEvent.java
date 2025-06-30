@@ -66,7 +66,7 @@ public class ReservationCreateEvent {
                 .vehicleNumber(reservation.getVehicleNumber())
                 .amount(reservation.getAmount())
                 .entryTime(reservation.getEntryTime())
-                .entryTime(reservation.getExitTime())
+                .exitTime(reservation.getExitTime())
                 .build();
     }
 }

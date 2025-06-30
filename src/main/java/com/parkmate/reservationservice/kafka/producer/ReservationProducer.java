@@ -1,7 +1,7 @@
 package com.parkmate.reservationservice.kafka.producer;
 
 import com.parkmate.reservationservice.kafka.event.ReservationCreateEvent;
-import com.parkmate.reservationservice.kafka.properties.KafkaTopics;
+import com.parkmate.reservationservice.kafka.constant.KafkaTopics;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;

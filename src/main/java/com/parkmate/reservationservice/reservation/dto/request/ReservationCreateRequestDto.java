@@ -4,7 +4,6 @@ import com.parkmate.reservationservice.common.generator.ReservationCodeGenerator
 import com.parkmate.reservationservice.reservation.domain.PaymentType;
 import com.parkmate.reservationservice.reservation.domain.Reservation;
 import com.parkmate.reservationservice.reservation.domain.ReservationStatus;
-import com.parkmate.reservationservice.reservation.infrastructure.client.response.ParkingLotAndSpotResponse;
 import com.parkmate.reservationservice.reservation.vo.ParkingSpot;
 import com.parkmate.reservationservice.reservation.vo.request.ReservationCreateRequestVo;
 import lombok.Builder;
@@ -59,8 +58,7 @@ public class ReservationCreateRequestDto {
                 .build();
     }
 
-    public Reservation toEntity(String parkingLotName,
-                                ParkingSpot parkingSpot) {
+    public Reservation toEntity(String parkingLotName, ParkingSpot parkingSpot) {
         return Reservation.builder()
                 .reservationCode(ReservationCodeGenerator.generate())
                 .userUuid(userUuid)
