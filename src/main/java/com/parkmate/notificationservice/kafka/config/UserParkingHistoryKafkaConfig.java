@@ -2,6 +2,7 @@ package com.parkmate.notificationservice.kafka.config;
 
 import com.parkmate.notificationservice.kafka.constant.KafkaConsumerGroups;
 import com.parkmate.notificationservice.notification.domain.event.reservation.ReservationCreatedEvent;
+import com.parkmate.notificationservice.notification.domain.event.userparkinghistory.UserParkingHistoryEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +17,7 @@ import java.util.Map;
 
 @EnableKafka
 @Configuration
-public class ReservationKafkaConfig extends CommonKafkaConfig {
-
+public class UserParkingHistoryKafkaConfig extends CommonKafkaConfig {
 
     @Override
     Map<String, Object> getStringObjectMap(String groupId) {
@@ -30,8 +30,8 @@ public class ReservationKafkaConfig extends CommonKafkaConfig {
         props.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class);
         props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
-        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");  //메시지 오프셋 설정
-        props.put(ConsumerConfig.RECONNECT_BACKOFF_MS_CONFIG, 5000); // 재연결 시도 간격 5초
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
+        props.put(ConsumerConfig.RECONNECT_BACKOFF_MS_CONFIG, 5000);
         props.put(ConsumerConfig.RECONNECT_BACKOFF_MAX_MS_CONFIG, 60000);
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 500);
         props.put(ConsumerConfig.FETCH_MIN_BYTES_CONFIG, 1024 * 1024);
@@ -41,9 +41,9 @@ public class ReservationKafkaConfig extends CommonKafkaConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, ReservationCreatedEvent> reservationCreatedContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, ReservationCreatedEvent> factory = createListenerFactory(
-                ReservationCreatedEvent.class, KafkaConsumerGroups.RESERVATION_CREATED_GROUP);
+    public ConcurrentKafkaListenerContainerFactory<String, UserParkingHistoryEvent> userParkingHistoryContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, UserParkingHistoryEvent> factory = createListenerFactory(
+                UserParkingHistoryEvent.class, KafkaConsumerGroups.USER_PARKING_HISTORY_GROUP);
 
         factory.setBatchListener(true);
         factory.setConcurrency(3);

@@ -1,10 +1,11 @@
-package com.parkmate.notificationservice.notification.domain.processor;
+package com.parkmate.notificationservice.notification.domain.processor.reservation;
 
 import com.parkmate.notificationservice.common.response.ApiResponse;
 import com.parkmate.notificationservice.notification.domain.Notification;
 import com.parkmate.notificationservice.notification.domain.NotificationStatus;
 import com.parkmate.notificationservice.notification.domain.event.NotificationEvent;
 import com.parkmate.notificationservice.notification.domain.event.reservation.ReservationCreatedEvent;
+import com.parkmate.notificationservice.notification.domain.processor.EventProcessor;
 import com.parkmate.notificationservice.notification.infrastructure.client.user.UserClient;
 import com.parkmate.notificationservice.notification.infrastructure.client.user.response.UserNameResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @Service
@@ -70,8 +70,8 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
             String content = getContent(event, userName);
             LocalDateTime sendAt = LocalDateTime.now().plusSeconds(LAZY_TIME_SECONDS);
 
-            Notification userNotification = createUserNotification(event, content, sendAt, reservationCode);
-            Notification hostNotification = createHostNotification(event, content, sendAt, reservationCode);
+            Notification userNotification = createUserNotification(event, content, sendAt);
+            Notification hostNotification = createHostNotification(event, content, sendAt);
 
             return List.of(userNotification, hostNotification);
         });
@@ -100,15 +100,14 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
      * @param event 예약 생성 이벤트
      * @param content 알림 내용
      * @param sendAt 알림 발송 시간
-     * @param reservationCode 예약 코드
      * @return 사용자 알림 객체
      */
-    private Notification createUserNotification(ReservationCreatedEvent event, String content, LocalDateTime sendAt, String reservationCode) {
+    private Notification createUserNotification(ReservationCreatedEvent event, String content, LocalDateTime sendAt) {
         return Notification.builder()
                 .receiverUuid(event.getUserUuid())
                 .title(TITLE)
                 .content(content)
-                .redirectUrl(USER_BASE_REDIRECT_URL + reservationCode)
+                .redirectUrl(USER_BASE_REDIRECT_URL + event.getReservationCode())
                 .sendAt(sendAt)
                 .status(NotificationStatus.PENDING)
                 .type(event.getNotificationType())
@@ -120,15 +119,14 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
      * @param event 예약 생성 이벤트
      * @param content 알림 내용
      * @param sendAt 알림 발송 시간
-     * @param reservationCode 예약 코드
      * @return 호스트 알림 객체
      */
-    private Notification createHostNotification(ReservationCreatedEvent event, String content, LocalDateTime sendAt, String reservationCode) {
+    private Notification createHostNotification(ReservationCreatedEvent event, String content, LocalDateTime sendAt) {
         return Notification.builder()
                 .receiverUuid(event.getHostUuid())
                 .title(TITLE)
                 .content(content)
-                .redirectUrl(HOST_BASE_REDIRECT_URL + reservationCode)
+                .redirectUrl(HOST_BASE_REDIRECT_URL + event.getReservationCode())
                 .sendAt(sendAt)
                 .status(NotificationStatus.PENDING)
                 .type(event.getNotificationType())

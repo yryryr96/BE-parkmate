@@ -19,9 +19,7 @@ public class ReservationConsumer {
 
     @KafkaListener(
             topics = KafkaTopics.RESERVATION_CREATED,
-            containerFactory = "reservationCreatedContainerFactory",
-            concurrency = "3"
-    )
+            containerFactory = "reservationCreatedContainerFactory")
     public void consumeReservationCreatedEvent(List<ReservationCreatedEvent> events) {
         eventHandler.handleEvent(events);
     }
