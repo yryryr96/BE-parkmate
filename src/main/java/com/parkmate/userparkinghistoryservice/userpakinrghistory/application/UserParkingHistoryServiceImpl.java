@@ -36,7 +36,7 @@ public class UserParkingHistoryServiceImpl implements UserParkingHistoryService 
                     if (!r.canEnter(entryRequestDto)) {
                         throw new BaseException(ResponseStatus.INVALID_ENTRY_REQUEST);
                     }
-                    HistoryEvent event = entryRequestDto.toEvent(r.getParkingSpotName(), EventType.CREATED);
+                    HistoryEvent event = entryRequestDto.toEvent(r, EventType.CREATED);
                     eventPublisher.publishEvent(event);
                 },
                 () -> {

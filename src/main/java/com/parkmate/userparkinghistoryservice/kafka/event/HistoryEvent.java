@@ -19,6 +19,8 @@ public class HistoryEvent {
     private String reservationCode;
     private String vehicleNumber;
     private HistoryType type;
+    private LocalDateTime entryTime;
+    private LocalDateTime exitTime;
     private LocalDateTime timestamp;
 
     @Builder
@@ -29,6 +31,8 @@ public class HistoryEvent {
                         String reservationCode,
                         String vehicleNumber,
                         HistoryType type,
+                        LocalDateTime entryTime,
+                        LocalDateTime exitTime,
                         LocalDateTime timestamp) {
         this.eventType = eventType;
         this.userUuid = userUuid;
@@ -37,6 +41,8 @@ public class HistoryEvent {
         this.reservationCode = reservationCode;
         this.vehicleNumber = vehicleNumber;
         this.type = type;
+        this.entryTime = entryTime;
+        this.exitTime = exitTime;
         this.timestamp = timestamp;
     }
 
