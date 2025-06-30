@@ -1,60 +1,54 @@
 package com.parkmate.parkmateorderservice.order.dto.request;
 
+import com.parkmate.parkmateorderservice.common.generator.OrderCodeGenerator;
 import com.parkmate.parkmateorderservice.order.domain.Order;
-import com.parkmate.parkmateorderservice.order.domain.ParkingSpotType;
+import com.parkmate.parkmateorderservice.order.domain.OrderStatus;
+import com.parkmate.parkmateorderservice.order.domain.OrderType;
+import com.parkmate.parkmateorderservice.order.domain.PaymentType;
 import com.parkmate.parkmateorderservice.order.vo.request.OrderCreateRequestVo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
 public class OrderCreateRequestDto {
 
     private String userUuid;
-    private String vehicleNumber;
+    private OrderType orderType;
+    private String productCode;
     private double amount;
-    private ParkingSpotType parkingSpotType;
-    private LocalDateTime entryTime;
-    private LocalDateTime exitTime;
+    private PaymentType paymentType;
 
     @Builder
-    private OrderCreateRequestDto(String userUuid,
-                                 String vehicleNumber,
-                                 double amount,
-                                 ParkingSpotType parkingSpotType,
-                                 LocalDateTime entryTime,
-                                 LocalDateTime exitTime) {
+    private OrderCreateRequestDto(String userUuid, OrderType orderType, String productCode, double amount,
+                                  PaymentType paymentType) {
         this.userUuid = userUuid;
-        this.vehicleNumber = vehicleNumber;
+        this.orderType = orderType;
+        this.productCode = productCode;
         this.amount = amount;
-        this.parkingSpotType = parkingSpotType;
-        this.entryTime = entryTime;
-        this.exitTime = exitTime;
+        this.paymentType = paymentType;
     }
 
-    public static OrderCreateRequestDto of(String userUuid,
-                                           OrderCreateRequestVo orderCreateRequestVo) {
+    public static OrderCreateRequestDto of(String userUuid, OrderCreateRequestVo orderCreateRequestVo) {
         return OrderCreateRequestDto.builder()
                 .userUuid(userUuid)
-                .vehicleNumber(orderCreateRequestVo.getVehicleNumber())
+                .orderType(orderCreateRequestVo.getOrderType())
+                .productCode(orderCreateRequestVo.getProductCode())
                 .amount(orderCreateRequestVo.getAmount())
-                .parkingSpotType(orderCreateRequestVo.getParkingSpotType())
-                .entryTime(orderCreateRequestVo.getEntryTime())
-                .exitTime(orderCreateRequestVo.getExitTime())
+                .paymentType(orderCreateRequestVo.getPaymentType())
                 .build();
     }
 
     public Order toEntity() {
         return Order.builder()
-                .userUuid(this.userUuid)
-                .vehicleNumber(this.vehicleNumber)
-                .amount(this.amount)
-                .parkingSpotType(this.parkingSpotType)
-                .entryTime(this.entryTime)
-                .exitTime(this.exitTime)
+                .orderCode(OrderCodeGenerator.generate())
+                .orderType(orderType)
+                .productCode(productCode)
+                .userUuid(userUuid)
+                .amount(amount)
+                .paymentType(paymentType)
+                .status(OrderStatus.PENDING)
                 .build();
     }
 }

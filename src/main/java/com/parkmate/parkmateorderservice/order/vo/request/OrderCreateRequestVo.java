@@ -1,16 +1,14 @@
 package com.parkmate.parkmateorderservice.order.vo.request;
 
-import com.parkmate.parkmateorderservice.order.domain.ParkingSpotType;
+import com.parkmate.parkmateorderservice.order.domain.OrderType;
+import com.parkmate.parkmateorderservice.order.domain.PaymentType;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Getter
 public class OrderCreateRequestVo {
 
-    private String vehicleNumber;
+    private OrderType orderType;
+    private String productCode;
     private double amount;
-    private ParkingSpotType parkingSpotType;
-    private LocalDateTime entryTime;
-    private LocalDateTime exitTime;
+    private PaymentType paymentType;
 }

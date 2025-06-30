@@ -28,14 +28,14 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .addSecurityItem(securityRequirement)
                 .components(components)
-                .addServersItem(new Server().url("/reservation-service"))
+                .addServersItem(new Server().url("/order-service"))
                 .info(apiInfo());
     }
 
     private Info apiInfo() {
         return new Info()
-                .title("RESERVATION-SERVICE API DOCS")
-                .description("reservation-service API 테스트를 위한 Swagger UI")
+                .title("ORDER-SERVICE API DOCS")
+                .description("order-service API 테스트를 위한 Swagger UI")
                 .version("1.0.0");
     }
 }

@@ -5,9 +5,9 @@ import com.parkmate.parkmateorderservice.order.dto.request.OrderCancelRequestDto
 import com.parkmate.parkmateorderservice.order.dto.request.OrderUpdateRequestDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    void cancel(OrderCancelRequestDto orderCancelRequestDto);
-
-    void update(OrderUpdateRequestDto orderModifyRequestDto);
+    Optional<Order> findByOrderCode(String orderCode);
 }

@@ -2,18 +2,14 @@ package com.parkmate.parkmateorderservice.order.domain;
 
 import com.parkmate.parkmateorderservice.common.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Comment;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "orders")
+@ToString
 public class Order extends BaseEntity {
 
     @Id
@@ -24,34 +20,18 @@ public class Order extends BaseEntity {
     @Column(nullable = false, unique = true, length = 36)
     private String orderCode;
 
+    @Enumerated(EnumType.STRING)
+    @Comment("주문 타입")
+    @Column(nullable = false)
+    private OrderType orderType;
+
     @Comment("예약 코드")
-    @Column(nullable = false, unique = true, length = 36)
-    private String reservationCode;
+    @Column(nullable = false, unique = true)
+    private String productCode;
 
     @Comment("구매자 UUID")
-    @Column(nullable = false, length = 36)
-    private String userUuid;
-
-    @Comment("주차장 UUID")
-    @Column(nullable = false, length = 36)
-    private String parkingLotUuid;
-
-    @Comment("주차장 이름")
-    @Column(nullable = false, length = 100)
-    private String parkingLotName;
-
-    @Comment("주차 공간 이름")
-    @Column(nullable = false, length = 50)
-    private String parkingSpotName;
-
-    @Comment("차량 번호")
-    @Column(nullable = false, length = 20)
-    private String vehicleNumber;
-
-    @Enumerated(EnumType.STRING)
-    @Comment("결제 타입")
     @Column(nullable = false)
-    private PaymentType paymentType;
+    private String userUuid;
 
     @Comment("주문 금액")
     @Column(nullable = false)
@@ -62,38 +42,25 @@ public class Order extends BaseEntity {
     @Column(nullable = false)
     private OrderStatus status;
 
-    @Comment("입차 시간")
+    @Enumerated(EnumType.STRING)
+    @Comment("결제 타입")
     @Column(nullable = false)
-    private LocalDateTime entryTime;
-
-    @Comment("출차 시간")
-    @Column(nullable = false)
-    private LocalDateTime exitTime;
+    private PaymentType paymentType;
 
     @Builder
-    private Order(String orderCode,
-                  String userUuid,
-                  String reservationCode,
-                  String parkingLotUuid,
-                  String parkingLotName,
-                  String parkingSpotName,
-                  String vehicleNumber,
-                  PaymentType paymentType,
-                  double amount,
-                  OrderStatus status,
-                  LocalDateTime entryTime,
-                  LocalDateTime exitTime) {
+    private Order(String orderCode, OrderType orderType, String productCode, String userUuid,
+                  double amount, OrderStatus status, PaymentType paymentType) {
+
         this.orderCode = orderCode;
+        this.orderType = orderType;
+        this.productCode = productCode;
         this.userUuid = userUuid;
-        this.reservationCode = reservationCode;
-        this.parkingLotUuid = parkingLotUuid;
-        this.parkingLotName = parkingLotName;
-        this.parkingSpotName = parkingSpotName;
-        this.vehicleNumber = vehicleNumber;
-        this.paymentType = paymentType;
         this.amount = amount;
         this.status = status;
-        this.entryTime = entryTime;
-        this.exitTime = exitTime;
+        this.paymentType = paymentType;
+    }
+
+    public void changeStatus(OrderStatus orderStatus) {
+        status = orderStatus;
     }
 }
