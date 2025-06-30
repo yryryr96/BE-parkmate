@@ -1,4 +1,4 @@
-package com.parkmate.reservationservice.kafka.properties;
+package com.parkmate.reservationservice.kafka.constant;
 
 public class KafkaTopics {
 

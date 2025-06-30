@@ -2,7 +2,7 @@ package com.parkmate.reservationservice.kafka.consumer;
 
 import com.parkmate.reservationservice.kafka.event.HistoryType;
 import com.parkmate.reservationservice.kafka.event.UserParkingHistoryEvent;
-import com.parkmate.reservationservice.kafka.properties.KafkaTopics;
+import com.parkmate.reservationservice.kafka.constant.KafkaTopics;
 import com.parkmate.reservationservice.reservation.application.ReservationService;
 import com.parkmate.reservationservice.reservation.domain.ReservationStatus;
 import lombok.RequiredArgsConstructor;
