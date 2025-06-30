@@ -27,41 +27,39 @@ public class FCMService implements NotificationSender {
     @Override
     public CompletableFuture<Void> send(com.parkmate.notificationservice.notification.domain.Notification notification) {
 
-        return CompletableFuture.completedFuture(null);
-//        String receiver = notification.getReceiverUuid();
-//        String title = notification.getTitle();
-//        String content = notification.getContent();
-//
-//        String token = userTokenService.getTokenByUserUuid(receiver).getToken();
-//
-//        Notification fcmNotification = Notification.builder()
-//                .setTitle(title)
-//                .setBody(content)
-//                .build();
-//
-//        Message message = Message.builder()
-//                .setToken(token)
-//                .setNotification(fcmNotification)
-//                .build();
-//
-//        ApiFuture<String> sendResultFuture = FirebaseMessaging.getInstance().sendAsync(message);
-//
-//        // ApiFuture를 CompletableFuture로 변환
-//        CompletableFuture<String> resultCompletableFuture = new CompletableFuture<>();
-//        ApiFutures.addCallback(sendResultFuture, new ApiFutureCallback<String>() {
-//            @Override
-//            public void onSuccess(String messageId) {
-//                resultCompletableFuture.complete(messageId);
-//                log.info("FCM 알림 전송 성공: messageId={}", messageId);
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable t) {
-//                resultCompletableFuture.completeExceptionally(t);
-//                log.error("FCM 알림 전송 실패: receiver={}, title={}, error={}", receiver, title, t.getMessage(), t);
-//            }
-//        }, MoreExecutors.directExecutor()); // 콜백 실행 스레드 (여기서는 호출 스레드)
-//
-//        return resultCompletableFuture.thenApply(messageId -> null);
+        String receiver = notification.getReceiverUuid();
+        String title = notification.getTitle();
+        String content = notification.getContent();
+
+        String token = userTokenService.getTokenByUserUuid(receiver).getToken();
+
+        Notification fcmNotification = Notification.builder()
+                .setTitle(title)
+                .setBody(content)
+                .build();
+
+        Message message = Message.builder()
+                .setToken(token)
+                .setNotification(fcmNotification)
+                .build();
+
+        ApiFuture<String> sendResultFuture = FirebaseMessaging.getInstance().sendAsync(message);
+
+        CompletableFuture<String> resultCompletableFuture = new CompletableFuture<>();
+        ApiFutures.addCallback(sendResultFuture, new ApiFutureCallback<String>() {
+            @Override
+            public void onSuccess(String messageId) {
+                resultCompletableFuture.complete(messageId);
+                log.info("FCM 알림 전송 성공: messageId={}", messageId);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                resultCompletableFuture.completeExceptionally(t);
+                log.error("FCM 알림 전송 실패: receiver={}, title={}, error={}", receiver, title, t.getMessage(), t);
+            }
+        }, MoreExecutors.directExecutor());
+
+        return resultCompletableFuture.thenApply(messageId -> null);
     }
 }

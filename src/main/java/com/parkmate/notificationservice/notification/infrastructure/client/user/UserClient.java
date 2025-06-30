@@ -15,8 +15,7 @@ public class UserClient {
 
     private final WebClient webClient;
 
-//    private static final String BASE_URL = "http://USER-SERVICE";
-    private static final String BASE_URL = "http://localhost:9200";
+    private static final String BASE_URL = "http://USER-SERVICE";
     private static final String USER_UUID_HEADER = "X-User-UUID";
 
     public CompletableFuture<ApiResponse<UserNameResponse>> getUserName(String userUuid) {

@@ -27,7 +27,6 @@ public class NotificationEventHandler {
     private final EventDispatcher eventDispatcher;
     private final ThreadPoolTaskExecutor dbThreadPool;
 
-//    @Async
     public CompletableFuture<Void> handleEvent(List<? extends NotificationEvent> events) {
 
         log.info("알림 처리 시작 startTime: {}, size: {}", LocalDateTime.now(), events.size());
