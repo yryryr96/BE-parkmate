@@ -110,7 +110,7 @@ public class NotificationController {
                     """,
             tags = {"NOTIFICATION-SERVICE"}
     )
-    private ApiResponse<Long> getUnreadNotificationCount(
+    public ApiResponse<Long> getUnreadNotificationCount(
             @PathVariable String receiverType,
             HttpServletRequest request) {
 
