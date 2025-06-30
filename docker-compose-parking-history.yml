@@ -3,7 +3,7 @@ version: '3.8'
 services:
   parking-history:
     container_name: parking-history-service
-    image: 090188239653.dkr.ecr.ap-northeast-2.amazonaws.com/parking-history
+    image: 090188239653.dkr.ecr.ap-northeast-2.amazonaws.com/parking-history-service
     volumes:
       - /home/ubuntu/config/parking-history/application.yml:/config/parking-history/application.yml
     environment:
