@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  notification:
+    container_name: notification-service
+    image: 090188239653.dkr.ecr.ap-northeast-2.amazonaws.com/notification-service
+    volumes:
+      - /home/ubuntu/config/notification/application.yml:/config/notification/application.yml
+    environment:
+      - SPRING_CONFIG_LOCATION=file:/config/notification/application.yml
+    ports:
+      - "9100:9100"
+    env_file:
+      - .env
+    networks:
+      - backend
+
+networks:
+  backend:
+    external: true
