@@ -1,5 +1,6 @@
 package com.parkmate.userparkinghistoryservice.userpakinrghistory.dto.request;
 
+import com.parkmate.userparkinghistoryservice.feign.response.ReservationResponse;
 import com.parkmate.userparkinghistoryservice.kafka.event.EventType;
 import com.parkmate.userparkinghistoryservice.kafka.event.HistoryEvent;
 import com.parkmate.userparkinghistoryservice.userpakinrghistory.domain.HistoryType;
@@ -7,11 +8,13 @@ import com.parkmate.userparkinghistoryservice.userpakinrghistory.vo.request.Entr
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
+@ToString
 public class EntryRequestDto {
 
     private String userUuid;
@@ -40,15 +43,17 @@ public class EntryRequestDto {
                 .build();
     }
 
-    public HistoryEvent toEvent(String parkingSpotName, EventType eventType) {
+    public HistoryEvent toEvent(ReservationResponse reservation, EventType eventType) {
         return HistoryEvent.builder()
                 .eventType(eventType)
                 .userUuid(userUuid)
                 .reservationCode(reservationCode)
                 .parkingLotUuid(parkingLotUuid)
                 .vehicleNumber(vehicleNumber)
-                .parkingSpotName(parkingSpotName)
+                .parkingSpotName(reservation.getParkingSpotName())
                 .type(HistoryType.ENTRY)
+                .entryTime(reservation.getEntryTime())
+                .exitTime(reservation.getExitTime())
                 .timestamp(LocalDateTime.now())
                 .build();
     }
