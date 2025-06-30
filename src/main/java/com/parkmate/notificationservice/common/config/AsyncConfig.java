@@ -8,12 +8,20 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 public class AsyncConfig {
 
     @Bean
+    public ThreadPoolTaskExecutor taskExecutor() {
+
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(200);
+        executor.setThreadNamePrefix("Async-");
+        return executor;
+    }
+
+    @Bean
     public ThreadPoolTaskExecutor dbThreadPool() {
 
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(50);
+        executor.setCorePoolSize(100);
         executor.setThreadNamePrefix("DB-Async-");
-
         return executor;
     }
 
@@ -23,7 +31,6 @@ public class AsyncConfig {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(50);
         executor.setThreadNamePrefix("FCM-Async-");
-
         return executor;
     }
 }

@@ -22,7 +22,7 @@ public class NotificationSendScheduler {
     private final NotificationService notificationService;
     private final TaskScheduler scheduler;
 
-    @Async
+    @Async("schedulerExecutor")
     public CompletableFuture<Void> addSchedule(Notification notification) {
 
         scheduler.schedule(() -> {

@@ -38,7 +38,8 @@ public class NotificationController {
                     - 알림 리스트를 조회합니다. 요청 헤더에 `X-User-UUID` 또는 `X-Host-UUID`를 포함해야 합니다.
                     - `receiverType`은 `user` 또는 `host` 중 하나를 선택해야 합니다.
                     - status가 `SENT`, `READ` 인 알림만 조회됩니다.
-                    """
+                    """,
+            tags = {"NOTIFICATION-SERVICE"}
     )
     @GetMapping("/{receiverType}")
     public ApiResponse<CursorPage<NotificationResponseVo>> getUserNotifications(
@@ -62,7 +63,8 @@ public class NotificationController {
                     - `notificationId`는 읽음 처리할 알림의 ID입니다.
                     - `receiverType`은 `user` 또는 `host` 중 하나를 선택해야 합니다.
                     - redirectUrl을 반환하고 해당 URL로 리다이렉트 처리를 클라이언트에서 수행해야 합니다.
-                    """
+                    """,
+            tags = {"NOTIFICATION-SERVICE"}
     )
     @PatchMapping("/{notificationId}/{receiverType}")
     public ApiResponse<NotificationReadResponseVo> readNotificationById(@PathVariable String notificationId,
@@ -84,7 +86,8 @@ public class NotificationController {
                     - 특정 알림을 삭제합니다. 요청 헤더에 `X-User-UUID` 또는 `X-Host-UUID`를 포함해야 합니다.
                     - `notificationId`는 삭제할 알림의 ID입니다.
                     - `receiverType`은 `user` 또는 `host` 중 하나를 선택해야 합니다.
-                    """
+                    """,
+            tags = {"NOTIFICATION-SERVICE"}
     )
     public ApiResponse<Void> deleteNotificationById(@PathVariable String notificationId,
                                                     @PathVariable String receiverType,
@@ -96,6 +99,23 @@ public class NotificationController {
         notificationService.delete(NotificationDeleteRequestDto.of(notificationId, receiverUuid));
 
         return ApiResponse.of(HttpStatus.NO_CONTENT, "알림이 삭제되었습니다.", null);
+    }
+
+    @GetMapping("/{receiverType}/unread-count")
+    @Operation(
+            summary = "읽지 않은 알림 개수 조회 API",
+            description = """
+                    - 특정 사용자의 읽지 않은 알림 개수를 조회합니다. 요청 헤더에 `X-User-UUID` 또는 `X-Host-UUID`를 포함해야 합니다.
+                    - `receiverType`은 `user` 또는 `host` 중 하나를 선택해야 합니다.
+                    """,
+            tags = {"NOTIFICATION-SERVICE"}
+    )
+    public ApiResponse<Long> getUnreadNotificationCount(
+            @PathVariable String receiverType,
+            HttpServletRequest request) {
+
+        String receiverUuid = getReceiverUuidFromHeader(receiverType, request);
+        return ApiResponse.ok(notificationService.getUnreadNotificationCount(receiverUuid));
     }
 
     private String getReceiverUuidFromHeader(String receiverType, HttpServletRequest request) {

@@ -45,7 +45,6 @@ public class FCMService implements NotificationSender {
 
         ApiFuture<String> sendResultFuture = FirebaseMessaging.getInstance().sendAsync(message);
 
-        // ApiFuture를 CompletableFuture로 변환
         CompletableFuture<String> resultCompletableFuture = new CompletableFuture<>();
         ApiFutures.addCallback(sendResultFuture, new ApiFutureCallback<String>() {
             @Override
@@ -59,7 +58,7 @@ public class FCMService implements NotificationSender {
                 resultCompletableFuture.completeExceptionally(t);
                 log.error("FCM 알림 전송 실패: receiver={}, title={}, error={}", receiver, title, t.getMessage(), t);
             }
-        }, MoreExecutors.directExecutor()); // 콜백 실행 스레드 (여기서는 호출 스레드)
+        }, MoreExecutors.directExecutor());
 
         return resultCompletableFuture.thenApply(messageId -> null);
     }

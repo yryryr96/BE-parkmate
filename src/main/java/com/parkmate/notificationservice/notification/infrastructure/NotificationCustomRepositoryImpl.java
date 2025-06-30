@@ -7,16 +7,20 @@ import com.parkmate.notificationservice.notification.dto.request.NotificationDel
 import com.parkmate.notificationservice.notification.dto.request.NotificationReadRequestDto;
 import com.parkmate.notificationservice.notification.dto.request.NotificationsGetRequestDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
 
 @Repository
+@Slf4j
 @RequiredArgsConstructor
 public class NotificationCustomRepositoryImpl implements NotificationCustomRepository {
 
@@ -26,6 +30,7 @@ public class NotificationCustomRepositoryImpl implements NotificationCustomRepos
     private static final String ID_FIELD = "_id";
     private static final String RECEIVER_UUID_FIELD = "receiverUuid";
     private static final String STATUS_FIELD = "status";
+    private static final String SEND_AT_FIELD = "sendAt";
 
     @Override
     public Notification readNotification(NotificationReadRequestDto notificationReadRequestDto) {
@@ -70,7 +75,7 @@ public class NotificationCustomRepositoryImpl implements NotificationCustomRepos
             query.addCriteria(Criteria.where(ID_FIELD).lte(cursor));
         }
 
-        query.with(Sort.by(Sort.Direction.DESC, ID_FIELD)).limit(pageSize + 1);
+        query.with(Sort.by(Sort.Direction.DESC, SEND_AT_FIELD)).limit(pageSize + 1);
 
         List<Notification> content = mongoTemplate.find(query, Notification.class);
 
@@ -88,5 +93,30 @@ public class NotificationCustomRepositoryImpl implements NotificationCustomRepos
                 .nextCursor(nextCursor)
                 .hasNext(hasNext)
                 .build();
+    }
+
+    @Override
+    public long getUnreadNotificationCount(String receiverUuid) {
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where(RECEIVER_UUID_FIELD).is(receiverUuid)
+                .and(STATUS_FIELD).is(NotificationStatus.SENT));
+
+        return mongoTemplate.count(query, Notification.class);
+    }
+
+    @Override
+    public List<Notification> bulkInsert(List<Notification> notifications) {
+
+        try {
+            mongoTemplate.bulkOps(BulkOperations.BulkMode.UNORDERED, Notification.class)
+                    .insert(notifications)
+                    .execute();
+            log.info("배치 알림저장: {}건", notifications.size());
+            return notifications;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
     }
 }
