@@ -3,7 +3,6 @@ package com.parkmate.parkmateorderservice.order.presentation;
 import com.parkmate.parkmateorderservice.common.response.ApiResponse;
 import com.parkmate.parkmateorderservice.order.application.OrderService;
 import com.parkmate.parkmateorderservice.order.dto.request.OrderCreateRequestDto;
-import com.parkmate.parkmateorderservice.order.dto.response.OrderCreateResponseDto;
 import com.parkmate.parkmateorderservice.order.vo.request.OrderCreateRequestVo;
 import com.parkmate.parkmateorderservice.order.vo.response.OrderCreateResponseVo;
 import io.swagger.v3.oas.annotations.Operation;

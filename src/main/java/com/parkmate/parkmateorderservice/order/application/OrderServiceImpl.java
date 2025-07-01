@@ -1,19 +1,17 @@
 package com.parkmate.parkmateorderservice.order.application;
 
 import com.parkmate.parkmateorderservice.common.exception.BaseException;
-import com.parkmate.parkmateorderservice.common.response.ResponseStatus;
 import com.parkmate.parkmateorderservice.order.domain.Order;
 import com.parkmate.parkmateorderservice.order.domain.OrderStatus;
 import com.parkmate.parkmateorderservice.order.dto.request.OrderCancelRequestDto;
 import com.parkmate.parkmateorderservice.order.dto.request.OrderCreateRequestDto;
-import com.parkmate.parkmateorderservice.order.dto.request.OrderUpdateRequestDto;
 import com.parkmate.parkmateorderservice.order.dto.response.OrderCreateResponseDto;
 import com.parkmate.parkmateorderservice.order.infrastructure.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.parkmate.parkmateorderservice.common.response.ResponseStatus.*;
+import static com.parkmate.parkmateorderservice.common.response.ResponseStatus.RESOURCE_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -38,8 +36,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void changeStatus(String orderCode, OrderStatus orderStatus) {
 
-        Order order = orderRepository.findByOrderCode(orderCode).orElseThrow(
-                () -> new BaseException(RESOURCE_NOT_FOUND));
+        Order order = orderRepository.findByOrderCode(orderCode)
+                .orElseThrow(() -> new BaseException(RESOURCE_NOT_FOUND));
 
         order.changeStatus(orderStatus);
     }
