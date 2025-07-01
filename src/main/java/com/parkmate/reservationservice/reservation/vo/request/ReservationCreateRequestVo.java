@@ -1,6 +1,5 @@
 package com.parkmate.reservationservice.reservation.vo.request;
 
-import com.parkmate.reservationservice.reservation.domain.PaymentType;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -14,5 +13,4 @@ public class ReservationCreateRequestVo {
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
     private double amount;
-    private PaymentType paymentType;
 }

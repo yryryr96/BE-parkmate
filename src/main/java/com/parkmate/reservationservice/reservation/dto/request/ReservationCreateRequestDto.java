@@ -1,7 +1,6 @@
 package com.parkmate.reservationservice.reservation.dto.request;
 
 import com.parkmate.reservationservice.common.generator.ReservationCodeGenerator;
-import com.parkmate.reservationservice.reservation.domain.PaymentType;
 import com.parkmate.reservationservice.reservation.domain.Reservation;
 import com.parkmate.reservationservice.reservation.domain.ReservationStatus;
 import com.parkmate.reservationservice.reservation.vo.ParkingSpot;
@@ -23,7 +22,6 @@ public class ReservationCreateRequestDto {
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
     private double amount;
-    private PaymentType paymentType;
 
     @Builder
     private ReservationCreateRequestDto(String userUuid,
@@ -32,8 +30,7 @@ public class ReservationCreateRequestDto {
                                         String vehicleNumber,
                                         LocalDateTime entryTime,
                                         LocalDateTime exitTime,
-                                        double amount,
-                                        PaymentType paymentType) {
+                                        double amount) {
         this.userUuid = userUuid;
         this.parkingSpotType = parkingSpotType;
         this.parkingLotUuid = parkingLotUuid;
@@ -41,7 +38,6 @@ public class ReservationCreateRequestDto {
         this.entryTime = entryTime;
         this.exitTime = exitTime;
         this.amount = amount;
-        this.paymentType = paymentType;
     }
 
     public static ReservationCreateRequestDto of(String userUuid,
@@ -54,7 +50,6 @@ public class ReservationCreateRequestDto {
                 .entryTime(reservationCreateRequestVo.getEntryTime())
                 .exitTime(reservationCreateRequestVo.getExitTime())
                 .amount(reservationCreateRequestVo.getAmount())
-                .paymentType(reservationCreateRequestVo.getPaymentType())
                 .build();
     }
 
@@ -70,7 +65,6 @@ public class ReservationCreateRequestDto {
                 .entryTime(entryTime)
                 .exitTime(exitTime)
                 .amount(amount)
-                .paymentType(paymentType)
                 .status(ReservationStatus.CONFIRMED)
                 .build();
     }

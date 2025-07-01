@@ -78,7 +78,6 @@ public class ReservationController {
                     - 예약 상태(status)는 `WAITING(대기중)`, `CONFIRMED(예약 확정)`, `CANCELLED(예약 취소)`
                     - `EXPIRED(예약 만료)`, `IN_USE(사용중)`, `COMPLETED(사용 완료)` 중 하나를 선택할 수 있습니다.
                     - 예약 상태를 지정하지 않으면 모든 예약 상태의 예약을 조회합니다.
-                    - 응답 paymentType에는 `PG`, `POINT` 가 있습니다.
                     """,
             tags = {"RESERVATION-SERVICE"}
     )

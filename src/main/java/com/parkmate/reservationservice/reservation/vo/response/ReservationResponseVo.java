@@ -1,6 +1,5 @@
 package com.parkmate.reservationservice.reservation.vo.response;
 
-import com.parkmate.reservationservice.reservation.domain.PaymentType;
 import com.parkmate.reservationservice.reservation.domain.ReservationStatus;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +22,6 @@ public class ReservationResponseVo {
     private LocalDateTime exitTime;
     private double amount;
     private ReservationStatus status;
-    private PaymentType paymentType;
 
     @Builder
     private ReservationResponseVo(String reservationCode,
@@ -36,8 +34,7 @@ public class ReservationResponseVo {
                                   LocalDateTime entryTime,
                                   LocalDateTime exitTime,
                                   double amount,
-                                  ReservationStatus status,
-                                  PaymentType paymentType) {
+                                  ReservationStatus status) {
         this.reservationCode = reservationCode;
         this.userUuid = userUuid;
         this.parkingSpotId = parkingSpotId;
@@ -49,6 +46,5 @@ public class ReservationResponseVo {
         this.exitTime = exitTime;
         this.amount = amount;
         this.status = status;
-        this.paymentType = paymentType;
     }
 }

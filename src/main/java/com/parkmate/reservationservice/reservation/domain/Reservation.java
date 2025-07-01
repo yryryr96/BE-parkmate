@@ -64,11 +64,6 @@ public class Reservation extends BaseEntity {
     @Column(nullable = false)
     private ReservationStatus status;
 
-    @Enumerated(EnumType.STRING)
-    @Comment("결제 유형")
-    @Column(nullable = false)
-    private PaymentType paymentType;
-
     @Builder
     private Reservation(Long id,
                         String reservationCode,
@@ -81,8 +76,7 @@ public class Reservation extends BaseEntity {
                         LocalDateTime entryTime,
                         LocalDateTime exitTime,
                         double amount,
-                        ReservationStatus status,
-                        PaymentType paymentType) {
+                        ReservationStatus status) {
         this.id = id;
         this.reservationCode = reservationCode;
         this.userUuid = userUuid;
@@ -95,7 +89,6 @@ public class Reservation extends BaseEntity {
         this.exitTime = exitTime;
         this.amount = amount;
         this.status = status;
-        this.paymentType = paymentType;
     }
 
     public void cancel() {
