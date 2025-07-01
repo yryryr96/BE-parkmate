@@ -1,7 +1,7 @@
 package com.parkmate.notificationservice.notification.domain.processor;
 
 import com.parkmate.notificationservice.notification.domain.Notification;
-import com.parkmate.notificationservice.notification.domain.event.NotificationEvent;
+import com.parkmate.notificationservice.notification.event.NotificationEvent;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

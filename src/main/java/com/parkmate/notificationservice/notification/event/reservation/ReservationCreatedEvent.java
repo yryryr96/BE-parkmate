@@ -1,7 +1,7 @@
-package com.parkmate.notificationservice.notification.domain.event.reservation;
+package com.parkmate.notificationservice.notification.event.reservation;
 
 import com.parkmate.notificationservice.notification.domain.NotificationType;
-import com.parkmate.notificationservice.notification.domain.event.NotificationEvent;
+import com.parkmate.notificationservice.notification.event.NotificationEvent;
 import lombok.Builder;
 import lombok.Getter;
 

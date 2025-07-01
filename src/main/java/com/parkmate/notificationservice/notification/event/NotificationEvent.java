@@ -1,4 +1,4 @@
-package com.parkmate.notificationservice.notification.domain.event;
+package com.parkmate.notificationservice.notification.event;
 
 import com.parkmate.notificationservice.notification.domain.NotificationType;
 import lombok.Getter;

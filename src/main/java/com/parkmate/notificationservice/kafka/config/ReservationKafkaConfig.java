@@ -1,7 +1,7 @@
 package com.parkmate.notificationservice.kafka.config;
 
 import com.parkmate.notificationservice.kafka.constant.KafkaConsumerGroups;
-import com.parkmate.notificationservice.notification.domain.event.reservation.ReservationCreatedEvent;
+import com.parkmate.notificationservice.notification.event.reservation.ReservationCreatedEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;

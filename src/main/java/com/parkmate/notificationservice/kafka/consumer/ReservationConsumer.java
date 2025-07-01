@@ -2,14 +2,12 @@ package com.parkmate.notificationservice.kafka.consumer;
 
 import com.parkmate.notificationservice.kafka.constant.KafkaTopics;
 import com.parkmate.notificationservice.notification.application.NotificationEventHandler;
-import com.parkmate.notificationservice.notification.domain.event.reservation.ReservationCreatedEvent;
+import com.parkmate.notificationservice.notification.event.reservation.ReservationCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +19,6 @@ public class ReservationConsumer {
             topics = KafkaTopics.RESERVATION_CREATED,
             containerFactory = "reservationCreatedContainerFactory")
     public void consumeReservationCreatedEvent(List<ReservationCreatedEvent> events) {
-        eventHandler.handleEvent(events);
+        eventHandler.handle(events);
     }
 }
