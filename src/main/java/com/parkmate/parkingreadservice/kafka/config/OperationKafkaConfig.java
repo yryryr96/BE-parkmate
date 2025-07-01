@@ -11,6 +11,6 @@ public class OperationKafkaConfig extends CommonKafkaConfig {
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, OperationCreateEvent> parkingLotOperationCreatedListener() {
-        return createListenerFactory(OperationCreateEvent.class, KafkaConsumerGroups.parkingLotOperationCreatedGroup);
+        return createListenerFactory(OperationCreateEvent.class, KafkaConsumerGroups.PARKING_LOT_OPERATION_CREATED_GROUP);
     }
 }

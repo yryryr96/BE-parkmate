@@ -16,7 +16,7 @@ public class ParkingLotOperationConsumer {
     private final OperationEventManager eventManager;
 
     @KafkaListener(
-            topics = KafkaTopics.parkingLotOperationCreated,
+            topics = KafkaTopics.PARKING_LOT_OPERATION_CREATED,
             containerFactory = "parkingLotOperationCreatedListener"
     )
     public void consumeOperationCreatedEvent(OperationCreateEvent event) {
