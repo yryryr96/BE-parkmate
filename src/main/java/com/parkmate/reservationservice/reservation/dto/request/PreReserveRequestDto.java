@@ -57,7 +57,7 @@ public class PreReserveRequestDto {
                 .parkingSpotName(parkingSpot.getName())
                 .entryTime(entryTime)
                 .exitTime(exitTime)
-                .status(ReservationStatus.PENDING)
+                .status(ReservationStatus.WAITING)
                 .build();
     }
 }
