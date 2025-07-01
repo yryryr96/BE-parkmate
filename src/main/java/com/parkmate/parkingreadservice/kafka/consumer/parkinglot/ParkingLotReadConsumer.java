@@ -20,7 +20,7 @@ public class ParkingLotReadConsumer {
     private final ParkingLotEventManager eventManager;
 
     @KafkaListener(
-            topics = KafkaTopics.parkingLotCreated,
+            topics = KafkaTopics.PARKING_LOT_CREATED,
             containerFactory = "parkingLotCreateListener",
             concurrency = "3"
     )
@@ -29,7 +29,7 @@ public class ParkingLotReadConsumer {
     }
 
     @KafkaListener(
-            topics = KafkaTopics.parkingLotMetadataUpdated,
+            topics = KafkaTopics.PARKING_LOT_METADATA_UPDATED,
             containerFactory = "parkingLotMetadataUpdateListener"
     )
     public void consumeParkingLotMetadataUpdated(ParkingLotMetadataUpdateEvent event) {
@@ -37,7 +37,7 @@ public class ParkingLotReadConsumer {
     }
 
     @KafkaListener(
-            topics = KafkaTopics.parkingLotReactionsUpdated,
+            topics = KafkaTopics.PARKING_LOT_REACTIONS_UPDATED,
             containerFactory = "parkingLotReactionsUpdateListener",
             concurrency = "3"
     )

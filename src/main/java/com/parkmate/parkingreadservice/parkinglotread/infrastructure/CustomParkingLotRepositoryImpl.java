@@ -3,10 +3,7 @@ package com.parkmate.parkingreadservice.parkinglotread.infrastructure;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoBulkWriteException;
-import com.parkmate.parkingreadservice.kafka.event.ParkingLotCreateEvent;
-import com.parkmate.parkingreadservice.kafka.event.ParkingLotMetadataUpdateEvent;
-import com.parkmate.parkingreadservice.kafka.event.ParkingLotReactionsUpdateEvent;
-import com.parkmate.parkingreadservice.kafka.event.ReactionType;
+import com.parkmate.parkingreadservice.kafka.event.*;
 import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -131,6 +128,37 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
         Query query = new Query();
         query.addCriteria(Criteria.where("parkingLotUuid").in(parkingLotUuids));
         return mongoTemplate.find(query, ParkingLotRead.class);
+    }
+
+    @Override
+    public void bulkUpdateRating(List<ReviewSummaryUpdateEvent> events) {
+
+        if (events == null || events.isEmpty()) {
+            return;
+        }
+
+        BulkOperations bulkOperations = mongoTemplate.bulkOps(BulkOperations.BulkMode.UNORDERED,
+                ParkingLotRead.class);
+
+        for (ReviewSummaryUpdateEvent event : events) {
+
+            Query query = new Query();
+            query.addCriteria(Criteria.where("parkingLotUuid").is(event.getParkingLotUuid()));
+
+            Update update = new Update();
+            update.set("rating", event.getAverageRating());
+            bulkOperations.updateOne(query, update);
+        }
+
+        try {
+            bulkOperations.execute();
+        } catch (MongoBulkWriteException e) {
+            e.getWriteErrors().forEach(error -> {
+                int failedIndex = error.getIndex();
+                String errorMessage = error.getMessage();
+                log.error("Failed at index {}: {}", failedIndex, errorMessage);
+            });
+        }
     }
 
     private Map<String, Object> createUpdateMap(Object object) {

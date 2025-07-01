@@ -16,7 +16,7 @@ public class ReservationConsumer {
     private final ReservationEventManager reservationEventManager;
 
     @KafkaListener(
-            topics = KafkaTopics.reservationCreated,
+            topics = KafkaTopics.RESERVATION_CREATED,
             containerFactory = "reservationCreateKafkaListener"
     )
     public void consumeReservationCreatedEvent(ReservationCreateEvent event) {
