@@ -62,7 +62,7 @@ public class NotificationEventHandler {
 
                     return CompletableFuture.allOf(scheduleFutures.toArray(new CompletableFuture[0]))
                             .thenAccept(v -> {
-//                                log.info("모든 알림 스케줄링 등록 완료. 총 {}건", savedNotifications.size());
+                                log.info("모든 알림 스케줄링 등록 완료. 총 {}건", savedNotifications.size());
                             });
 
                 })

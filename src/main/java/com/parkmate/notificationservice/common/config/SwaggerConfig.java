@@ -19,6 +19,16 @@ public class SwaggerConfig {
         String securityJwtName = "JWT";
         SecurityRequirement securityRequirement = new SecurityRequirement().addList(securityJwtName);
         Components components = new Components()
+                .addSecuritySchemes("X-User-UUID", new SecurityScheme()
+                        .type(SecurityScheme.Type.APIKEY)
+                        .in(SecurityScheme.In.HEADER)
+                        .name("X-User-UUID")
+                        .description("사용자 UUID"))
+                .addSecuritySchemes("X-Host-UUID", new SecurityScheme()
+                        .type(SecurityScheme.Type.APIKEY)
+                        .in(SecurityScheme.In.HEADER)
+                        .name("X-Host-UUID")
+                        .description("호스트 UUID"))
                 .addSecuritySchemes(securityJwtName, new SecurityScheme()
                         .name(securityJwtName)
                         .type(SecurityScheme.Type.HTTP)
