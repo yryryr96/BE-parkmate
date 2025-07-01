@@ -1,5 +1,6 @@
 package com.parkmate.parkmateorderservice.order.application;
 
+import com.parkmate.parkmateorderservice.order.domain.Order;
 import com.parkmate.parkmateorderservice.order.domain.OrderStatus;
 import com.parkmate.parkmateorderservice.order.dto.request.OrderCancelRequestDto;
 import com.parkmate.parkmateorderservice.order.dto.request.OrderCreateRequestDto;
@@ -11,5 +12,5 @@ public interface OrderService {
 
     void cancel(OrderCancelRequestDto orderCancelRequestDto);
 
-    void changeStatus(String orderCode, OrderStatus orderStatus);
+    Order changeStatus(String orderCode, OrderStatus orderStatus);
 }

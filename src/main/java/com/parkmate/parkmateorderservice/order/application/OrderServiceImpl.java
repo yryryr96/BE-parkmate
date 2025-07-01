@@ -34,11 +34,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public void changeStatus(String orderCode, OrderStatus orderStatus) {
+    public Order changeStatus(String orderCode, OrderStatus orderStatus) {
 
         Order order = orderRepository.findByOrderCode(orderCode)
                 .orElseThrow(() -> new BaseException(RESOURCE_NOT_FOUND));
 
         order.changeStatus(orderStatus);
+        return order;
     }
 }
