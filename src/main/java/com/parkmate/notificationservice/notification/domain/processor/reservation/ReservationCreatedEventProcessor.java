@@ -24,7 +24,7 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
 
     private final UserClient userClient;
 
-    private static final long LAZY_TIME_SECONDS = 30L;
+    private static final long LAZY_TIME_SECONDS = 5L;
     private static final String TITLE = "예약 완료";
     private static final String USER_BASE_REDIRECT_URL = "http://localhost:3000/user/reservations/";
     private static final String HOST_BASE_REDIRECT_URL = "http://localhost:3000/host/reservations/";
