@@ -1,7 +1,9 @@
-package com.parkmate.reservationservice.kafka.consumer;
+package com.parkmate.reservationservice.kafka.consumer.userparkinghistory;
 
-import com.parkmate.reservationservice.kafka.event.HistoryType;
-import com.parkmate.reservationservice.kafka.event.UserParkingHistoryEvent;
+import com.parkmate.reservationservice.reservation.application.dispatcher.EventDispatcher;
+import com.parkmate.reservationservice.reservation.application.handler.EventHandler;
+import com.parkmate.reservationservice.reservation.event.userparkinghistory.HistoryType;
+import com.parkmate.reservationservice.reservation.event.userparkinghistory.UserParkingHistoryEvent;
 import com.parkmate.reservationservice.kafka.constant.KafkaTopics;
 import com.parkmate.reservationservice.reservation.application.ReservationService;
 import com.parkmate.reservationservice.reservation.domain.ReservationStatus;
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UserParkingHistoryConsumer {
 
-    private final ReservationService reservationService;
+    private final EventDispatcher eventDispatcher;
 
     @KafkaListener(
             topics = KafkaTopics.USER_PARKING_HISTORY,
@@ -21,12 +23,7 @@ public class UserParkingHistoryConsumer {
     )
     public void consumeUserParkingHistory(UserParkingHistoryEvent event) {
 
-        String reservationCode = event.getReservationCode();
-
-        if (event.getType().equals(HistoryType.ENTRY)) {
-            reservationService.changeStatus(reservationCode, ReservationStatus.IN_USE);
-        } else {
-            reservationService.changeStatus(reservationCode, ReservationStatus.COMPLETED);
-        }
+        EventHandler eventHandler = eventDispatcher.dispatch(event);
+        eventHandler.handle(event);
     }
 }

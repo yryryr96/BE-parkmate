@@ -1,4 +1,4 @@
-package com.parkmate.reservationservice.kafka.event;
+package com.parkmate.reservationservice.reservation.event.userparkinghistory;
 
 import lombok.Getter;
 

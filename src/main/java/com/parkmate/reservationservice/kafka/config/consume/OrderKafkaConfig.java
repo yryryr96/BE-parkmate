@@ -1,12 +1,11 @@
 package com.parkmate.reservationservice.kafka.config.consume;
 
-import com.parkmate.reservationservice.reservation.event.userparkinghistory.UserParkingHistoryEvent;
 import com.parkmate.reservationservice.kafka.constant.KafkaConsumerGroups;
+import com.parkmate.reservationservice.reservation.event.order.OrderEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
@@ -14,9 +13,8 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import java.util.HashMap;
 import java.util.Map;
 
-@EnableKafka
 @Configuration
-public class UserParkingHistoryKafkaConfig extends CommonConsumeKafkaConfig {
+public class OrderKafkaConfig extends CommonConsumeKafkaConfig {
 
     @Override
     Map<String, Object> getStringObjectMap(String groupId) {
@@ -38,7 +36,7 @@ public class UserParkingHistoryKafkaConfig extends CommonConsumeKafkaConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, UserParkingHistoryEvent> userParkingHistoryContainerFactory() {
-        return createListenerFactory(UserParkingHistoryEvent.class, KafkaConsumerGroups.USER_PARKING_HISTORY_GROUP);
+    public ConcurrentKafkaListenerContainerFactory<String, OrderEvent> orderContainerFactory() {
+        return createListenerFactory(OrderEvent.class, KafkaConsumerGroups.ORDER_GROUP);
     }
 }

@@ -1,6 +1,6 @@
 package com.parkmate.reservationservice.kafka.config.produce;
 
-import com.parkmate.reservationservice.kafka.event.ReservationCreateEvent;
+import com.parkmate.reservationservice.reservation.event.reservation.ReservationCreateEvent;
 import com.parkmate.reservationservice.kafka.constant.KafkaTopics;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;

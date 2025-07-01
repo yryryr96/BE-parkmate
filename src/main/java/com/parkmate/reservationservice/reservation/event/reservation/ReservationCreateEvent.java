@@ -1,4 +1,4 @@
-package com.parkmate.reservationservice.kafka.event;
+package com.parkmate.reservationservice.reservation.event.reservation;
 
 import com.parkmate.reservationservice.reservation.domain.Reservation;
 import com.parkmate.reservationservice.reservation.domain.ReservationStatus;

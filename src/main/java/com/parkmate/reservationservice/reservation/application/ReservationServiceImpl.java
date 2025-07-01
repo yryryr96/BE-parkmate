@@ -3,7 +3,7 @@ package com.parkmate.reservationservice.reservation.application;
 import com.parkmate.reservationservice.common.exception.BaseException;
 import com.parkmate.reservationservice.common.response.CursorPage;
 import com.parkmate.reservationservice.common.response.ResponseStatus;
-import com.parkmate.reservationservice.kafka.event.ReservationCreateEvent;
+import com.parkmate.reservationservice.reservation.event.reservation.ReservationCreateEvent;
 import com.parkmate.reservationservice.reservation.domain.Reservation;
 import com.parkmate.reservationservice.reservation.domain.ReservationStatus;
 import com.parkmate.reservationservice.reservation.dto.request.*;

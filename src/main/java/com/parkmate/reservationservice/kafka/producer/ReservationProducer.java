@@ -1,6 +1,6 @@
 package com.parkmate.reservationservice.kafka.producer;
 
-import com.parkmate.reservationservice.kafka.event.ReservationCreateEvent;
+import com.parkmate.reservationservice.reservation.event.reservation.ReservationCreateEvent;
 import com.parkmate.reservationservice.kafka.constant.KafkaTopics;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
