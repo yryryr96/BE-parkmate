@@ -13,7 +13,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
     Optional<Reservation> findByReservationCodeAndUserUuid(String reservationCode,
                                                            String userUuid);
 
-
     @Query(value = "SELECT r FROM Reservation r " +
             "WHERE r.parkingLotUuid = :parkingLotUuid and " +
             "r.status in ('CONFIRMED', 'IN_USE') and " +

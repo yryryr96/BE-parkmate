@@ -2,10 +2,7 @@ package com.parkmate.reservationservice.reservation.domain;
 
 import com.parkmate.reservationservice.common.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import java.time.LocalDateTime;
@@ -13,6 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class Reservation extends BaseEntity {
 
     @Id
@@ -44,7 +42,6 @@ public class Reservation extends BaseEntity {
     private String parkingLotName;
 
     @Comment("차량 번호")
-    @Column(nullable = false)
     private String vehicleNumber;
 
     @Comment("입차 시간")
@@ -56,7 +53,6 @@ public class Reservation extends BaseEntity {
     private LocalDateTime exitTime;
 
     @Comment("예약 금액")
-    @Column(nullable = false)
     private double amount;
 
     @Enumerated(EnumType.STRING)
@@ -65,8 +61,7 @@ public class Reservation extends BaseEntity {
     private ReservationStatus status;
 
     @Builder
-    private Reservation(Long id,
-                        String reservationCode,
+    private Reservation(String reservationCode,
                         String userUuid,
                         Long parkingSpotId,
                         String parkingSpotName,
@@ -77,7 +72,6 @@ public class Reservation extends BaseEntity {
                         LocalDateTime exitTime,
                         double amount,
                         ReservationStatus status) {
-        this.id = id;
         this.reservationCode = reservationCode;
         this.userUuid = userUuid;
         this.parkingSpotId = parkingSpotId;

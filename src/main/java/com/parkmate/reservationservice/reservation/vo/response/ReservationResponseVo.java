@@ -12,39 +12,30 @@ import java.time.LocalDateTime;
 public class ReservationResponseVo {
 
     private String reservationCode;
-    private String userUuid;
-    private Long parkingSpotId;
     private String parkingSpotName;
     private String parkingLotUuid;
     private String parkingLotName;
     private String vehicleNumber;
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
-    private double amount;
     private ReservationStatus status;
 
     @Builder
     private ReservationResponseVo(String reservationCode,
-                                  String userUuid,
-                                  Long parkingSpotId,
                                   String parkingSpotName,
                                   String parkingLotUuid,
                                   String parkingLotName,
                                   String vehicleNumber,
                                   LocalDateTime entryTime,
                                   LocalDateTime exitTime,
-                                  double amount,
                                   ReservationStatus status) {
         this.reservationCode = reservationCode;
-        this.userUuid = userUuid;
-        this.parkingSpotId = parkingSpotId;
         this.parkingSpotName = parkingSpotName;
         this.parkingLotUuid = parkingLotUuid;
         this.parkingLotName = parkingLotName;
         this.vehicleNumber = vehicleNumber;
         this.entryTime = entryTime;
         this.exitTime = exitTime;
-        this.amount = amount;
         this.status = status;
     }
 }
