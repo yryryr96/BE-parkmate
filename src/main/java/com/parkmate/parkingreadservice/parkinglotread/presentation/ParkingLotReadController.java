@@ -9,6 +9,7 @@ import com.parkmate.parkingreadservice.geo.vo.response.InBoxParkingLotResponseLi
 import com.parkmate.parkingreadservice.geo.vo.response.NearbyParkingLotResponseVoList;
 import com.parkmate.parkingreadservice.parkinglotread.application.ParkingLotReadService;
 import com.parkmate.parkingreadservice.parkinglotread.vo.response.ParkingLotReadResponseVo;
+import com.parkmate.parkingreadservice.parkinglotread.vo.response.ParkingLotReadSimpleResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,15 @@ public class ParkingLotReadController {
         return ApiResponse.ok(
                 "주차장 정보 조회에 성공했습니다.",
                 parkingLotReadService.getParkingLotReadByParkingLotUuid(parkingLotUuid).toVo()
+        );
+    }
+
+    @GetMapping("/{parkingLotUuid}/simple")
+    public ApiResponse<ParkingLotReadSimpleResponseVo> getSimpleParkingLotByParkingLotUuid(@PathVariable String parkingLotUuid) {
+
+        return ApiResponse.ok(
+                "주차장 간단 정보 조회에 성공했습니다.",
+                parkingLotReadService.getParkingLotReadSimpleByParkingLotUuid(parkingLotUuid).toVo()
         );
     }
 
