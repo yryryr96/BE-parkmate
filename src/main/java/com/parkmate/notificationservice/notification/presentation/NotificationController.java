@@ -41,6 +41,9 @@ public class NotificationController {
                     - 알림 리스트를 조회합니다. 요청 헤더에 `X-User-UUID` 또는 `X-Host-UUID`를 포함해야 합니다.
                     - `receiverType`은 `user` 또는 `host` 중 하나를 선택해야 합니다.
                     - status가 `SENT`, `READ` 인 알림만 조회됩니다.
+                    - type에는 `CHAT_MESSAGE("채팅 메시지")`, `EMPTY_SPOT_AVAILABLE("빈 주차 공간 알림")`,`RESERVATION_CREATED("예약 생성 알림")`,
+                      `RESERVATION_MODIFIED("예약 수정 알림")`,`RESERVATION_CANCELED("예약 취소 알림")`,`USER_PARKING_ENTRY("사용자 입차 알림")`,
+                      `PARKING_EXIT_REMINDER("주차장 퇴장 알림")` 이 있습니다.
                     """,
             tags = {"NOTIFICATION-SERVICE"}
     )
@@ -121,7 +124,8 @@ public class NotificationController {
         return ApiResponse.ok(notificationService.getUnreadNotificationCount(receiverUuid));
     }
 
-    private String getReceiverUuidFromHeader(String receiverType, HttpServletRequest request) {
+    private String getReceiverUuidFromHeader(String receiverType,
+                                             HttpServletRequest request) {
 
         String headerName = RECEIVER_TYPE_HEADER_MAP.get(receiverType);
         if (headerName == null) {
