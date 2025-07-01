@@ -4,16 +4,17 @@ import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutureCallback;
 import com.google.api.core.ApiFutures;
 import com.google.common.util.concurrent.MoreExecutors;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.Notification;
+import com.google.firebase.messaging.*;
 import com.parkmate.notificationservice.notificationsender.NotificationSender;
 import com.parkmate.notificationservice.usertoken.application.UserTokenService;
+import com.parkmate.notificationservice.usertoken.domain.UserToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -31,37 +32,66 @@ public class FCMService implements NotificationSender {
         String title = notification.getTitle();
         String content = notification.getContent();
 
-        String token = userTokenService.getTokenByUserUuid(receiver).getToken();
+        List<String> tokens = userTokenService.getTokenByUserUuid(receiver).stream()
+                .map(UserToken::getToken)
+                .toList();
 
         Notification fcmNotification = Notification.builder()
                 .setTitle(title)
                 .setBody(content)
                 .build();
 
-        Message message = Message.builder()
-                .setToken(token)
+        MulticastMessage message = MulticastMessage.builder()
                 .setNotification(fcmNotification)
                 .putData("type", notification.getType().toString())
                 .putData("redirectUrl", notification.getRedirectUrl())
+                .addAllTokens(tokens)
                 .build();
 
-        ApiFuture<String> sendResultFuture = FirebaseMessaging.getInstance().sendAsync(message);
+        ApiFuture<BatchResponse> sendResultFuture = FirebaseMessaging.getInstance().sendEachForMulticastAsync(message);
 
-        CompletableFuture<String> resultCompletableFuture = new CompletableFuture<>();
-        ApiFutures.addCallback(sendResultFuture, new ApiFutureCallback<String>() {
+        CompletableFuture<Void> resultCompletableFuture = new CompletableFuture<>();
+        ApiFutures.addCallback(sendResultFuture, new ApiFutureCallback<BatchResponse>() {
             @Override
-            public void onSuccess(String messageId) {
-                resultCompletableFuture.complete(messageId);
-                log.info("FCM 알림 전송 성공: messageId={}", messageId);
+            public void onSuccess(BatchResponse response) {
+
+                log.info("FCM 알림 전송 결과: receiver={}, successfulCount={}, failureCount={}",
+                        receiver, response.getSuccessCount(), response.getFailureCount());
+
+                if (response.getFailureCount() > 0) {
+                    List<String> tokensToDelete = new ArrayList<>();
+                    for (int i = 0; i < response.getResponses().size(); i++) {
+                        SendResponse sendResponse = response.getResponses().get(i);
+                        if (!sendResponse.isSuccessful()) {
+                            MessagingErrorCode errorCode = sendResponse.getException().getMessagingErrorCode();
+                            String failedToken = tokens.get(i);
+
+                            log.warn("FCM 알림 전송 실패 토큰: token={}, errorCode={}, errorMessage={}",
+                                    failedToken, errorCode, sendResponse.getException().getMessage());
+
+                            if (errorCode == MessagingErrorCode.UNREGISTERED ||
+                                errorCode == MessagingErrorCode.INVALID_ARGUMENT ||
+                                errorCode == MessagingErrorCode.SENDER_ID_MISMATCH) {
+                                tokensToDelete.add(failedToken);
+                            }
+                        }
+                    }
+
+                    if (!tokensToDelete.isEmpty()) {
+                        log.info("DB에서 삭제할 FCM 토큰 수: receiver={}, count={}", receiver, tokensToDelete.size());
+                        userTokenService.deleteTokens(tokensToDelete);
+                    }
+                }
+                resultCompletableFuture.complete(null);
             }
 
             @Override
             public void onFailure(Throwable t) {
                 resultCompletableFuture.completeExceptionally(t);
-                log.error("FCM 알림 전송 실패: receiver={}, title={}, error={}", receiver, title, t.getMessage(), t);
+                log.error("FCM 알림 전송 실패 (Multicast 전체 오류): receiver={}, title={}, error={}", receiver, title, t.getMessage(), t);
             }
         }, MoreExecutors.directExecutor());
 
-        return resultCompletableFuture.thenApply(messageId -> null);
+        return resultCompletableFuture;
     }
 }

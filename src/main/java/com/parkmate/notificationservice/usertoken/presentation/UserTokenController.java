@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/usertokens")
@@ -37,7 +39,7 @@ public class UserTokenController {
             tags = {"USER-TOKEN-SERVICE"}
     )
     @GetMapping
-    public UserToken getTokenByUserUuid(@RequestHeader(USER_UUID_HEADER) String userUuid) {
+    public List<UserToken> getTokenByUserUuid(@RequestHeader(USER_UUID_HEADER) String userUuid) {
         return userTokenService.getTokenByUserUuid(userUuid);
     }
 }

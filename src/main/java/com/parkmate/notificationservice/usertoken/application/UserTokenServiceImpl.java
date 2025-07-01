@@ -6,6 +6,8 @@ import com.parkmate.notificationservice.usertoken.infrastructure.UserTokenReposi
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserTokenServiceImpl implements UserTokenService {
@@ -18,7 +20,13 @@ public class UserTokenServiceImpl implements UserTokenService {
     }
 
     @Override
-    public UserToken getTokenByUserUuid(String userUuid) {
+    public List<UserToken> getTokenByUserUuid(String userUuid) {
         return userTokenRepository.findByUserUuid(userUuid);
+    }
+
+    @Override
+    public void deleteTokens(List<String> tokens) {
+
+        userTokenRepository.deleteAllInTokens(tokens);
     }
 }

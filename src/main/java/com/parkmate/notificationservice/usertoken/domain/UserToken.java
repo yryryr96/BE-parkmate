@@ -16,7 +16,7 @@ public class UserToken extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_uuid", nullable = false, unique = true)
+    @Column(name = "user_uuid", nullable = false)
     private String userUuid;
 
     @Column(name = "token", nullable = false, unique = true)
@@ -24,8 +24,8 @@ public class UserToken extends BaseEntity {
 
     @Builder
     private UserToken(Long id,
-                     String userUuid,
-                     String token) {
+                      String userUuid,
+                      String token) {
         this.id = id;
         this.userUuid = userUuid;
         this.token = token;
