@@ -9,6 +9,7 @@ public class PreReserveRequestVo {
 
     private String parkingSpotType;
     private String parkingLotUuid;
+    private String vehicleNumber;
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
 }
