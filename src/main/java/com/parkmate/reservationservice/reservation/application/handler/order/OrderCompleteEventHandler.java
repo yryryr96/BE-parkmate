@@ -1,10 +1,10 @@
 package com.parkmate.reservationservice.reservation.application.handler.order;
 
+import com.parkmate.reservationservice.reservation.application.ReservationService;
 import com.parkmate.reservationservice.reservation.application.handler.EventHandler;
+import com.parkmate.reservationservice.reservation.domain.ReservationStatus;
 import com.parkmate.reservationservice.reservation.event.order.OrderEvent;
 import com.parkmate.reservationservice.reservation.event.order.OrderEventType;
-import com.parkmate.reservationservice.reservation.application.ReservationService;
-import com.parkmate.reservationservice.reservation.domain.ReservationStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

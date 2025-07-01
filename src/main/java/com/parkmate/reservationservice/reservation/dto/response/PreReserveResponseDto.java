@@ -1,8 +1,6 @@
 package com.parkmate.reservationservice.reservation.dto.response;
 
 import com.parkmate.reservationservice.reservation.domain.Reservation;
-import com.parkmate.reservationservice.reservation.dto.request.PreReserveRequestDto;
-import com.parkmate.reservationservice.reservation.vo.request.PreReserveRequestVo;
 import com.parkmate.reservationservice.reservation.vo.response.PreReserveResponseVo;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,7 +1,7 @@
 package com.parkmate.reservationservice.kafka.config.consume;
 
-import com.parkmate.reservationservice.reservation.event.userparkinghistory.UserParkingHistoryEvent;
 import com.parkmate.reservationservice.kafka.constant.KafkaConsumerGroups;
+import com.parkmate.reservationservice.reservation.event.userparkinghistory.UserParkingHistoryEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;

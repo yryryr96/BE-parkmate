@@ -1,8 +1,8 @@
 package com.parkmate.reservationservice.reservation.dto.request;
 
-import com.parkmate.reservationservice.reservation.generator.ReservationCodeGenerator;
 import com.parkmate.reservationservice.reservation.domain.Reservation;
 import com.parkmate.reservationservice.reservation.domain.ReservationStatus;
+import com.parkmate.reservationservice.reservation.generator.ReservationCodeGenerator;
 import com.parkmate.reservationservice.reservation.vo.ParkingSpot;
 import com.parkmate.reservationservice.reservation.vo.request.ReservationCreateRequestVo;
 import lombok.Builder;
