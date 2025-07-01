@@ -38,10 +38,10 @@ public class ParkingLotRead {
     private List<ParkingLotOption> options;
     private int likeCount = 0;
     private int dislikeCount = 0;
+    private double rating = 0.0;
 
     @Builder
-    private ParkingLotRead(String id,
-                           String parkingLotUuid,
+    private ParkingLotRead(String parkingLotUuid,
                            String hostUuid,
                            String thumbnailUrl,
                            String name,
@@ -58,8 +58,8 @@ public class ParkingLotRead {
                            List<Image> imageUrls,
                            List<ParkingLotOption> options,
                            int likeCount,
-                           int dislikeCount) {
-        this.id = id;
+                           int dislikeCount,
+                           double rating) {
         this.parkingLotUuid = parkingLotUuid;
         this.hostUuid = hostUuid;
         this.thumbnailUrl = thumbnailUrl;
@@ -78,5 +78,6 @@ public class ParkingLotRead {
         this.options = options;
         this.likeCount = likeCount;
         this.dislikeCount = dislikeCount;
+        this.rating = rating;
     }
 }
