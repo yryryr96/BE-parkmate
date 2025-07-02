@@ -3,11 +3,12 @@ package com.parkmate.reservationservice.reservation.application;
 import com.parkmate.reservationservice.common.exception.BaseException;
 import com.parkmate.reservationservice.common.response.CursorPage;
 import com.parkmate.reservationservice.common.response.ResponseStatus;
-import com.parkmate.reservationservice.kafka.event.ReservationCreateEvent;
 import com.parkmate.reservationservice.reservation.domain.Reservation;
 import com.parkmate.reservationservice.reservation.domain.ReservationStatus;
 import com.parkmate.reservationservice.reservation.dto.request.*;
+import com.parkmate.reservationservice.reservation.dto.response.PreReserveResponseDto;
 import com.parkmate.reservationservice.reservation.dto.response.ReservationResponseDto;
+import com.parkmate.reservationservice.reservation.event.reservation.ReservationCreateEvent;
 import com.parkmate.reservationservice.reservation.infrastructure.client.ParkingServiceClient;
 import com.parkmate.reservationservice.reservation.infrastructure.client.request.ParkingSpotRequest;
 import com.parkmate.reservationservice.reservation.infrastructure.client.response.ParkingLotAndSpotResponse;
@@ -38,9 +39,43 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Transactional
     @Override
+    public PreReserveResponseDto preReserve(PreReserveRequestDto preReserveRequestDto) {
+
+        ParkingLotAndSpotResponse parkingLot = fetchPotentialParkingSpots(
+                preReserveRequestDto.getEntryTime(),
+                preReserveRequestDto.getExitTime(),
+                preReserveRequestDto.getParkingLotUuid(),
+                preReserveRequestDto.getParkingSpotType()
+        );
+
+        Set<Long> unAvailableParkingSpotIds = getReservedParkingSpotIds(
+                parkingLot.getParkingLotUuid(),
+                preReserveRequestDto.getEntryTime(),
+                preReserveRequestDto.getExitTime()
+        );
+
+        ParkingSpot availableSpot = parkingLot.getParkingSpots().stream()
+                .filter(parkingSpot -> !unAvailableParkingSpotIds.contains(parkingSpot.getId()))
+                .findFirst()
+                .orElseThrow(() -> new BaseException(ResponseStatus.PARKING_LOT_NOT_AVAILABLE));
+
+        Reservation savedReservation = reservationRepository.save(
+                preReserveRequestDto.toEntity(parkingLot.getParkingLotName(), availableSpot)
+        );
+
+        return PreReserveResponseDto.from(savedReservation);
+    }
+
+    @Transactional
+    @Override
     public void reserve(ReservationCreateRequestDto reservationCreateRequestDto) {
 
-        ParkingLotAndSpotResponse parkingLot = fetchPotentialParkingSpots(reservationCreateRequestDto);
+        ParkingLotAndSpotResponse parkingLot = fetchPotentialParkingSpots(
+                reservationCreateRequestDto.getEntryTime(),
+                reservationCreateRequestDto.getExitTime(),
+                reservationCreateRequestDto.getParkingLotUuid(),
+                reservationCreateRequestDto.getParkingSpotType()
+        );
 
         Set<Long> unAvailableParkingSpotIds = getReservedParkingSpotIds(
                 parkingLot.getParkingLotUuid(),
@@ -154,15 +189,19 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     private ParkingLotAndSpotResponse fetchPotentialParkingSpots(
-            ReservationCreateRequestDto reservationCreateRequestDto) {
+            LocalDateTime entryTime,
+            LocalDateTime exitTime,
+            String parkingLotUuid,
+            String parkingSpotType
+    ) {
 
-        List<LocalDate> requestDates = reservationCreateRequestDto.getEntryTime().toLocalDate()
-                .datesUntil(reservationCreateRequestDto.getExitTime().toLocalDate().plusDays(1))
+        List<LocalDate> requestDates = entryTime.toLocalDate()
+                .datesUntil(exitTime.toLocalDate().plusDays(1))
                 .toList();
 
         ParkingSpotRequest parkingSpotRequest = ParkingSpotRequest.of(
-                reservationCreateRequestDto.getParkingLotUuid(),
-                reservationCreateRequestDto.getParkingSpotType(),
+                parkingLotUuid,
+                parkingSpotType,
                 requestDates
         );
 

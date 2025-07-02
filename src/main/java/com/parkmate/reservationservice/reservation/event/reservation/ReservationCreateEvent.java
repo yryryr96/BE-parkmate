@@ -1,4 +1,4 @@
-package com.parkmate.reservationservice.kafka.event;
+package com.parkmate.reservationservice.reservation.event.reservation;
 
 import com.parkmate.reservationservice.reservation.domain.Reservation;
 import com.parkmate.reservationservice.reservation.domain.ReservationStatus;
@@ -20,7 +20,7 @@ public class ReservationCreateEvent {
     private String hostUuid;
     private String userUuid;
     private String vehicleNumber;
-    private double amount;
+    private long amount;
     private ReservationStatus status;
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
@@ -34,7 +34,7 @@ public class ReservationCreateEvent {
                                    String hostUuid,
                                    String userUuid,
                                    String vehicleNumber,
-                                   double amount,
+                                   long amount,
                                    ReservationStatus status,
                                    LocalDateTime entryTime,
                                    LocalDateTime exitTime) {

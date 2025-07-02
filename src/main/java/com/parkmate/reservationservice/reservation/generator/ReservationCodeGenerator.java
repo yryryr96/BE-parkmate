@@ -1,4 +1,4 @@
-package com.parkmate.reservationservice.common.generator;
+package com.parkmate.reservationservice.reservation.generator;
 
 import java.util.UUID;
 
