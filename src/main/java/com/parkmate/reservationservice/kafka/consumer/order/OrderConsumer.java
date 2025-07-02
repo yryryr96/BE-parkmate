@@ -17,7 +17,7 @@ public class OrderConsumer {
 
     @KafkaListener(
             topics = KafkaTopics.ORDER_TOPIC,
-            containerFactory = KafkaConsumerGroups.ORDER_GROUP
+            containerFactory = "orderContainerFactory"
     )
     public void consume(OrderEvent event) {
 
