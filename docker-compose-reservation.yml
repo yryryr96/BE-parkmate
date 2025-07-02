@@ -11,7 +11,7 @@ services:
     ports:
       - "8200:8200"
     env_file:
-      - .env
+      - /home/ubuntu/env/.env.reservation
     networks:
       - backend
 
