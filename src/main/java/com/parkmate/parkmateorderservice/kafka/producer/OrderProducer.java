@@ -17,7 +17,7 @@ public class OrderProducer {
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void send(OrderEvent orderEvent) {
-        kafkaTemplate.send(KafkaTopics.ORDER_TOPIC, orderEvent.getOrderCode(), orderEvent);
+    public void send(OrderEvent event) {
+        kafkaTemplate.send(KafkaTopics.ORDER_TOPIC, event.getOrderCode(), event);
     }
 }

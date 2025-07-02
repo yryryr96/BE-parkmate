@@ -4,10 +4,11 @@ import com.parkmate.parkmateorderservice.order.domain.PaymentType;
 import lombok.Getter;
 
 @Getter
-public class PaymentCompleteEvent {
+public class PaymentEvent {
 
+    private PaymentEventType eventType;
     private String paymentCode;
     private PaymentType paymentType;
     private String orderCode;
-    private String amount;
+    private long amount;
 }

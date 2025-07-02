@@ -1,13 +1,12 @@
 package com.parkmate.parkmateorderservice.kafka.config.consume;
 
 import com.parkmate.parkmateorderservice.kafka.constant.KafkaConsumerGroups;
-import com.parkmate.parkmateorderservice.kafka.event.payment.PaymentCompleteEvent;
+import com.parkmate.parkmateorderservice.kafka.event.payment.PaymentEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
-import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
@@ -37,7 +36,7 @@ public class PaymentKafkaConfig extends CommonConsumeKafkaConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, PaymentCompleteEvent> paymentCompleteEventContainerFactory() {
-        return createListenerFactory(PaymentCompleteEvent.class, KafkaConsumerGroups.PAYMENT_GROUP);
+    public ConcurrentKafkaListenerContainerFactory<String, PaymentEvent> paymentEventContainerFactory() {
+        return createListenerFactory(PaymentEvent.class, KafkaConsumerGroups.PAYMENT_GROUP);
     }
 }

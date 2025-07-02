@@ -1,9 +1,9 @@
 package com.parkmate.parkmateorderservice.kafka.consumer;
 
 import com.parkmate.parkmateorderservice.kafka.constant.KafkaTopics;
-import com.parkmate.parkmateorderservice.kafka.event.payment.PaymentCompleteEvent;
-import com.parkmate.parkmateorderservice.order.application.OrderService;
-import com.parkmate.parkmateorderservice.order.domain.OrderStatus;
+import com.parkmate.parkmateorderservice.kafka.event.payment.PaymentEvent;
+import com.parkmate.parkmateorderservice.order.application.dispatcher.EventDispatcher;
+import com.parkmate.parkmateorderservice.order.application.handler.EventHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -12,14 +12,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PaymentConsumer {
 
-    private final OrderService orderService;
-    private static final
+    private final EventDispatcher eventDispatcher;
 
     @KafkaListener(
-            topics = KafkaTopics.PAYMENT_COMPLETED,
-            containerFactory = "paymentCompleteEventContainerFactory"
+            topics = KafkaTopics.PAYMENT_TOPIC,
+            containerFactory = "paymentEventContainerFactory"
     )
-    public void consumePaymentCompletedEvent(PaymentCompleteEvent event) {
-        orderService.changeStatus(event.getOrderCode(), OrderStatus.PAID);
+    public void consumePaymentCompletedEvent(PaymentEvent event) {
+        EventHandler dispatcher = eventDispatcher.dispatch(event);
+        dispatcher.handle(event);
     }
 }
