@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  parking-history:
+    container_name: parking-history-service
+    image: 090188239653.dkr.ecr.ap-northeast-2.amazonaws.com/parking-history-service
+    volumes:
+      - /home/ubuntu/config/parking-history/application.yml:/config/parking-history/application.yml
+    environment:
+      - SPRING_CONFIG_LOCATION=file:/config/parking-history/application.yml
+    ports:
+      - "9300:9300"
+    env_file:
+      - /home/ubuntu/env/.env.parking-history
+    networks:
+      - backend
+
+networks:
+  backend:
+    external: true
