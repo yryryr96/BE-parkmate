@@ -9,6 +9,6 @@ public class OrderCreateRequestVo {
 
     private OrderType orderType;
     private String productCode;
-    private double amount;
+    private long amount;
     private PaymentType paymentType;
 }

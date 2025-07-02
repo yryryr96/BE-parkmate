@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 public class OrderCreateResponseDto {
 
     private String orderCode;
-    private double amount;
+    private long amount;
 
     @Builder
-    private OrderCreateResponseDto(String orderCode, double amount) {
+    private OrderCreateResponseDto(String orderCode, long amount) {
         this.orderCode = orderCode;
         this.amount = amount;
     }

@@ -35,7 +35,7 @@ public class Order extends BaseEntity {
 
     @Comment("주문 금액")
     @Column(nullable = false)
-    private double amount;
+    private long amount;
 
     @Enumerated(EnumType.STRING)
     @Comment("주문 상태")
@@ -49,7 +49,7 @@ public class Order extends BaseEntity {
 
     @Builder
     private Order(String orderCode, OrderType orderType, String productCode, String userUuid,
-                  double amount, OrderStatus status, PaymentType paymentType) {
+                  long amount, OrderStatus status, PaymentType paymentType) {
 
         this.orderCode = orderCode;
         this.orderType = orderType;

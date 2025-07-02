@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 public class OrderCreateResponseVo {
 
     private String orderCode;
-    private double amount;
+    private long amount;
 
     @Builder
-    private OrderCreateResponseVo(String orderCode, double amount) {
+    private OrderCreateResponseVo(String orderCode, long amount) {
         this.orderCode = orderCode;
         this.amount = amount;
     }

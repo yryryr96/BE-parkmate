@@ -17,11 +17,11 @@ public class OrderCreateRequestDto {
     private String userUuid;
     private OrderType orderType;
     private String productCode;
-    private double amount;
+    private long amount;
     private PaymentType paymentType;
 
     @Builder
-    private OrderCreateRequestDto(String userUuid, OrderType orderType, String productCode, double amount,
+    private OrderCreateRequestDto(String userUuid, OrderType orderType, String productCode, long amount,
                                   PaymentType paymentType) {
         this.userUuid = userUuid;
         this.orderType = orderType;

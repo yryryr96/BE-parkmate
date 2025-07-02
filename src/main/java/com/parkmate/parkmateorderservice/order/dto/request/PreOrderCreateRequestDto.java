@@ -16,7 +16,7 @@ public class PreOrderCreateRequestDto {
     private String parkingLotUuid;
     private String vehicleNumber;
     private PaymentType paymentType;
-    private double amount;
+    private long amount;
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
 
@@ -26,7 +26,7 @@ public class PreOrderCreateRequestDto {
                                      String parkingLotUuid,
                                      String vehicleNumber,
                                      PaymentType paymentType,
-                                     double amount,
+                                     long amount,
                                      LocalDateTime entryTime,
                                      LocalDateTime exitTime) {
         this.orderCode = orderCode;

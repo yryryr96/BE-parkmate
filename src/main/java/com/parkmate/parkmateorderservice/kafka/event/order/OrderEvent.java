@@ -12,14 +12,14 @@ public class OrderEvent {
     private String orderCode;
     private String paymentCode;
     private String reservationCode;
-    private double amount;
+    private long amount;
 
     @Builder
     private OrderEvent(OrderEventType eventType,
                        String orderCode,
                        String paymentCode,
                        String reservationCode,
-                       double amount) {
+                       long amount) {
 
         this.eventType = eventType;
         this.orderCode = orderCode;
