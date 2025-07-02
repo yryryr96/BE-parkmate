@@ -15,8 +15,8 @@ public class PaymentCompleteEventHandler implements EventHandler<PaymentEvent> {
     private final OrderService orderService;
 
     @Override
-    public boolean supports(PaymentEvent event) {
-        return event.getEventType() == PaymentEventType.COMPLETED;
+    public boolean supports(Object event) {
+        return event instanceof PaymentEvent && ((PaymentEvent) event).getEventType() == PaymentEventType.COMPLETED;
     }
 
     @Override
