@@ -8,11 +8,15 @@ import com.parkmate.parkingreadservice.geo.vo.request.InBoxParkingLotRequestVo;
 import com.parkmate.parkingreadservice.geo.vo.response.InBoxParkingLotResponseList;
 import com.parkmate.parkingreadservice.geo.vo.response.NearbyParkingLotResponseVoList;
 import com.parkmate.parkingreadservice.parkinglotread.application.ParkingLotReadService;
+import com.parkmate.parkingreadservice.parkinglotread.dto.response.ParkingLotSearchResponseDto;
 import com.parkmate.parkingreadservice.parkinglotread.vo.response.ParkingLotReadResponseVo;
 import com.parkmate.parkingreadservice.parkinglotread.vo.response.ParkingLotReadSimpleResponseVo;
+import com.parkmate.parkingreadservice.parkinglotread.vo.response.ParkingLotSearchResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/parkingLots")
@@ -63,6 +67,17 @@ public class ParkingLotReadController {
         return ApiResponse.ok(
                 "주차장 박스 정보 조회에 성공했습니다.",
                 parkingLotFacade.getParkingLotsInBox(InBoxParkingLotRequestDto.from(inBoxParkingLotRequestVo)).toVo()
+        );
+    }
+
+    @GetMapping("/search")
+    public ApiResponse<List<ParkingLotSearchResponseVo>> search(@RequestParam String keyword) {
+
+        return ApiResponse.ok(
+                "주차장 검색에 성공했습니다.",
+                parkingLotReadService.search(keyword).stream()
+                        .map(ParkingLotSearchResponseDto::toVo)
+                        .toList()
         );
     }
 }
