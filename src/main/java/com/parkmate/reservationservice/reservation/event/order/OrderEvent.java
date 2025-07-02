@@ -7,5 +7,5 @@ public class OrderEvent {
 
     private OrderEventType type;
     private String reservationCode;
-    private double amount;
+    private long amount;
 }

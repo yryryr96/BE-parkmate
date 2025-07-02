@@ -53,7 +53,7 @@ public class Reservation extends BaseEntity {
     private LocalDateTime exitTime;
 
     @Comment("예약 금액")
-    private double amount;
+    private long amount;
 
     @Enumerated(EnumType.STRING)
     @Comment("예약 상태")
@@ -70,7 +70,7 @@ public class Reservation extends BaseEntity {
                         String vehicleNumber,
                         LocalDateTime entryTime,
                         LocalDateTime exitTime,
-                        double amount,
+                        long amount,
                         ReservationStatus status) {
         this.reservationCode = reservationCode;
         this.userUuid = userUuid;

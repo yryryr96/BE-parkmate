@@ -12,5 +12,5 @@ public class ReservationCreateRequestVo {
     private String vehicleNumber;
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
-    private double amount;
+    private long amount;
 }

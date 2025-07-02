@@ -21,7 +21,7 @@ public class ReservationCreateRequestDto {
     private String vehicleNumber;
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
-    private double amount;
+    private long amount;
 
     @Builder
     private ReservationCreateRequestDto(String userUuid,
@@ -30,7 +30,7 @@ public class ReservationCreateRequestDto {
                                         String vehicleNumber,
                                         LocalDateTime entryTime,
                                         LocalDateTime exitTime,
-                                        double amount) {
+                                        long amount) {
         this.userUuid = userUuid;
         this.parkingSpotType = parkingSpotType;
         this.parkingLotUuid = parkingLotUuid;
