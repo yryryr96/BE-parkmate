@@ -24,7 +24,9 @@ public class ReservationController {
     @Operation(
             summary = "예약 사전 확인",
             description = "사용자가 주차 공간을 예약하기 전에 사전 확인을 합니다. " +
-                          "Header에 X-User-UUID를 포함해야 하며, 요청 본문에 주차 공간 ID와 예약 시간을 포함해야 합니다.",
+                          "Header에 X-User-UUID를 포함해야 하며, 요청 본문에 주차장 UUID와 예약 시간을 포함해야 합니다. " +
+                          "예약 가능 여부를 확인하고, 예약이 가능하면 예약 코드를 반환합니다. " +
+                          "parkingSpotType에는 `COMPACT(경차)`, `SMALL(소형)`, `STANDARD(중형)`, `LARGE(대형)`, `EV(전기차)` 중 하나를 선택할 수 있습니다.",
             tags = {"RESERVATION-SERVICE"}
     )
     @PostMapping("/pre")
