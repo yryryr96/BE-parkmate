@@ -3,8 +3,8 @@ package com.parkmate.notificationservice.notification.domain.processor.reservati
 import com.parkmate.notificationservice.common.response.ApiResponse;
 import com.parkmate.notificationservice.notification.domain.Notification;
 import com.parkmate.notificationservice.notification.domain.NotificationStatus;
-import com.parkmate.notificationservice.notification.domain.event.NotificationEvent;
-import com.parkmate.notificationservice.notification.domain.event.reservation.ReservationCreatedEvent;
+import com.parkmate.notificationservice.notification.event.NotificationEvent;
+import com.parkmate.notificationservice.notification.event.reservation.ReservationCreatedEvent;
 import com.parkmate.notificationservice.notification.domain.processor.EventProcessor;
 import com.parkmate.notificationservice.notification.infrastructure.client.user.UserClient;
 import com.parkmate.notificationservice.notification.infrastructure.client.user.response.UserNameResponse;
@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -26,6 +27,7 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
 
     private static final long LAZY_TIME_SECONDS = 5L;
     private static final String TITLE = "예약 완료";
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분");
     private static final String USER_BASE_REDIRECT_URL = "http://localhost:3000/user/reservations/";
     private static final String HOST_BASE_REDIRECT_URL = "http://localhost:3000/host/reservations/";
     private static final String CONTENT_TEMPLATE = """
@@ -49,7 +51,6 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
         Objects.requireNonNull(event, "ReservationCreatedEvent must not be null");
 
         String userUuid = event.getUserUuid();
-        String reservationCode = event.getReservationCode();
 
         CompletableFuture<ApiResponse<UserNameResponse>> userNameFuture = userClient.getUserName(userUuid)
                 .exceptionally(ex -> {
@@ -84,14 +85,18 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
      * @return 생성된 알림 내용 문자열
      */
     private String getContent(ReservationCreatedEvent event, String userName) {
+
+        String formattedEntryTime = event.getEntryTime().format(DATE_TIME_FORMATTER);
+        String formattedExitTime = event.getExitTime().format(DATE_TIME_FORMATTER);
+
         return String.format(
                 CONTENT_TEMPLATE,
                 userName,
                 event.getVehicleNumber(),
                 event.getParkingLotName(),
                 event.getParkingSpotName(),
-                event.getEntryTime(),
-                event.getExitTime()
+                formattedEntryTime,
+                formattedExitTime
         );
     }
 

@@ -2,20 +2,17 @@ package com.parkmate.notificationservice.notification.application;
 
 import com.parkmate.notificationservice.notification.domain.EventDispatcher;
 import com.parkmate.notificationservice.notification.domain.Notification;
-import com.parkmate.notificationservice.notification.domain.event.NotificationEvent;
+import com.parkmate.notificationservice.notification.event.NotificationEvent;
 import com.parkmate.notificationservice.notification.domain.processor.EventProcessor;
 import com.parkmate.notificationservice.scheduler.NotificationSendScheduler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -27,7 +24,7 @@ public class NotificationEventHandler {
     private final EventDispatcher eventDispatcher;
     private final ThreadPoolTaskExecutor dbThreadPool;
 
-    public CompletableFuture<Void> handleEvent(List<? extends NotificationEvent> events) {
+    public CompletableFuture<Void> handle(List<? extends NotificationEvent> events) {
 
         log.info("알림 처리 시작 startTime: {}, size: {}", LocalDateTime.now(), events.size());
 

@@ -1,6 +1,6 @@
 package com.parkmate.notificationservice.notification.domain;
 
-import com.parkmate.notificationservice.notification.domain.event.NotificationEvent;
+import com.parkmate.notificationservice.notification.event.NotificationEvent;
 import com.parkmate.notificationservice.notification.domain.processor.EventProcessor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
