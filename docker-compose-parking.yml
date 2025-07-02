@@ -11,7 +11,7 @@ services:
     ports:
       - "8100:8100"
     env_file:
-      - .env
+      - /home/ubuntu/env/.env.parking
     networks:
       - backend
 
