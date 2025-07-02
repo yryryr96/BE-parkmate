@@ -11,7 +11,7 @@ services:
     ports:
       - "9300:9300"
     env_file:
-      - .env
+      - /home/ubuntu/env/.env.parking-history
     networks:
       - backend
 
