@@ -11,7 +11,7 @@ services:
     ports:
       - "9000:9000"
     env_file:
-      - .env
+      - /home/ubuntu/env/.env.parking-read
     networks:
       - backend
 
