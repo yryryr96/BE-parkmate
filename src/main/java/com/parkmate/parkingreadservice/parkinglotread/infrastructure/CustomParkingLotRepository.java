@@ -19,4 +19,6 @@ public interface CustomParkingLotRepository {
     List<ParkingLotRead> findByParkingLotUuids(List<String> parkingLotUuids);
 
     void bulkUpdateRating(List<ReviewSummaryUpdateEvent> events);
+
+    List<ParkingLotRead> search(String keyword);
 }

@@ -1,4 +1,4 @@
-package com.parkmate.parkingreadservice.common.response;
+package com.parkmate.parkingreadservice.common.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

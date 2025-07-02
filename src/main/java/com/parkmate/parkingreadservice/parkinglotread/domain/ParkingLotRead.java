@@ -19,7 +19,7 @@ public class ParkingLotRead {
     @Id
     private String id;
 
-    @TextIndexed
+//    @TextIndexed
     private String parkingLotUuid;
     private String hostUuid;
     private String thumbnailUrl;

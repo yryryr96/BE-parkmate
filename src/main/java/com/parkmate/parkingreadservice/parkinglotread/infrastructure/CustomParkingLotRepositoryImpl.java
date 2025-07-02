@@ -3,12 +3,18 @@ package com.parkmate.parkingreadservice.parkinglotread.infrastructure;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoBulkWriteException;
+import com.mongodb.client.model.search.SearchOperator;
+import com.mongodb.client.model.search.SearchPath;
+import com.mongodb.client.model.search.TextSearchOperator;
 import com.parkmate.parkingreadservice.kafka.event.*;
 import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
+import org.springframework.data.mongodb.core.aggregation.SearchOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -25,6 +31,9 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
 
     private final MongoTemplate mongoTemplate;
 
+    private static final String PARKING_LOT_UUID_FIELD = "parkingLotUuid";
+
+
     @Override
     public void create(ParkingLotCreateEvent parkingLotCreateEvent) {
 
@@ -32,13 +41,13 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
         Update update = new Update();
 
         query.addCriteria(
-                Criteria.where("parkingLotUuid")
+                Criteria.where(PARKING_LOT_UUID_FIELD)
                         .is(parkingLotCreateEvent.getParkingLotUuid())
         );
 
         Map<String, Object> map = createUpdateMap(parkingLotCreateEvent);
         map.forEach((key, value) -> {
-            if(!key.equals("parkingLotUuid") && value != null) {
+            if(!key.equals(PARKING_LOT_UUID_FIELD) && value != null) {
                 update.set(key, value);
             }
         });
@@ -53,13 +62,13 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
         Update update = new Update();
 
         query.addCriteria(
-                Criteria.where("parkingLotUuid")
+                Criteria.where(PARKING_LOT_UUID_FIELD)
                         .is(parkingLotMetadataUpdateEvent.getParkingLotUuid())
         );
 
         Map<String, Object> map = createUpdateMap(parkingLotMetadataUpdateEvent);
         map.forEach((key, value) -> {
-            if(!key.equals("parkingLotUuid") && value != null) {
+            if(!key.equals(PARKING_LOT_UUID_FIELD) && value != null) {
                 update.set(key, value);
             }
         });
@@ -86,7 +95,7 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
         for (ParkingLotReactionsUpdateEvent event : parkingLotReactionsUpdateEvents) {
 
             Query query = new Query();
-            query.addCriteria(Criteria.where("parkingLotUuid").is(event.getParkingLotUuid()));
+            query.addCriteria(Criteria.where(PARKING_LOT_UUID_FIELD).is(event.getParkingLotUuid()));
 
             Update update = new Update();
 
@@ -126,7 +135,7 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
     public List<ParkingLotRead> findByParkingLotUuids(List<String> parkingLotUuids) {
 
         Query query = new Query();
-        query.addCriteria(Criteria.where("parkingLotUuid").in(parkingLotUuids));
+        query.addCriteria(Criteria.where(PARKING_LOT_UUID_FIELD).in(parkingLotUuids));
         return mongoTemplate.find(query, ParkingLotRead.class);
     }
 
@@ -143,7 +152,7 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
         for (ReviewSummaryUpdateEvent event : events) {
 
             Query query = new Query();
-            query.addCriteria(Criteria.where("parkingLotUuid").is(event.getParkingLotUuid()));
+            query.addCriteria(Criteria.where(PARKING_LOT_UUID_FIELD).is(event.getParkingLotUuid()));
 
             Update update = new Update();
             update.set("rating", event.getAverageRating());
@@ -159,6 +168,17 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
                 log.error("Failed at index {}: {}", failedIndex, errorMessage);
             });
         }
+    }
+
+    @Override
+    public List<ParkingLotRead> search(String keyword) {
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("name").(keyword));
+
+
+        return mongoTemplate.aggregate(aggregation, "parking_lot_read", ParkingLotRead.class)
+                .getMappedResults();
     }
 
     private Map<String, Object> createUpdateMap(Object object) {

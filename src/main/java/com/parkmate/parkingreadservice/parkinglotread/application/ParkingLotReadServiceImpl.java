@@ -1,7 +1,7 @@
 package com.parkmate.parkingreadservice.parkinglotread.application;
 
 import com.parkmate.parkingreadservice.common.exception.BaseException;
-import com.parkmate.parkingreadservice.common.response.ResponseStatus;
+import com.parkmate.parkingreadservice.common.exception.ResponseStatus;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotCreateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotMetadataUpdateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotReactionsUpdateEvent;
@@ -80,7 +80,12 @@ public class ParkingLotReadServiceImpl implements ParkingLotReadService {
 
     @Override
     public List<ParkingLotSearchResponseDto> search(String keyword) {
-        return parkingLotReadRepository.findAllByAddressContains(keyword).stream()
+//        return parkingLotReadRepository.findAllByAddressContains(keyword).stream()
+//                .map(ParkingLotSearchResponseDto::from)
+//                .toList();
+
+        return parkingLotReadRepository.search(keyword)
+                .stream()
                 .map(ParkingLotSearchResponseDto::from)
                 .toList();
     }
