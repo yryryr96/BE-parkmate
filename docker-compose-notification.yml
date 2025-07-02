@@ -11,7 +11,7 @@ services:
     ports:
       - "9100:9100"
     env_file:
-      - .env
+      - /home/ubuntu/env/.env.notification
     networks:
       - backend
 
