@@ -1,9 +1,13 @@
 package com.parkmate.parkingreadservice.geo.application;
 
+import com.parkmate.parkingreadservice.common.exception.BaseException;
+import com.parkmate.parkingreadservice.common.response.ResponseStatus;
 import com.parkmate.parkingreadservice.geo.dto.request.GeoPointAddRequestDto;
 import com.parkmate.parkingreadservice.geo.dto.request.InBoxParkingLotRequestDto;
 import com.parkmate.parkingreadservice.geo.dto.request.NearbyParkingLotRequestDto;
+import com.parkmate.parkingreadservice.geo.dto.request.UserParkingLotDistanceRequestDto;
 import com.parkmate.parkingreadservice.geo.dto.response.GeoSearchResult;
+import com.parkmate.parkingreadservice.geo.dto.response.UserParkingLotDistanceResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.geo.*;
 import org.springframework.data.redis.connection.RedisGeoCommands;
@@ -38,7 +42,8 @@ public class GeoServiceImplByRedis implements GeoService {
     }
 
     @Override
-    public void addParkingLot(String key, List<GeoPointAddRequestDto> geoPointAddRequestsDto) {
+    public void addParkingLot(String key,
+                              List<GeoPointAddRequestDto> geoPointAddRequestsDto) {
 
         Map<String, Point> locationMap = geoPointAddRequestsDto.stream()
                 .collect(Collectors.toMap(
@@ -71,7 +76,7 @@ public class GeoServiceImplByRedis implements GeoService {
 
         return content.stream()
                 .map(gr -> {
-                    double dist = Math.round(gr.getDistance().getValue() * DISTANCE_PRECISION_FACTOR) / DISTANCE_PRECISION_FACTOR;
+                    double dist = changeDistanceFormat(gr.getDistance().getValue());
                     return GeoSearchResult.builder()
                             .parkingLotUuid(gr.getContent().getName())
                             .latitude(gr.getContent().getPoint().getY())
@@ -116,7 +121,7 @@ public class GeoServiceImplByRedis implements GeoService {
         List<GeoResult<RedisGeoCommands.GeoLocation<String>>> content = result == null ? Collections.emptyList() : result.getContent();
         return content.stream()
                 .map(gr -> {
-                    double dist = Math.round(gr.getDistance().getValue() * DISTANCE_PRECISION_FACTOR) / DISTANCE_PRECISION_FACTOR;
+                    double dist = changeDistanceFormat(gr.getDistance().getValue());
                     return GeoSearchResult.builder()
                             .parkingLotUuid(gr.getContent().getName())
                             .latitude(gr.getContent().getPoint().getY())
@@ -125,6 +130,28 @@ public class GeoServiceImplByRedis implements GeoService {
                             .build();
                 })
                 .toList();
+    }
+
+    @Override
+    public UserParkingLotDistanceResponseDto getUserParkingLotDistance(UserParkingLotDistanceRequestDto userParkingLotDistanceRequestDto) {
+
+        List<Point> points = geoOperations.position(GEO_KEY, userParkingLotDistanceRequestDto.getParkingLotUuid());
+
+        if (points == null || points.isEmpty() || points.get(0) == null) {
+            throw new BaseException(ResponseStatus.RESOURCE_NOT_FOUND);
+        }
+
+        Point parkingLotPoint = points.get(0);
+
+        Point userPoint = new Point(
+                userParkingLotDistanceRequestDto.getLongitude(),
+                userParkingLotDistanceRequestDto.getLatitude()
+        );
+
+        double distanceInKm = changeDistanceFormat(calculateHaversineDistance(userPoint, parkingLotPoint));
+        return UserParkingLotDistanceResponseDto.builder()
+                .distance(distanceInKm)
+                .build();
     }
 
     private double calculateWidth(Point bottomLeft, Point topRight) {
@@ -139,16 +166,21 @@ public class GeoServiceImplByRedis implements GeoService {
         return calculateHaversineDistance(topRight, bottomRight);
     }
 
-    private double calculateHaversineDistance(Point p1, Point p2) {
+    private double calculateHaversineDistance(Point p1,
+                                              Point p2) {
 
         final int R = 6371;
         double latDistance = Math.toRadians(p2.getY() - p1.getY());
         double lonDistance = Math.toRadians(p2.getX() - p1.getX());
         double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-                + Math.cos(Math.toRadians(p1.getY())) * Math.cos(Math.toRadians(p2.getY()))
-                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+                   + Math.cos(Math.toRadians(p1.getY())) * Math.cos(Math.toRadians(p2.getY()))
+                     * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
         return R * c;
+    }
+
+    private double changeDistanceFormat(double distance) {
+        return Math.round(distance * DISTANCE_PRECISION_FACTOR) / DISTANCE_PRECISION_FACTOR;
     }
 }

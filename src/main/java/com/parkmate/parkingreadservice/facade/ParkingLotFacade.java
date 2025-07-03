@@ -4,6 +4,7 @@ import com.parkmate.parkingreadservice.common.utils.RedisUtil;
 import com.parkmate.parkingreadservice.geo.application.GeoService;
 import com.parkmate.parkingreadservice.geo.dto.request.InBoxParkingLotRequestDto;
 import com.parkmate.parkingreadservice.geo.dto.request.NearbyParkingLotRequestDto;
+import com.parkmate.parkingreadservice.geo.dto.request.UserParkingLotDistanceRequestDto;
 import com.parkmate.parkingreadservice.geo.dto.response.*;
 import com.parkmate.parkingreadservice.parkinglotread.application.ParkingLotReadService;
 import com.parkmate.parkingreadservice.parkinglotread.dto.response.ParkingLotReadResponseDto;
@@ -90,6 +91,10 @@ public class ParkingLotFacade {
                 .toList();
 
         return InBoxParkingLotResponseDtoList.from(result);
+    }
+
+    public UserParkingLotDistanceResponseDto getDistance(UserParkingLotDistanceRequestDto userParkingLotDistanceRequestDto) {
+        return geoService.getUserParkingLotDistance(userParkingLotDistanceRequestDto);
     }
 
     private List<ParkingLotReadResponseDto> filterByEvChargingCondition(Boolean isEvChargingAvailable,

@@ -3,7 +3,6 @@ package com.parkmate.parkingreadservice.parkinglotread.infrastructure;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoBulkWriteException;
-import com.mongodb.client.MongoDatabase;
 import com.parkmate.parkingreadservice.kafka.event.*;
 import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 @RequiredArgsConstructor
@@ -32,8 +30,6 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
     private final MongoTemplate mongoTemplate;
 
     private static final String PARKING_LOT_UUID_FIELD = "parkingLotUuid";
-    private static final AtomicInteger counter = new AtomicInteger(0);
-
 
     @Override
     public void create(ParkingLotCreateEvent parkingLotCreateEvent) {
@@ -42,13 +38,13 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
         Update update = new Update();
 
         query.addCriteria(
-                Criteria.where(PARKING_LOT_UUID_FIELD)
+                Criteria.where("parkingLotUuid")
                         .is(parkingLotCreateEvent.getParkingLotUuid())
         );
 
         Map<String, Object> map = createUpdateMap(parkingLotCreateEvent);
         map.forEach((key, value) -> {
-            if(!key.equals(PARKING_LOT_UUID_FIELD) && value != null) {
+            if(!key.equals("parkingLotUuid") && value != null) {
                 update.set(key, value);
             }
         });
@@ -63,13 +59,13 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
         Update update = new Update();
 
         query.addCriteria(
-                Criteria.where(PARKING_LOT_UUID_FIELD)
+                Criteria.where("parkingLotUuid")
                         .is(parkingLotMetadataUpdateEvent.getParkingLotUuid())
         );
 
         Map<String, Object> map = createUpdateMap(parkingLotMetadataUpdateEvent);
         map.forEach((key, value) -> {
-            if(!key.equals(PARKING_LOT_UUID_FIELD) && value != null) {
+            if(!key.equals("parkingLotUuid") && value != null) {
                 update.set(key, value);
             }
         });
@@ -96,7 +92,7 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
         for (ParkingLotReactionsUpdateEvent event : parkingLotReactionsUpdateEvents) {
 
             Query query = new Query();
-            query.addCriteria(Criteria.where(PARKING_LOT_UUID_FIELD).is(event.getParkingLotUuid()));
+            query.addCriteria(Criteria.where("parkingLotUuid").is(event.getParkingLotUuid()));
 
             Update update = new Update();
 
@@ -136,7 +132,7 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
     public List<ParkingLotRead> findByParkingLotUuids(List<String> parkingLotUuids) {
 
         Query query = new Query();
-        query.addCriteria(Criteria.where(PARKING_LOT_UUID_FIELD).in(parkingLotUuids));
+        query.addCriteria(Criteria.where("parkingLotUuid").in(parkingLotUuids));
         return mongoTemplate.find(query, ParkingLotRead.class);
     }
 
@@ -191,7 +187,7 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
                 "parking_lot_read",
                 ParkingLotRead.class
         );
-        log.info("counter : {}", counter.getAndIncrement());
+
         return results.getMappedResults();
     }
 
