@@ -1,6 +1,7 @@
 package com.parkmate.parkingreadservice.parkinglotread.presentation;
 
 import com.parkmate.parkingreadservice.common.response.ApiResponse;
+import com.parkmate.parkingreadservice.common.response.CursorPage;
 import com.parkmate.parkingreadservice.facade.ParkingLotFacade;
 import com.parkmate.parkingreadservice.geo.dto.request.InBoxParkingLotRequestDto;
 import com.parkmate.parkingreadservice.geo.dto.request.NearbyParkingLotRequestDto;
@@ -10,7 +11,9 @@ import com.parkmate.parkingreadservice.geo.vo.response.InBoxParkingLotResponseLi
 import com.parkmate.parkingreadservice.geo.vo.response.NearbyParkingLotResponseVoList;
 import com.parkmate.parkingreadservice.geo.vo.response.UserParkingLotDistanceResponseVo;
 import com.parkmate.parkingreadservice.parkinglotread.application.ParkingLotReadService;
+import com.parkmate.parkingreadservice.parkinglotread.dto.request.ParkingLotSearchRequestDto;
 import com.parkmate.parkingreadservice.parkinglotread.dto.response.ParkingLotSearchResponseDto;
+import com.parkmate.parkingreadservice.parkinglotread.vo.request.ParkingLotSearchRequestVo;
 import com.parkmate.parkingreadservice.parkinglotread.vo.response.ParkingLotReadResponseVo;
 import com.parkmate.parkingreadservice.parkinglotread.vo.response.ParkingLotReadSimpleResponseVo;
 import com.parkmate.parkingreadservice.parkinglotread.vo.response.ParkingLotSearchResponseVo;
@@ -113,13 +116,14 @@ public class ParkingLotReadController {
             tags = {"PARKING-LOT-READ-SERVICE"}
     )
     @GetMapping("/search")
-    public ApiResponse<List<ParkingLotSearchResponseVo>> search(@RequestParam String keyword) {
+    public ApiResponse<CursorPage<ParkingLotSearchResponseVo>> search(
+            @ModelAttribute ParkingLotSearchRequestVo parkingLotSearchRequestVo
+    ) {
 
         return ApiResponse.ok(
                 "주차장 검색에 성공했습니다.",
-                parkingLotReadService.search(keyword).stream()
+                parkingLotReadService.search(ParkingLotSearchRequestDto.from(parkingLotSearchRequestVo))
                         .map(ParkingLotSearchResponseDto::toVo)
-                        .toList()
         );
     }
 }

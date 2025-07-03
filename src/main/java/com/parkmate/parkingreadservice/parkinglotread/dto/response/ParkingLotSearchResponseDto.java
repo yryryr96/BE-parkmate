@@ -29,13 +29,13 @@ public class ParkingLotSearchResponseDto {
         this.longitude = longitude;
     }
 
-    public static ParkingLotSearchResponseDto from(ParkingLotRead parkingLotRead) {
+    public static ParkingLotSearchResponseDto from(ParkingLotSearchDto parkingLotSearchDto) {
         return ParkingLotSearchResponseDto.builder()
-                .parkingLotUuid(parkingLotRead.getParkingLotUuid())
-                .name(parkingLotRead.getName())
-                .address(parkingLotRead.getAddress())
-                .latitude(parkingLotRead.getLatitude())
-                .longitude(parkingLotRead.getLongitude())
+                .parkingLotUuid(parkingLotSearchDto.getParkingLotUuid())
+                .name(parkingLotSearchDto.getName())
+                .address(parkingLotSearchDto.getAddress())
+                .latitude(parkingLotSearchDto.getLatitude())
+                .longitude(parkingLotSearchDto.getLongitude())
                 .build();
     }
 

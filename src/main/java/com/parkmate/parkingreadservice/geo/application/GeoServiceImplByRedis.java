@@ -1,7 +1,7 @@
 package com.parkmate.parkingreadservice.geo.application;
 
 import com.parkmate.parkingreadservice.common.exception.BaseException;
-import com.parkmate.parkingreadservice.common.response.ResponseStatus;
+import com.parkmate.parkingreadservice.common.exception.ResponseStatus;
 import com.parkmate.parkingreadservice.geo.dto.request.GeoPointAddRequestDto;
 import com.parkmate.parkingreadservice.geo.dto.request.InBoxParkingLotRequestDto;
 import com.parkmate.parkingreadservice.geo.dto.request.NearbyParkingLotRequestDto;
