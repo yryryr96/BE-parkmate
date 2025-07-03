@@ -23,6 +23,7 @@ public enum ResponseStatus {
     /**
      * 5xx: 서버 오류
      */
+    NOT_FOUND_EVENT_DISPATCHER(HttpStatus.NOT_FOUND, false, 500, "이벤트 디스패처를 찾을 수 없습니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, 500, "서버 내부 오류가 발생했습니다.")
     ;
 
