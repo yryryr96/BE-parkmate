@@ -4,9 +4,12 @@ import com.parkmate.parkingreadservice.common.response.ApiResponse;
 import com.parkmate.parkingreadservice.facade.ParkingLotFacade;
 import com.parkmate.parkingreadservice.geo.dto.request.InBoxParkingLotRequestDto;
 import com.parkmate.parkingreadservice.geo.dto.request.NearbyParkingLotRequestDto;
+import com.parkmate.parkingreadservice.geo.dto.request.UserParkingLotDistanceRequestDto;
+import com.parkmate.parkingreadservice.geo.dto.response.UserParkingLotDistanceResponseDto;
 import com.parkmate.parkingreadservice.geo.vo.request.InBoxParkingLotRequestVo;
 import com.parkmate.parkingreadservice.geo.vo.response.InBoxParkingLotResponseList;
 import com.parkmate.parkingreadservice.geo.vo.response.NearbyParkingLotResponseVoList;
+import com.parkmate.parkingreadservice.geo.vo.response.UserParkingLotDistanceResponseVo;
 import com.parkmate.parkingreadservice.parkinglotread.application.ParkingLotReadService;
 import com.parkmate.parkingreadservice.parkinglotread.vo.response.ParkingLotReadResponseVo;
 import com.parkmate.parkingreadservice.parkinglotread.vo.response.ParkingLotReadSimpleResponseVo;
@@ -63,6 +66,20 @@ public class ParkingLotReadController {
         return ApiResponse.ok(
                 "주차장 박스 정보 조회에 성공했습니다.",
                 parkingLotFacade.getParkingLotsInBox(InBoxParkingLotRequestDto.from(inBoxParkingLotRequestVo)).toVo()
+        );
+    }
+
+    @GetMapping("/{parkingLotUuid}/distance")
+    public ApiResponse<UserParkingLotDistanceResponseVo> getDistance(
+            @PathVariable String parkingLotUuid,
+            @RequestParam double latitude,
+            @RequestParam double longitude
+    ) {
+        return ApiResponse.ok(
+                "주차장과의 거리 조회에 성공했습니다.",
+                parkingLotFacade.getDistance(
+                        UserParkingLotDistanceRequestDto.of(parkingLotUuid, latitude, longitude))
+                        .toVo()
         );
     }
 }
