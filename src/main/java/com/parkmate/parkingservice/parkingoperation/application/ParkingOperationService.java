@@ -1,12 +1,12 @@
 package com.parkmate.parkingservice.parkingoperation.application;
 
 import com.parkmate.parkingservice.parkingoperation.dto.request.*;
+import com.parkmate.parkingservice.parkingoperation.dto.response.AmountResponseDto;
 import com.parkmate.parkingservice.parkingoperation.dto.response.ParkingOperationResponseDto;
 import com.parkmate.parkingservice.parkingoperation.dto.response.WeeklyOperationResponseDto;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 public interface ParkingOperationService {
 
@@ -25,4 +25,6 @@ public interface ParkingOperationService {
     ParkingOperationResponseDto getDailyOperation(String parkingLotUuid, LocalDate date);
 
     List<String> getOpenParkingLotUuids(List<String> parkingLotUuids);
+
+    AmountResponseDto calculateTotalParkingAmount(AmountRequestDto amountRequestDto);
 }

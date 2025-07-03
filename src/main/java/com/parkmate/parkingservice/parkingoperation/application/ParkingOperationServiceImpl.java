@@ -5,25 +5,29 @@ import com.parkmate.parkingservice.common.response.ResponseStatus;
 import com.parkmate.parkingservice.kafka.event.OperationCreatedEvent;
 import com.parkmate.parkingservice.parkingoperation.domain.ParkingOperation;
 import com.parkmate.parkingservice.parkingoperation.dto.request.*;
+import com.parkmate.parkingservice.parkingoperation.dto.response.AmountResponseDto;
 import com.parkmate.parkingservice.parkingoperation.dto.response.ParkingOperationResponseDto;
 import com.parkmate.parkingservice.parkingoperation.dto.response.WeeklyOperationResponseDto;
 import com.parkmate.parkingservice.parkingoperation.infrastructure.ParkingOperationRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ParkingOperationServiceImpl implements ParkingOperationService {
 
     private final ParkingOperationRepository parkingOperationRepository;
@@ -117,7 +121,7 @@ public class ParkingOperationServiceImpl implements ParkingOperationService {
 
     @Override
     public ParkingOperationResponseDto getDailyOperation(String parkingLotUuid,
-                                                        LocalDate date) {
+                                                         LocalDate date) {
 
         ParkingOperation operation = parkingOperationRepository.findByParkingLotUuidAndOperationDate(
                 parkingLotUuid,
@@ -130,6 +134,53 @@ public class ParkingOperationServiceImpl implements ParkingOperationService {
     @Override
     public List<String> getOpenParkingLotUuids(List<String> parkingLotUuids) {
         return parkingOperationRepository.getOpenParkingLotUuids(parkingLotUuids, LocalDateTime.now());
+    }
+
+    @Override
+    public AmountResponseDto calculateTotalParkingAmount(AmountRequestDto amountRequestDto) {
+
+        String parkingLotUuid = amountRequestDto.getParkingLotUuid();
+        LocalDateTime startDateTime = amountRequestDto.getStartDateTime();
+        LocalDateTime endDateTime = amountRequestDto.getEndDateTime();
+
+        LocalDate startDate = startDateTime.toLocalDate();
+        LocalDate endDate = endDateTime.toLocalDate();
+
+        Map<LocalDate, ParkingOperation> operationInfoMap =
+                parkingOperationRepository.findAllByParkingLotUuidAndOperationDateBetween(parkingLotUuid, startDate, endDate.plusDays(1))
+                        .stream()
+                        .collect(Collectors.toMap(o -> o.getOperationDate().toLocalDate(), Function.identity()));
+
+        long totalAmount = 0;
+
+        for (LocalDate currentDate = startDate; !currentDate.isAfter(endDate); currentDate = currentDate.plusDays(1)) {
+
+            ParkingOperation currentDayInfo = operationInfoMap.get(currentDate);
+            if (currentDayInfo == null || currentDayInfo.getBaseIntervalMinutes() <= 0) {
+                log.warn("No valid operation found for date: {} or base interval minutes is zero", currentDate);
+                continue;
+            }
+
+            LocalDateTime loopStart = currentDate.isEqual(startDate) ? startDateTime : currentDate.atStartOfDay();
+            LocalDateTime loopEnd = currentDate.isEqual(endDate) ? endDateTime : currentDate.plusDays(1).atStartOfDay();
+
+            LocalDateTime chargeableStart = loopStart.isAfter(currentDayInfo.getValidStartTime())
+                    ? loopStart : currentDayInfo.getValidStartTime();
+            LocalDateTime chargeableEnd = loopEnd.isBefore(currentDayInfo.getValidEndTime())
+                    ? loopEnd : currentDayInfo.getValidEndTime();
+
+            if (chargeableEnd.isAfter(chargeableStart)) {
+
+                long minutesOnThisDay = Duration.between(chargeableStart, chargeableEnd).toMinutes();
+                if (minutesOnThisDay > 0) {
+                    double numberOfIntervals = Math.ceil((double) minutesOnThisDay / currentDayInfo.getBaseIntervalMinutes());
+                    long dailyFee = (long) (numberOfIntervals * currentDayInfo.getBaseFee());
+                    totalAmount += dailyFee;
+                }
+            }
+        }
+
+        return AmountResponseDto.from(totalAmount);
     }
 
     private ParkingOperation createUpdatedParkingOperationEntity(
