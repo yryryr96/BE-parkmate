@@ -1,7 +1,6 @@
 package com.parkmate.parkingreadservice.common.exception;
 
 import com.parkmate.parkingreadservice.common.response.ApiResponse;
-import com.parkmate.parkingreadservice.common.response.ResponseStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

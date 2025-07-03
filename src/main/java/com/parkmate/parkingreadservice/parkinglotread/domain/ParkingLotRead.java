@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.TextIndexed;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class ParkingLotRead {
     @Id
     private String id;
 
-    @TextIndexed
+    @Indexed(unique = true)
     private String parkingLotUuid;
     private String hostUuid;
     private String thumbnailUrl;

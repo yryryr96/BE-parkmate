@@ -1,7 +1,6 @@
 package com.parkmate.parkingreadservice.kafka.config;
 
 import com.parkmate.parkingreadservice.kafka.constant.KafkaConsumerGroups;
-import com.parkmate.parkingreadservice.kafka.event.ReservationCreateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ReviewSummaryUpdateEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

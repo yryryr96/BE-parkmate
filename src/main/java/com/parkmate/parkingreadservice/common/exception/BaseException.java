@@ -1,6 +1,5 @@
 package com.parkmate.parkingreadservice.common.exception;
 
-import com.parkmate.parkingreadservice.common.response.ResponseStatus;
 import lombok.Getter;
 
 @Getter

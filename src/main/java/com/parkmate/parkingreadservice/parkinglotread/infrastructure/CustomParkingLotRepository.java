@@ -1,10 +1,13 @@
 package com.parkmate.parkingreadservice.parkinglotread.infrastructure;
 
+import com.parkmate.parkingreadservice.common.response.CursorPage;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotCreateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotMetadataUpdateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ParkingLotReactionsUpdateEvent;
 import com.parkmate.parkingreadservice.kafka.event.ReviewSummaryUpdateEvent;
 import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
+import com.parkmate.parkingreadservice.parkinglotread.dto.request.ParkingLotSearchRequestDto;
+import com.parkmate.parkingreadservice.parkinglotread.dto.response.ParkingLotSearchDto;
 
 import java.util.List;
 
@@ -19,4 +22,6 @@ public interface CustomParkingLotRepository {
     List<ParkingLotRead> findByParkingLotUuids(List<String> parkingLotUuids);
 
     void bulkUpdateRating(List<ReviewSummaryUpdateEvent> events);
+
+    CursorPage<ParkingLotSearchDto> search(ParkingLotSearchRequestDto request);
 }

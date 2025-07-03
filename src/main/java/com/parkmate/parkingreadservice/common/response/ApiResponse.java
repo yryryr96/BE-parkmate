@@ -1,5 +1,6 @@
 package com.parkmate.parkingreadservice.common.response;
 
+import com.parkmate.parkingreadservice.common.exception.ResponseStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
