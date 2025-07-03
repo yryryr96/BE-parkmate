@@ -13,6 +13,7 @@ public class ParkingLotResponseVo {
     private String hostUuid;
     private ParkingLotType parkingLotType;
     private String name;
+    private String thumbnailUrl;
     private String phoneNumber;
     private int capacity;
     private int registeredCapacity;
@@ -25,20 +26,22 @@ public class ParkingLotResponseVo {
 
     @Builder
     private ParkingLotResponseVo(String hostUuid,
-                                ParkingLotType parkingLotType,
-                                String name,
-                                String phoneNumber,
-                                int capacity,
-                                int registeredCapacity,
-                                String mainAddress,
-                                String detailAddress,
-                                double latitude,
-                                double longitude,
-                                Boolean isEvChargingAvailable,
-                                String extraInfo) {
+                                 ParkingLotType parkingLotType,
+                                 String name,
+                                 String thumbnailUrl,
+                                 String phoneNumber,
+                                 int capacity,
+                                 int registeredCapacity,
+                                 String mainAddress,
+                                 String detailAddress,
+                                 double latitude,
+                                 double longitude,
+                                 Boolean isEvChargingAvailable,
+                                 String extraInfo) {
         this.hostUuid = hostUuid;
         this.parkingLotType = parkingLotType;
         this.name = name;
+        this.thumbnailUrl = thumbnailUrl;
         this.phoneNumber = phoneNumber;
         this.capacity = capacity;
         this.registeredCapacity = registeredCapacity;
@@ -55,6 +58,7 @@ public class ParkingLotResponseVo {
                 .hostUuid(parkingLot.getHostUuid())
                 .parkingLotType(parkingLot.getParkingLotType())
                 .name(parkingLot.getName())
+                .thumbnailUrl(parkingLot.getThumbnailUrl())
                 .phoneNumber(parkingLot.getPhoneNumber())
                 .capacity(parkingLot.getCapacity())
                 .registeredCapacity(parkingLot.getRegisteredCapacity())

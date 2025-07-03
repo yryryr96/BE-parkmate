@@ -1,7 +1,5 @@
 package com.parkmate.parkingservice.facade.parkinglot;
 
-import com.parkmate.parkingservice.common.exception.BaseException;
-import com.parkmate.parkingservice.common.response.ResponseStatus;
 import com.parkmate.parkingservice.facade.parkinglot.dto.ParkingLotRegisterRequest;
 import com.parkmate.parkingservice.kafka.event.ParkingLotCreatedEvent;
 import com.parkmate.parkingservice.parkinglot.application.ParkingLotService;
@@ -26,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

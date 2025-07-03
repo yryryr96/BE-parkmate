@@ -5,9 +5,11 @@ import com.parkmate.parkingservice.parkingoperation.application.ParkingOperation
 import com.parkmate.parkingservice.parkingoperation.dto.request.*;
 import com.parkmate.parkingservice.parkingoperation.dto.response.ParkingOperationResponseDto;
 import com.parkmate.parkingservice.parkingoperation.dto.response.WeeklyOperationResponseDto;
+import com.parkmate.parkingservice.parkingoperation.vo.request.AmountRequestVo;
 import com.parkmate.parkingservice.parkingoperation.vo.request.ParkingOperationRegisterRequestVo;
 import com.parkmate.parkingservice.parkingoperation.vo.request.ParkingOperationUpdateRequestVo;
 import com.parkmate.parkingservice.parkingoperation.vo.request.WeeklyOperationResponseVo;
+import com.parkmate.parkingservice.parkingoperation.vo.response.AmountResponseVo;
 import com.parkmate.parkingservice.parkingoperation.vo.response.ParkingOperationResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -157,6 +159,17 @@ public class ParkingOperationController {
         return ApiResponse.ok(
                 "주차장 운영시간 조회에 성공했습니다.",
                 parkingOperationService.getDailyOperation(parkingLotUuid, date).toVo()
+        );
+    }
+
+    @GetMapping("/{parkingLotUuid}/operations/calculate")
+    public ApiResponse<AmountResponseVo> calculateTotalParkingAmount(@PathVariable String parkingLotUuid,
+                                                                     @ModelAttribute AmountRequestVo amountRequestVo) {
+
+        return ApiResponse.ok(
+                "주차 요금 계산에 성공했습니다.",
+                parkingOperationService.calculateTotalParkingAmount(AmountRequestDto.of(parkingLotUuid, amountRequestVo))
+                        .toVo()
         );
     }
 }
