@@ -19,6 +19,7 @@ public class PreReserveRequestDto {
     private String parkingSpotType;
     private String parkingLotUuid;
     private String vehicleNumber;
+    private long amount;
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
 
@@ -27,12 +28,14 @@ public class PreReserveRequestDto {
                                  String parkingSpotType,
                                  String parkingLotUuid,
                                  String vehicleNumber,
+                                 long amount,
                                  LocalDateTime entryTime,
                                  LocalDateTime exitTime) {
         this.userUuid = userUuid;
         this.parkingSpotType = parkingSpotType;
         this.parkingLotUuid = parkingLotUuid;
         this.vehicleNumber = vehicleNumber;
+        this.amount = amount;
         this.entryTime = entryTime;
         this.exitTime = exitTime;
     }
@@ -44,6 +47,7 @@ public class PreReserveRequestDto {
                 .parkingSpotType(preReserveRequestVo.getParkingSpotType())
                 .parkingLotUuid(preReserveRequestVo.getParkingLotUuid())
                 .vehicleNumber(preReserveRequestVo.getVehicleNumber())
+                .amount(preReserveRequestVo.getAmount())
                 .entryTime(preReserveRequestVo.getEntryTime())
                 .exitTime(preReserveRequestVo.getExitTime())
                 .build();
@@ -60,6 +64,7 @@ public class PreReserveRequestDto {
                 .parkingSpotId(parkingSpot.getId())
                 .parkingSpotName(parkingSpot.getName())
                 .vehicleNumber(vehicleNumber)
+                .amount(amount)
                 .entryTime(entryTime)
                 .exitTime(exitTime)
                 .status(ReservationStatus.WAITING)
