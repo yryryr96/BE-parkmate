@@ -16,6 +16,7 @@ public class PreReserveResponseDto {
     private String parkingSpotType;
     private String parkingLotUuid;
     private String vehicleNumber;
+    private long amount;
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
 
@@ -24,12 +25,14 @@ public class PreReserveResponseDto {
                                   String parkingSpotType,
                                   String parkingLotUuid,
                                   String vehicleNumber,
+                                  long amount,
                                   LocalDateTime entryTime,
                                   LocalDateTime exitTime) {
         this.reservationCode = reservationCode;
         this.parkingSpotType = parkingSpotType;
         this.parkingLotUuid = parkingLotUuid;
         this.vehicleNumber = vehicleNumber;
+        this.amount = amount;
         this.entryTime = entryTime;
         this.exitTime = exitTime;
     }
@@ -37,13 +40,14 @@ public class PreReserveResponseDto {
     public static PreReserveResponseDto from(Reservation reservation) {
         return PreReserveResponseDto.builder()
                 .reservationCode(reservation.getReservationCode())
-
+                .amount(reservation.getAmount())
                 .build();
     }
 
     public PreReserveResponseVo toVo() {
         return PreReserveResponseVo.builder()
                 .reservationCode(reservationCode)
+                .amount(amount)
                 .build();
     }
 }
