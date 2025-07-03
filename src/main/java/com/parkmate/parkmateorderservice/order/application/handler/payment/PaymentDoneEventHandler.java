@@ -10,17 +10,17 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
-public class PaymentFailEventHandler implements EventHandler<PaymentEvent> {
+public class PaymentDoneEventHandler implements EventHandler<PaymentEvent> {
 
     private final OrderService orderService;
 
     @Override
     public boolean supports(Object event) {
-        return event instanceof PaymentEvent && ((PaymentEvent) event).getEventType() == PaymentEventType.CANCELLED;
+        return event instanceof PaymentEvent && ((PaymentEvent) event).getEventType() == PaymentEventType.DONE;
     }
 
     @Override
     public void handle(PaymentEvent event) {
-        orderService.changeStatus(event.getOrderCode(), OrderStatus.PAYMENT_FAILED);
+        orderService.changeStatus(event.getOrderCode(), OrderStatus.PAID);
     }
 }
