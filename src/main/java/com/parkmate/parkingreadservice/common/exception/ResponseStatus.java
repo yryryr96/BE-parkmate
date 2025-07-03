@@ -18,6 +18,7 @@ public enum ResponseStatus {
      **/
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, false, 404, "리소스가 존재하지 않습니다."),
     REQUEST_CONFLICT(HttpStatus.CONFLICT, false, 409, "POST 요청에 실패했습니다."),
+    INVALID_SEARCH_CURSOR(HttpStatus.BAD_REQUEST, false, 400, "유효하지 않은 검색 커서입니다."),
 
     /**
      * 5xx: 서버 오류

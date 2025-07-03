@@ -3,6 +3,8 @@ package com.parkmate.parkingreadservice.parkinglotread.infrastructure;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoBulkWriteException;
+import com.parkmate.parkingreadservice.common.exception.BaseException;
+import com.parkmate.parkingreadservice.common.exception.ResponseStatus;
 import com.parkmate.parkingreadservice.common.response.CursorPage;
 import com.parkmate.parkingreadservice.kafka.event.*;
 import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
@@ -42,13 +44,13 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
         Update update = new Update();
 
         query.addCriteria(
-                Criteria.where("parkingLotUuid")
+                Criteria.where(PARKING_LOT_UUID_FIELD)
                         .is(parkingLotCreateEvent.getParkingLotUuid())
         );
 
         Map<String, Object> map = createUpdateMap(parkingLotCreateEvent);
         map.forEach((key, value) -> {
-            if(!key.equals("parkingLotUuid") && value != null) {
+            if(!key.equals(PARKING_LOT_UUID_FIELD) && value != null) {
                 update.set(key, value);
             }
         });
@@ -63,13 +65,13 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
         Update update = new Update();
 
         query.addCriteria(
-                Criteria.where("parkingLotUuid")
+                Criteria.where(PARKING_LOT_UUID_FIELD)
                         .is(parkingLotMetadataUpdateEvent.getParkingLotUuid())
         );
 
         Map<String, Object> map = createUpdateMap(parkingLotMetadataUpdateEvent);
         map.forEach((key, value) -> {
-            if(!key.equals("parkingLotUuid") && value != null) {
+            if(!key.equals(PARKING_LOT_UUID_FIELD) && value != null) {
                 update.set(key, value);
             }
         });
@@ -96,7 +98,7 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
         for (ParkingLotReactionsUpdateEvent event : parkingLotReactionsUpdateEvents) {
 
             Query query = new Query();
-            query.addCriteria(Criteria.where("parkingLotUuid").is(event.getParkingLotUuid()));
+            query.addCriteria(Criteria.where(PARKING_LOT_UUID_FIELD).is(event.getParkingLotUuid()));
 
             Update update = new Update();
 
@@ -136,7 +138,7 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
     public List<ParkingLotRead> findByParkingLotUuids(List<String> parkingLotUuids) {
 
         Query query = new Query();
-        query.addCriteria(Criteria.where("parkingLotUuid").in(parkingLotUuids));
+        query.addCriteria(Criteria.where(PARKING_LOT_UUID_FIELD).in(parkingLotUuids));
         return mongoTemplate.find(query, ParkingLotRead.class);
     }
 
@@ -191,26 +193,26 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
                 lastId = parts[1];
             } catch (Exception e) {
                 log.error("Cursor decoding failed: {}", e.getMessage());
+                throw new BaseException(ResponseStatus.INVALID_SEARCH_CURSOR);
             }
         }
 
-        // 1. $search: 키워드로 주차장 이름 검색 (기존과 동일)
+        // mongoDB Aggregation Pipeline
         Document searchStageDoc = new Document("$search",
-                new Document("index", "name") // Atlas Search 인덱스 이름
+                new Document("index", "name")
                         .append("text", new Document()
                                 .append("query", keyword)
-                                .append("path", "name") // 검색할 필드
+                                .append("path", "name")
                         )
         );
 
         AggregationOperation searchOperation = context -> searchStageDoc;
-        // 2. $addFields: 검색 결과에 'score'(정확도 점수) 필드 추가
+
         Document addFieldsDoc = new Document("$addFields",
                 new Document("score", new Document("$meta", "searchScore"))
         );
         AggregationOperation addFieldsOperation = context -> addFieldsDoc;
 
-        // $match 단계
         Criteria criteria = new Criteria();
         if (lastScore != null && lastId != null) {
             criteria.orOperator(
@@ -223,7 +225,6 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
         }
         AggregationOperation matchOperation = Aggregation.match(criteria);
 
-        // $sort, $limit 단계
         AggregationOperation sortOperation = Aggregation.sort(Sort.Direction.DESC, "score", "_id");
         AggregationOperation limitOperation = Aggregation.limit(size + 1);
 
@@ -231,6 +232,7 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
                 searchOperation, addFieldsOperation, sortOperation, matchOperation, limitOperation
         );
 
+        // Cursor Pagination
         List<ParkingLotSearchDto> results = mongoTemplate.aggregate(aggregation, "parking_lot_read", ParkingLotSearchDto.class).getMappedResults();
 
         boolean hasNext = results.size() > size;
