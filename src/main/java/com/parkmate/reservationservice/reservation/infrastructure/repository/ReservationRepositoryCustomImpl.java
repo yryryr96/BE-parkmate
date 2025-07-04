@@ -42,6 +42,7 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
                 .where(
                         userUuidEq(reservationCursorGetRequestDto.getUserUuid()),
                         statusIn(reservationCursorGetRequestDto.getStatus()),
+                        reservation.status.notIn(ReservationStatus.WAITING),
                         builder
                 )
                 .offset(offset)
