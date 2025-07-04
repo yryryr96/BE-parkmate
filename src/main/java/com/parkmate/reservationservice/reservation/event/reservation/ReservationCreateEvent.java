@@ -52,6 +52,7 @@ public class ReservationCreateEvent {
         this.vehicleNumber = vehicleNumber;
         this.entryTime = entryTime;
         this.exitTime = exitTime;
+        this.timestamp = timestamp;
     }
 
     public static ReservationCreateEvent from(String hostUuid,

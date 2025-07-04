@@ -66,6 +66,18 @@ public class ReservationServiceImpl implements ReservationService {
         return PreReserveResponseDto.from(savedReservation);
     }
 
+    public void confirm(String reservationCode) {
+
+        Reservation reservation = reservationRepository.findByReservationCode(reservationCode)
+                .orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
+
+        reservation.confirm();
+
+
+
+        eventPublisher.publishEvent(ReservationCreateEvent.from(reservation.getHostUuid(), reservation));
+    }
+
     @Transactional
     @Override
     public void reserve(ReservationCreateRequestDto reservationCreateRequestDto) {
@@ -90,9 +102,9 @@ public class ReservationServiceImpl implements ReservationService {
 
         Reservation reservation = reservationCreateRequestDto.toEntity(parkingLot.getParkingLotName(), availableSpot);
 
-        reservationRepository.save(reservation);
+        Reservation savedReservation = reservationRepository.save(reservation);
 
-        eventPublisher.publishEvent(ReservationCreateEvent.from(parkingLot.getHostUuid(), reservation));
+        eventPublisher.publishEvent(ReservationCreateEvent.from(parkingLot.getHostUuid(), savedReservation));
     }
 
     @Transactional
