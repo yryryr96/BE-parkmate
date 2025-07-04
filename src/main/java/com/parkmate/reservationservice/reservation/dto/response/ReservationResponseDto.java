@@ -18,6 +18,7 @@ public class ReservationResponseDto {
     private String parkingLotUuid;
     private String parkingLotName;
     private String vehicleNumber;
+    private long amount;
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
     private ReservationStatus status;
@@ -28,6 +29,7 @@ public class ReservationResponseDto {
                                    String parkingLotUuid,
                                    String parkingLotName,
                                    String vehicleNumber,
+                                   long amount,
                                    LocalDateTime entryTime,
                                    LocalDateTime exitTime,
                                    ReservationStatus status) {
@@ -36,6 +38,7 @@ public class ReservationResponseDto {
         this.parkingLotUuid = parkingLotUuid;
         this.parkingLotName = parkingLotName;
         this.vehicleNumber = vehicleNumber;
+        this.amount = amount;
         this.entryTime = entryTime;
         this.exitTime = exitTime;
         this.status = status;
@@ -48,6 +51,7 @@ public class ReservationResponseDto {
                 .parkingLotUuid(reservation.getParkingLotUuid())
                 .parkingLotName(reservation.getParkingLotName())
                 .vehicleNumber(reservation.getVehicleNumber())
+                .amount(reservation.getAmount())
                 .entryTime(reservation.getEntryTime())
                 .exitTime(reservation.getExitTime())
                 .status(reservation.getStatus())
@@ -61,6 +65,7 @@ public class ReservationResponseDto {
                 .parkingLotUuid(parkingLotUuid)
                 .parkingLotName(parkingLotName)
                 .vehicleNumber(vehicleNumber)
+                .amount(amount)
                 .entryTime(entryTime)
                 .exitTime(exitTime)
                 .status(status)

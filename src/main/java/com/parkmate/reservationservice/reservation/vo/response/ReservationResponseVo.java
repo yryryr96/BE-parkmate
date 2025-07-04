@@ -16,6 +16,7 @@ public class ReservationResponseVo {
     private String parkingLotUuid;
     private String parkingLotName;
     private String vehicleNumber;
+    private long amount;
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
     private ReservationStatus status;
@@ -26,6 +27,7 @@ public class ReservationResponseVo {
                                   String parkingLotUuid,
                                   String parkingLotName,
                                   String vehicleNumber,
+                                  long amount,
                                   LocalDateTime entryTime,
                                   LocalDateTime exitTime,
                                   ReservationStatus status) {
@@ -34,6 +36,7 @@ public class ReservationResponseVo {
         this.parkingLotUuid = parkingLotUuid;
         this.parkingLotName = parkingLotName;
         this.vehicleNumber = vehicleNumber;
+        this.amount = amount;
         this.entryTime = entryTime;
         this.exitTime = exitTime;
         this.status = status;
