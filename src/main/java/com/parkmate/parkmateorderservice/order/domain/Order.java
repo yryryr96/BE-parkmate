@@ -4,14 +4,16 @@ import com.parkmate.parkmateorderservice.common.entity.BaseEntity;
 import com.parkmate.parkmateorderservice.common.exception.BaseException;
 import com.parkmate.parkmateorderservice.common.response.ResponseStatus;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "orders")
-@ToString
 public class Order extends BaseEntity {
 
     @Id
