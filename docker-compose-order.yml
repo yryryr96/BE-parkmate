@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  order:
+    container_name: order-service
+    image: 090188239653.dkr.ecr.ap-northeast-2.amazonaws.com/order-service
+    volumes:
+      - /home/ubuntu/config/order/application.yml:/config/order/application.yml
+    environment:
+      - SPRING_CONFIG_LOCATION=file:/config/order/application.yml
+    ports:
+      - "9400:9400"
+    env_file:
+      - /home/ubuntu/env/.env.order
+    networks:
+      - backend
+
+networks:
+  backend:
+    external: true
