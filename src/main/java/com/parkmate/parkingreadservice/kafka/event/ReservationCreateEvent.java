@@ -16,16 +16,16 @@ public class ReservationCreateEvent {
     private String parkingLotUuid;
     private Long parkingSpotId;
     private ReservationStatus status;
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
+    private LocalDateTime entryTime;
+    private LocalDateTime exitTime;
 
     public ReservationRecord toRecord() {
         return ReservationRecord.builder()
                 .parkingLotUuid(parkingLotUuid)
                 .parkingSpotId(parkingSpotId)
                 .status(status)
-                .startDateTime(startDateTime)
-                .endDateTime(endDateTime)
+                .entryTime(entryTime)
+                .exitTime(exitTime)
                 .build();
     }
 }

@@ -19,21 +19,21 @@ public class ReservationRecord {
     private String parkingLotUuid;
     private Long parkingSpotId;
     private ReservationStatus status;
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
+    private LocalDateTime entryTime;
+    private LocalDateTime exitTime;
 
     @Builder
     private ReservationRecord(String id,
                               String parkingLotUuid,
                               Long parkingSpotId,
                               ReservationStatus status,
-                              LocalDateTime startDateTime,
-                              LocalDateTime endDateTime) {
+                              LocalDateTime entryTime,
+                              LocalDateTime exitTime) {
         this.id = id;
         this.parkingLotUuid = parkingLotUuid;
         this.parkingSpotId = parkingSpotId;
         this.status = status;
-        this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
+        this.entryTime = entryTime;
+        this.exitTime = exitTime;
     }
 }
