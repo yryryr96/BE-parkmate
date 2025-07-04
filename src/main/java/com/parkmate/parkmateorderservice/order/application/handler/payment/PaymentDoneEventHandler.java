@@ -7,10 +7,8 @@ import com.parkmate.parkmateorderservice.kafka.event.payment.PaymentEventType;
 import com.parkmate.parkmateorderservice.order.application.OrderService;
 import com.parkmate.parkmateorderservice.order.application.handler.EventHandler;
 import com.parkmate.parkmateorderservice.order.domain.Order;
-import com.parkmate.parkmateorderservice.order.domain.OrderStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

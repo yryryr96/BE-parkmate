@@ -3,7 +3,6 @@ package com.parkmate.parkmateorderservice.order.application;
 import com.parkmate.parkmateorderservice.common.exception.BaseException;
 import com.parkmate.parkmateorderservice.order.domain.Order;
 import com.parkmate.parkmateorderservice.order.domain.OrderStatus;
-import com.parkmate.parkmateorderservice.order.dto.request.OrderCancelRequestDto;
 import com.parkmate.parkmateorderservice.order.dto.request.OrderCreateRequestDto;
 import com.parkmate.parkmateorderservice.order.dto.response.OrderCreateResponseDto;
 import com.parkmate.parkmateorderservice.order.infrastructure.OrderRepository;

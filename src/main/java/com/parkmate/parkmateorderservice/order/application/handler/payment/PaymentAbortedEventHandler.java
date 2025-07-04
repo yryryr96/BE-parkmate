@@ -6,7 +6,6 @@ import com.parkmate.parkmateorderservice.order.application.OrderService;
 import com.parkmate.parkmateorderservice.order.application.handler.EventHandler;
 import com.parkmate.parkmateorderservice.order.domain.OrderStatus;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 @Component
