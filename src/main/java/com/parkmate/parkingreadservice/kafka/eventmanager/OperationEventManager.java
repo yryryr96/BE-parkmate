@@ -1,6 +1,6 @@
 package com.parkmate.parkingreadservice.kafka.eventmanager;
 
-import com.parkmate.parkingreadservice.kafka.event.OperationCreateEvent;
+import com.parkmate.parkingreadservice.kafka.event.parkinglot.OperationCreateEvent;
 import com.parkmate.parkingreadservice.parkingoperation.application.ParkingLotOperationReadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

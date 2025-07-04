@@ -1,9 +1,9 @@
 package com.parkmate.parkingreadservice.kafka.config;
 
 import com.parkmate.parkingreadservice.kafka.constant.KafkaConsumerGroups;
-import com.parkmate.parkingreadservice.kafka.event.ParkingLotCreateEvent;
-import com.parkmate.parkingreadservice.kafka.event.ParkingLotMetadataUpdateEvent;
-import com.parkmate.parkingreadservice.kafka.event.ParkingLotReactionsUpdateEvent;
+import com.parkmate.parkingreadservice.kafka.event.parkinglot.ParkingLotCreateEvent;
+import com.parkmate.parkingreadservice.kafka.event.parkinglot.ParkingLotMetadataUpdateEvent;
+import com.parkmate.parkingreadservice.kafka.event.parkinglot.ParkingLotReactionsUpdateEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;

@@ -1,7 +1,7 @@
 package com.parkmate.parkingreadservice.kafka.consumer.batch;
 
 import com.parkmate.parkingreadservice.kafka.constant.KafkaTopics;
-import com.parkmate.parkingreadservice.kafka.event.ReviewSummaryUpdateEvent;
+import com.parkmate.parkingreadservice.kafka.event.review.ReviewSummaryUpdateEvent;
 import com.parkmate.parkingreadservice.parkinglotread.application.ParkingLotReadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

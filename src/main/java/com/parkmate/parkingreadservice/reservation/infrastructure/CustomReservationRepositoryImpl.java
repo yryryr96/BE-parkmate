@@ -1,5 +1,6 @@
 package com.parkmate.parkingreadservice.reservation.infrastructure;
 
+import com.parkmate.parkingreadservice.reservation.domain.ReservationStatus;
 import com.parkmate.parkingreadservice.reservation.dto.response.ReserveParkingLotResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -16,7 +17,6 @@ import java.util.List;
 public class CustomReservationRepositoryImpl implements CustomReservationRepository {
 
     private final MongoTemplate mongoTemplate;
-    private final MongoConverter mongoConverter;
 
     @Override
     public List<ReserveParkingLotResponseDto> findAllByParkingLotUuidsAndDates(List<String> parkingLotUuids,
@@ -24,6 +24,7 @@ public class CustomReservationRepositoryImpl implements CustomReservationReposit
                                                                                LocalDateTime endDateTime) {
 
         Criteria criteria = Criteria.where("parkingLotUuid").in(parkingLotUuids)
+                .and("status").in(ReservationStatus.CONFIRMED, ReservationStatus.IN_USE)
                 .and("startDateTime").lt(endDateTime)
                 .and("endDateTime").gt(startDateTime);
 

@@ -1,10 +1,10 @@
 package com.parkmate.parkingreadservice.parkinglotread.infrastructure;
 
 import com.parkmate.parkingreadservice.common.response.CursorPage;
-import com.parkmate.parkingreadservice.kafka.event.ParkingLotCreateEvent;
-import com.parkmate.parkingreadservice.kafka.event.ParkingLotMetadataUpdateEvent;
-import com.parkmate.parkingreadservice.kafka.event.ParkingLotReactionsUpdateEvent;
-import com.parkmate.parkingreadservice.kafka.event.ReviewSummaryUpdateEvent;
+import com.parkmate.parkingreadservice.kafka.event.parkinglot.ParkingLotCreateEvent;
+import com.parkmate.parkingreadservice.kafka.event.parkinglot.ParkingLotMetadataUpdateEvent;
+import com.parkmate.parkingreadservice.kafka.event.parkinglot.ParkingLotReactionsUpdateEvent;
+import com.parkmate.parkingreadservice.kafka.event.review.ReviewSummaryUpdateEvent;
 import com.parkmate.parkingreadservice.parkinglotread.domain.ParkingLotRead;
 import com.parkmate.parkingreadservice.parkinglotread.dto.request.ParkingLotSearchRequestDto;
 import com.parkmate.parkingreadservice.parkinglotread.dto.response.ParkingLotSearchDto;

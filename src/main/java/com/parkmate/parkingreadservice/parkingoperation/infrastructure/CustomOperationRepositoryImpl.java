@@ -1,6 +1,6 @@
 package com.parkmate.parkingreadservice.parkingoperation.infrastructure;
 
-import com.parkmate.parkingreadservice.kafka.event.OperationCreateEvent;
+import com.parkmate.parkingreadservice.kafka.event.parkinglot.OperationCreateEvent;
 import com.parkmate.parkingreadservice.parkingoperation.domain.ParkingLotOperationRead;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
