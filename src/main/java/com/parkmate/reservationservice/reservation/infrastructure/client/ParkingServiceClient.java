@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Optional;
 
-@FeignClient(name = "parking-service", url = "localhost:8100")
+@FeignClient(name = "parking-service")
 public interface ParkingServiceClient {
 
     @PostMapping("/internal/parkingSpots/search")
