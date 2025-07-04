@@ -65,7 +65,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponseDto getOrder(OrderGetRequestDto orderGetRequestDto) {
 
-        Order order = orderRepository.findByOrderCode(orderGetRequestDto.getOrderCode())
+        Order order = orderRepository.findByOrderCodeAndUserUuid(
+                        orderGetRequestDto.getOrderCode(),
+                        orderGetRequestDto.getUserUuid()
+                )
                 .orElseThrow(() -> new BaseException(RESOURCE_NOT_FOUND));
 
         return OrderResponseDto.from(order);
