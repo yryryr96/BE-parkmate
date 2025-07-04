@@ -31,7 +31,7 @@ public class NotificationEventHandler {
         List<CompletableFuture<List<Notification>>> notificationCreationFutures = events.stream()
                 .map(event -> {
                     EventProcessor<NotificationEvent> processor = eventDispatcher.dispatch(event);
-                    return processor.create(event)
+                    return processor.process(event)
                             .exceptionally(ex -> {
                                 log.error("개별 알림 리스트 생성 중 예외 발생: event={}, {}", event.getClass().getSimpleName(), ex.getMessage(), ex);
                                 return List.of();

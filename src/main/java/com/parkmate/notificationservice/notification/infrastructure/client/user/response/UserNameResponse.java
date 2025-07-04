@@ -3,7 +3,7 @@ package com.parkmate.notificationservice.notification.infrastructure.client.user
 import lombok.Getter;
 
 @Getter
-public class UserNameResponse {
+public class UsernameResponse {
 
     private String name;
 }

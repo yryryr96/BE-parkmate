@@ -8,7 +8,7 @@ import com.parkmate.notificationservice.notification.event.NotificationEvent;
 import com.parkmate.notificationservice.notification.event.userparkinghistory.UserParkingHistoryEvent;
 import com.parkmate.notificationservice.notification.domain.processor.EventProcessor;
 import com.parkmate.notificationservice.notification.infrastructure.client.user.UserClient;
-import com.parkmate.notificationservice.notification.infrastructure.client.user.response.UserNameResponse;
+import com.parkmate.notificationservice.notification.infrastructure.client.user.response.UsernameResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -37,11 +37,11 @@ public class UserParkingHistoryEventProcessor implements EventProcessor<UserPark
     }
 
     @Override
-    public CompletableFuture<List<Notification>> create(UserParkingHistoryEvent event) {
+    public CompletableFuture<List<Notification>> process(UserParkingHistoryEvent event) {
 
         String userUuid = event.getUserUuid();
 
-        CompletableFuture<ApiResponse<UserNameResponse>> userNameFuture = userClient.getUserName(userUuid)
+        CompletableFuture<ApiResponse<UsernameResponse>> userNameFuture = userClient.getUsername(userUuid)
                 .exceptionally(ex -> {
                     log.error("Failed to fetch user name for UUID: {}", event.getUserUuid(), ex);
                     return null;

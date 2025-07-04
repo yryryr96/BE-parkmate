@@ -8,8 +8,9 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class ReservationCreatedEvent extends NotificationEvent {
+public class ReservationEvent extends NotificationEvent {
 
+    private ReservationEventType eventType;
     private String reservationCode;
     private String userUuid;
     private String hostUuid;
@@ -21,23 +22,25 @@ public class ReservationCreatedEvent extends NotificationEvent {
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
 
-    protected ReservationCreatedEvent() {
+    protected ReservationEvent() {
         super(NotificationType.RESERVATION_CREATED);
     }
 
     @Builder
-    private ReservationCreatedEvent(NotificationType notificationType,
-                                    String reservationCode,
-                                    String userUuid,
-                                    String hostUuid,
-                                    String parkingLotUuid,
-                                    String parkingLotName,
-                                    Long parkingSpotId,
-                                    String parkingSpotName,
-                                    String vehicleNumber,
-                                    LocalDateTime entryTime,
-                                    LocalDateTime exitTime) {
+    private ReservationEvent(NotificationType notificationType,
+                             ReservationEventType eventType,
+                             String reservationCode,
+                             String userUuid,
+                             String hostUuid,
+                             String parkingLotUuid,
+                             String parkingLotName,
+                             Long parkingSpotId,
+                             String parkingSpotName,
+                             String vehicleNumber,
+                             LocalDateTime entryTime,
+                             LocalDateTime exitTime) {
         super(notificationType);
+        this.eventType = eventType;
         this.reservationCode = reservationCode;
         this.userUuid = userUuid;
         this.hostUuid = hostUuid;

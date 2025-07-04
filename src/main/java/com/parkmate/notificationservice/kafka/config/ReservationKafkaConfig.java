@@ -1,7 +1,7 @@
 package com.parkmate.notificationservice.kafka.config;
 
 import com.parkmate.notificationservice.kafka.constant.KafkaConsumerGroups;
-import com.parkmate.notificationservice.notification.event.reservation.ReservationCreatedEvent;
+import com.parkmate.notificationservice.notification.event.reservation.ReservationEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -41,9 +41,9 @@ public class ReservationKafkaConfig extends CommonKafkaConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, ReservationCreatedEvent> reservationCreatedContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, ReservationCreatedEvent> factory = createListenerFactory(
-                ReservationCreatedEvent.class, KafkaConsumerGroups.RESERVATION_CREATED_GROUP);
+    public ConcurrentKafkaListenerContainerFactory<String, ReservationEvent> reservationCreatedContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, ReservationEvent> factory = createListenerFactory(
+                ReservationEvent.class, KafkaConsumerGroups.RESERVATION_CREATED_GROUP);
 
         factory.setBatchListener(true);
         factory.setConcurrency(3);
