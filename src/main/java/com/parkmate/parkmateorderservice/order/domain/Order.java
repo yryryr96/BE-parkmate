@@ -68,8 +68,8 @@ public class Order extends BaseEntity {
 
     public Order confirm() {
 
-        if (this.status != OrderStatus.PENDING) {
-            throw new BaseException(ResponseStatus.RESOURCE_NOT_FOUND, "주문 상태가 PENDING이 아닙니다.");
+        if (this.status != OrderStatus.PENDING && this.status != OrderStatus.PAYMENT_FAILED) {
+            throw new BaseException(ResponseStatus.INVALID_ORDER_STATUS, "이미 처리된 주문입니다.");
         }
 
         this.status = OrderStatus.PAID;
