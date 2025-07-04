@@ -11,9 +11,10 @@ import com.parkmate.parkmateorderservice.order.domain.OrderStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Configuration
+@Component
 @RequiredArgsConstructor
 public class PaymentDoneEventHandler implements EventHandler<PaymentEvent> {
 
