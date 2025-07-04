@@ -1,6 +1,8 @@
 package com.parkmate.parkmateorderservice.order.domain;
 
 import com.parkmate.parkmateorderservice.common.entity.BaseEntity;
+import com.parkmate.parkmateorderservice.common.exception.BaseException;
+import com.parkmate.parkmateorderservice.common.response.ResponseStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
@@ -62,5 +64,20 @@ public class Order extends BaseEntity {
 
     public void changeStatus(OrderStatus orderStatus) {
         status = orderStatus;
+    }
+
+    public Order confirm() {
+
+        if (this.status != OrderStatus.PENDING && this.status != OrderStatus.PAYMENT_FAILED) {
+            throw new BaseException(ResponseStatus.INVALID_ORDER_STATUS, "이미 처리된 주문입니다.");
+        }
+
+        this.status = OrderStatus.PAID;
+        return this;
+    }
+
+    public Order cancel() {
+        this.status = OrderStatus.CANCELLED;
+        return this;
     }
 }

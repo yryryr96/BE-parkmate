@@ -3,7 +3,6 @@ package com.parkmate.parkmateorderservice.order.application;
 import com.parkmate.parkmateorderservice.common.exception.BaseException;
 import com.parkmate.parkmateorderservice.order.domain.Order;
 import com.parkmate.parkmateorderservice.order.domain.OrderStatus;
-import com.parkmate.parkmateorderservice.order.dto.request.OrderCancelRequestDto;
 import com.parkmate.parkmateorderservice.order.dto.request.OrderCreateRequestDto;
 import com.parkmate.parkmateorderservice.order.dto.response.OrderCreateResponseDto;
 import com.parkmate.parkmateorderservice.order.infrastructure.OrderRepository;
@@ -28,8 +27,22 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public void cancel(OrderCancelRequestDto orderCancelRequestDto) {
+    public Order confirm(String orderCode) {
 
+        Order order = orderRepository.findByOrderCode(orderCode)
+                .orElseThrow(() -> new BaseException(RESOURCE_NOT_FOUND));
+
+        return order.confirm();
+    }
+
+    @Transactional
+    @Override
+    public Order cancel(String orderCode) {
+
+        Order order = orderRepository.findByOrderCode(orderCode)
+                .orElseThrow(() -> new BaseException(RESOURCE_NOT_FOUND));
+
+        return order.cancel();
     }
 
     @Transactional

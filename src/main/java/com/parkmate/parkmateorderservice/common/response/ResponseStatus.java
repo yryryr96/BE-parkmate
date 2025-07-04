@@ -20,6 +20,7 @@ public enum ResponseStatus {
     REQUEST_CONFLICT(HttpStatus.CONFLICT, false, 409, "POST 요청에 실패했습니다."),
     MODIFY_TIME_LIMIT_EXCEEDED(HttpStatus.UNPROCESSABLE_ENTITY, false, 422, "수정 가능한 시간이 초과되었습니다. 예약은 입장 1시간 전까지 수정 가능합니다."),
     PARKING_LOT_NOT_AVAILABLE(HttpStatus.BAD_REQUEST, false, 400, "해당 주차장은 현재 이용할 수 없습니다."),
+    INVALID_ORDER_STATUS(HttpStatus.BAD_REQUEST, false, 400, "주문 상태가 유효하지 않습니다."),
     /**
      * 5xx: 서버 오류
      */
