@@ -10,7 +10,9 @@ public interface OrderService {
 
     OrderCreateResponseDto create(OrderCreateRequestDto orderCreateRequestDto);
 
-    void cancel(OrderCancelRequestDto orderCancelRequestDto);
+    Order confirm(String orderCode);
+
+    Order cancel(String orderCode);
 
     Order changeStatus(String orderCode, OrderStatus orderStatus);
 }

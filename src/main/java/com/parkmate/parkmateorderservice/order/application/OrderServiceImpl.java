@@ -28,8 +28,22 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public void cancel(OrderCancelRequestDto orderCancelRequestDto) {
+    public Order confirm(String orderCode) {
 
+        Order order = orderRepository.findByOrderCode(orderCode)
+                .orElseThrow(() -> new BaseException(RESOURCE_NOT_FOUND));
+
+        return order.confirm();
+    }
+
+    @Transactional
+    @Override
+    public Order cancel(String orderCode) {
+
+        Order order = orderRepository.findByOrderCode(orderCode)
+                .orElseThrow(() -> new BaseException(RESOURCE_NOT_FOUND));
+
+        return order.cancel();
     }
 
     @Transactional

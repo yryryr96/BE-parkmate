@@ -1,5 +1,6 @@
 package com.parkmate.parkmateorderservice.kafka.event.order;
 
+import com.parkmate.parkmateorderservice.order.domain.Order;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,5 +27,17 @@ public class OrderEvent {
         this.paymentCode = paymentCode;
         this.reservationCode = reservationCode;
         this.amount = amount;
+    }
+
+    public static OrderEvent from(Order order,
+                                  OrderEventType orderEventType) {
+
+        return OrderEvent.builder()
+                .eventType(orderEventType)
+                .orderCode(order.getOrderCode())
+//                .paymentCode(order.getPaymentCode())
+                .reservationCode(order.getProductCode())
+                .amount(order.getAmount())
+                .build();
     }
 }
