@@ -11,7 +11,6 @@ import org.hibernate.annotations.Comment;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "orders")
-@ToString
 public class Order extends BaseEntity {
 
     @Id
