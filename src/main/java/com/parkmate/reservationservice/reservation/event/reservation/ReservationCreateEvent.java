@@ -24,6 +24,7 @@ public class ReservationCreateEvent {
     private ReservationStatus status;
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
+    private LocalDateTime timestamp;
 
     @Builder
     private ReservationCreateEvent(String reservationCode,
@@ -37,7 +38,8 @@ public class ReservationCreateEvent {
                                    long amount,
                                    ReservationStatus status,
                                    LocalDateTime entryTime,
-                                   LocalDateTime exitTime) {
+                                   LocalDateTime exitTime,
+                                   LocalDateTime timestamp) {
         this.reservationCode = reservationCode;
         this.parkingLotUuid = parkingLotUuid;
         this.parkingLotName = parkingLotName;
@@ -67,6 +69,7 @@ public class ReservationCreateEvent {
                 .amount(reservation.getAmount())
                 .entryTime(reservation.getEntryTime())
                 .exitTime(reservation.getExitTime())
+                .timestamp(reservation.getCreatedAt())
                 .build();
     }
 }
