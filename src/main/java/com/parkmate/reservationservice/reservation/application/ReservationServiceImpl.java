@@ -8,7 +8,7 @@ import com.parkmate.reservationservice.reservation.domain.ReservationStatus;
 import com.parkmate.reservationservice.reservation.dto.request.*;
 import com.parkmate.reservationservice.reservation.dto.response.PreReserveResponseDto;
 import com.parkmate.reservationservice.reservation.dto.response.ReservationResponseDto;
-import com.parkmate.reservationservice.reservation.event.reservation.ReservationCreateEvent;
+import com.parkmate.reservationservice.reservation.event.reservation.ReservationEvent;
 import com.parkmate.reservationservice.reservation.infrastructure.client.ParkingServiceClient;
 import com.parkmate.reservationservice.reservation.infrastructure.client.request.ParkingSpotRequest;
 import com.parkmate.reservationservice.reservation.infrastructure.client.response.ParkingLotAndSpotResponse;
@@ -63,19 +63,20 @@ public class ReservationServiceImpl implements ReservationService {
                 preReserveRequestDto.toEntity(parkingLot.getParkingLotName(), availableSpot)
         );
 
+        eventPublisher.publishEvent(ReservationEvent.from(parkingLot.getHostUuid(), savedReservation));
         return PreReserveResponseDto.from(savedReservation);
     }
 
+    @Transactional
+    @Override
     public void confirm(String reservationCode) {
 
         Reservation reservation = reservationRepository.findByReservationCode(reservationCode)
                 .orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
 
-        reservation.confirm();
+        Reservation confirmedReservation = reservation.confirm();
+        eventPublisher.publishEvent(ReservationEvent.from(confirmedReservation));
 
-
-
-        eventPublisher.publishEvent(ReservationCreateEvent.from(reservation.getHostUuid(), reservation));
     }
 
     @Transactional
@@ -104,7 +105,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         Reservation savedReservation = reservationRepository.save(reservation);
 
-        eventPublisher.publishEvent(ReservationCreateEvent.from(parkingLot.getHostUuid(), savedReservation));
+        eventPublisher.publishEvent(ReservationEvent.from(parkingLot.getHostUuid(), savedReservation));
     }
 
     @Transactional

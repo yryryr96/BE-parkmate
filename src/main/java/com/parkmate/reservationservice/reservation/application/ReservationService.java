@@ -30,4 +30,6 @@ public interface ReservationService {
     ReservationResponseDto getReservationForUse(ReservationGetForUseDto reservationGetForUseDto);
 
     void changeStatus(String reservationCode, ReservationStatus reservationStatus);
+
+    void confirm(String reservationCode);
 }

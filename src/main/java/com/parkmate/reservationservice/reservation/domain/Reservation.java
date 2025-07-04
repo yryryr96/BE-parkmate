@@ -101,12 +101,13 @@ public class Reservation extends BaseEntity {
         this.status = status;
     }
 
-    public void confirm() {
+    public Reservation confirm() {
 
         if (status != ReservationStatus.WAITING && status != ReservationStatus.CANCELLED) {
             throw new BaseException(ResponseStatus.INVALID_RESERVATION_STATUS, "이미 처리된 예약입니다.");
         }
 
         changeStatus(ReservationStatus.CONFIRMED);
+        return this;
     }
 }
