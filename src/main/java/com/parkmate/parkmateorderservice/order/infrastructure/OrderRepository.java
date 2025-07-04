@@ -8,4 +8,7 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<Order, Long>, OrderCustomRepository {
 
     Optional<Order> findByOrderCode(String orderCode);
+
+    Optional<Order> findByOrderCodeAndUserUuid(String orderCode,
+                                                String userUuid);
 }
