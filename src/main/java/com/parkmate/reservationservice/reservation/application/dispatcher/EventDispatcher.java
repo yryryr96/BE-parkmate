@@ -15,9 +15,8 @@ public class EventDispatcher {
 
     private final List<EventHandler<?>> handlers;
 
-    @SuppressWarnings("unchecked")
-    public EventHandler dispatch(Object event) {
-        for (EventHandler handler : handlers) {
+    public EventHandler<?> dispatch(Object event) {
+        for (EventHandler<?> handler : handlers) {
             if (handler.supports(event)) {
                 return handler;
             }

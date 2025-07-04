@@ -15,8 +15,9 @@ public class ExitHistoryEventHandler implements EventHandler<UserParkingHistoryE
     private final ReservationService reservationService;
 
     @Override
-    public boolean supports(UserParkingHistoryEvent event) {
-        return event.getType() == HistoryType.EXIT;
+    public boolean supports(Object event) {
+        return event instanceof UserParkingHistoryEvent &&
+                ((UserParkingHistoryEvent) event).getType() == HistoryType.EXIT;
     }
 
     @Override

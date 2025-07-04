@@ -15,8 +15,8 @@ public class OrderCancelEventHandler implements EventHandler<OrderEvent> {
     private final ReservationService reservationService;
 
     @Override
-    public boolean supports(OrderEvent event) {
-        return event.getType() == OrderEventType.CANCELLED;
+    public boolean supports(Object event) {
+        return event instanceof OrderEvent && ((OrderEvent) event).getEventType() == OrderEventType.CANCELLED;
     }
 
     @Override

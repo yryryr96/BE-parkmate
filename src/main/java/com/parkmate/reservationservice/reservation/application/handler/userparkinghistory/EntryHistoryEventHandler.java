@@ -15,8 +15,9 @@ public class EntryHistoryEventHandler implements EventHandler<UserParkingHistory
     private final ReservationService reservationService;
 
     @Override
-    public boolean supports(UserParkingHistoryEvent event) {
-        return event.getType() == HistoryType.ENTRY;
+    public boolean supports(Object event) {
+        return event instanceof UserParkingHistoryEvent &&
+                ((UserParkingHistoryEvent) event).getType() == HistoryType.ENTRY;
     }
 
     @Override
