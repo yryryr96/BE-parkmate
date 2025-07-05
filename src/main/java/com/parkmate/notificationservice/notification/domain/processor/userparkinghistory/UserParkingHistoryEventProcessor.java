@@ -8,7 +8,7 @@ import com.parkmate.notificationservice.notification.event.NotificationEvent;
 import com.parkmate.notificationservice.notification.event.userparkinghistory.UserParkingHistoryEvent;
 import com.parkmate.notificationservice.notification.domain.processor.EventProcessor;
 import com.parkmate.notificationservice.notification.infrastructure.client.user.UserClient;
-import com.parkmate.notificationservice.notification.infrastructure.client.user.response.UsernameResponse;
+import com.parkmate.notificationservice.notification.infrastructure.client.response.UsernameResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

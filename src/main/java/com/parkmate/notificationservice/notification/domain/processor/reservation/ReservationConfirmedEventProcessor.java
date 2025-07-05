@@ -7,14 +7,17 @@ import com.parkmate.notificationservice.notification.event.NotificationEvent;
 import com.parkmate.notificationservice.notification.event.reservation.ReservationEvent;
 import com.parkmate.notificationservice.notification.domain.processor.EventProcessor;
 import com.parkmate.notificationservice.notification.event.reservation.ReservationEventType;
+import com.parkmate.notificationservice.notification.infrastructure.client.parking.ParkingClient;
 import com.parkmate.notificationservice.notification.infrastructure.client.user.UserClient;
-import com.parkmate.notificationservice.notification.infrastructure.client.user.response.UsernameResponse;
+import com.parkmate.notificationservice.notification.infrastructure.client.response.ParkingLotHostResponse;
+import com.parkmate.notificationservice.notification.infrastructure.client.response.UsernameResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -22,9 +25,10 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ReservationCreatedEventProcessor implements EventProcessor<ReservationEvent> {
+public class ReservationConfirmedEventProcessor implements EventProcessor<ReservationEvent> {
 
     private final UserClient userClient;
+    private final ParkingClient parkingClient;
 
     private static final long LAZY_TIME_SECONDS = 5L;
     private static final String TITLE = "예약 완료";
@@ -43,7 +47,7 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
 
     @Override
     public boolean supports(NotificationEvent event) {
-        return event instanceof ReservationEvent && ((ReservationEvent) event).getEventType() == ReservationEventType.CREATED;
+        return event instanceof ReservationEvent && ((ReservationEvent) event).getEventType() == ReservationEventType.CONFIRMED;
     }
 
     @Override
@@ -52,6 +56,7 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
         Objects.requireNonNull(event, "ReservationCreatedEvent must not be null");
 
         String userUuid = event.getUserUuid();
+        String parkingLotUuid = event.getParkingLotUuid();
 
         CompletableFuture<ApiResponse<UsernameResponse>> usernameFuture = userClient.getUsername(userUuid)
                 .exceptionally(ex -> {
@@ -59,24 +64,56 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
                     return null;
                 });
 
-        return usernameFuture.thenApplyAsync(userNameResponse -> {
+        CompletableFuture<ParkingLotHostResponse> hostFuture = parkingClient.getHostUuid(event.getParkingLotUuid())
+                .exceptionally(ex -> {
+                    log.error("Failed to fetch host UUID for parking lot {}: {}", event.getParkingLotUuid(), ex.getMessage());
+                    return null;
+                });
 
-            String userName;
-            if (userNameResponse == null || userNameResponse.getData() == null) {
-                log.warn("User name response is null or data is missing for UUID {}", userUuid);
-                userName = "회원";
-            } else {
-                userName = userNameResponse.getData().getName();
-            }
+        return CompletableFuture.allOf(usernameFuture, hostFuture)
+                .thenApplyAsync(v -> {
 
-            String content = getContent(event, userName);
-            LocalDateTime sendAt = LocalDateTime.now().plusSeconds(LAZY_TIME_SECONDS);
+                    ApiResponse<UsernameResponse> userNameResponse = usernameFuture.join();
+                    ParkingLotHostResponse hostResponse = hostFuture.join();
 
-            Notification userNotification = createUserNotification(event, content, sendAt);
-            Notification hostNotification = createHostNotification(event, content, sendAt);
+                    String userName = (userNameResponse != null && userNameResponse.getData() != null)
+                            ? userNameResponse.getData().getName()
+                            : "회원";
 
-            return List.of(userNotification, hostNotification);
-        });
+                    String content = getContent(event, userName);
+                    LocalDateTime sendAt = LocalDateTime.now().plusSeconds(LAZY_TIME_SECONDS);
+
+                    List<Notification> notifications = new ArrayList<>();
+
+                    notifications.add(createUserNotification(event, content, sendAt));
+
+                    if (hostResponse != null && hostResponse.getHostUuid() != null) {
+                        notifications.add(createHostNotification(hostResponse.getHostUuid(), event, content, sendAt));
+                    } else {
+                        log.warn("Host UUID is missing for parking lot {}. Skipping host notification.", parkingLotUuid);
+                    }
+
+                    return notifications;
+                });
+//
+//        return usernameFuture.thenApplyAsync(userNameResponse -> {
+//
+//            String userName;
+//            if (userNameResponse == null || userNameResponse.getData() == null) {
+//                log.warn("User name response is null or data is missing for UUID {}", userUuid);
+//                userName = "회원";
+//            } else {
+//                userName = userNameResponse.getData().getName();
+//            }
+//
+//            String content = getContent(event, userName);
+//            LocalDateTime sendAt = LocalDateTime.now().plusSeconds(LAZY_TIME_SECONDS);
+//
+//            Notification userNotification = createUserNotification(event, content, sendAt);
+//            Notification hostNotification = createHostNotification(hostUuid, event, content, sendAt);
+//
+//            return List.of(userNotification, hostNotification);
+//        });
     }
 
     /**
@@ -127,9 +164,9 @@ public class ReservationCreatedEventProcessor implements EventProcessor<Reservat
      * @param sendAt 알림 발송 시간
      * @return 호스트 알림 객체
      */
-    private Notification createHostNotification(ReservationEvent event, String content, LocalDateTime sendAt) {
+    private Notification createHostNotification(String receiverUuid, ReservationEvent event, String content, LocalDateTime sendAt) {
         return Notification.builder()
-                .receiverUuid(event.getHostUuid())
+                .receiverUuid(receiverUuid)
                 .title(TITLE)
                 .content(content)
                 .redirectUrl(HOST_BASE_REDIRECT_URL + event.getReservationCode())

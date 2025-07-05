@@ -1,4 +1,4 @@
-package com.parkmate.notificationservice.notification.infrastructure.client.user.response;
+package com.parkmate.notificationservice.notification.infrastructure.client.response;
 
 import lombok.Getter;
 

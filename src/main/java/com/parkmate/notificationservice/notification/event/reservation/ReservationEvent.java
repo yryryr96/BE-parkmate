@@ -13,7 +13,6 @@ public class ReservationEvent extends NotificationEvent {
     private ReservationEventType eventType;
     private String reservationCode;
     private String userUuid;
-    private String hostUuid;
     private String parkingLotUuid;
     private String parkingLotName;
     private Long parkingSpotId;
@@ -31,7 +30,6 @@ public class ReservationEvent extends NotificationEvent {
                              ReservationEventType eventType,
                              String reservationCode,
                              String userUuid,
-                             String hostUuid,
                              String parkingLotUuid,
                              String parkingLotName,
                              Long parkingSpotId,
@@ -43,7 +41,6 @@ public class ReservationEvent extends NotificationEvent {
         this.eventType = eventType;
         this.reservationCode = reservationCode;
         this.userUuid = userUuid;
-        this.hostUuid = hostUuid;
         this.parkingLotUuid = parkingLotUuid;
         this.parkingLotName = parkingLotName;
         this.parkingSpotId = parkingSpotId;
