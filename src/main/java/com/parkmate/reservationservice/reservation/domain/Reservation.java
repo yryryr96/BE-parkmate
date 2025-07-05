@@ -1,6 +1,8 @@
 package com.parkmate.reservationservice.reservation.domain;
 
 import com.parkmate.reservationservice.common.entity.BaseEntity;
+import com.parkmate.reservationservice.common.exception.BaseException;
+import com.parkmate.reservationservice.common.response.ResponseStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
@@ -97,5 +99,15 @@ public class Reservation extends BaseEntity {
 
     public void changeStatus(ReservationStatus status) {
         this.status = status;
+    }
+
+    public Reservation confirm() {
+
+        if (status != ReservationStatus.WAITING && status != ReservationStatus.CANCELLED) {
+            throw new BaseException(ResponseStatus.INVALID_RESERVATION_STATUS, "이미 처리된 예약입니다.");
+        }
+
+        changeStatus(ReservationStatus.CONFIRMED);
+        return this;
     }
 }

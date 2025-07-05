@@ -1,7 +1,7 @@
 package com.parkmate.reservationservice.kafka.config.produce;
 
 import com.parkmate.reservationservice.kafka.constant.KafkaTopics;
-import com.parkmate.reservationservice.reservation.event.reservation.ReservationCreateEvent;
+import com.parkmate.reservationservice.reservation.event.reservation.ReservationEvent;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -42,19 +42,19 @@ public class KafkaProduceConfig {
     @Bean
     public NewTopic reservationCreatedTopic() {
         return TopicBuilder
-                .name(KafkaTopics.RESERVATION_CREATED)
+                .name(KafkaTopics.RESERVATION)
                 .partitions(3)
                 .replicas(2)
                 .build();
     }
 
     @Bean
-    public ProducerFactory<String, ReservationCreateEvent> createReservationNotification() {
+    public ProducerFactory<String, ReservationEvent> createReservationNotification() {
         return new DefaultKafkaProducerFactory<>(reservationProducerConfigs());
     }
 
     @Bean
-    public KafkaTemplate<String, ReservationCreateEvent> kafkaTemplate() {
+    public KafkaTemplate<String, ReservationEvent> kafkaTemplate() {
         return new KafkaTemplate<>(createReservationNotification());
     }
 }

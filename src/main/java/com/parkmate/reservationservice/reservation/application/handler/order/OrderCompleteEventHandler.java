@@ -21,6 +21,6 @@ public class OrderCompleteEventHandler implements EventHandler<OrderEvent> {
 
     @Override
     public void handle(OrderEvent event) {
-        reservationService.changeStatus(event.getReservationCode(), ReservationStatus.CONFIRMED);
+        reservationService.confirm(event.getReservationCode());
     }
 }

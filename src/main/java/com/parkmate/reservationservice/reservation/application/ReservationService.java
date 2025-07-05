@@ -13,8 +13,6 @@ public interface ReservationService {
 
     PreReserveResponseDto preReserve(PreReserveRequestDto preReserveRequestDto);
 
-    void reserve(ReservationCreateRequestDto reservationCreateRequestDto);
-
     void cancel(ReservationCancelRequestDto reservationCancelRequestDto);
 
     void modify(ReservationModifyRequestDto reservationModifyRequestDto);
@@ -30,4 +28,6 @@ public interface ReservationService {
     ReservationResponseDto getReservationForUse(ReservationGetForUseDto reservationGetForUseDto);
 
     void changeStatus(String reservationCode, ReservationStatus reservationStatus);
+
+    void confirm(String reservationCode);
 }
