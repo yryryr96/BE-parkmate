@@ -20,13 +20,13 @@ public class CustomReservationRepositoryImpl implements CustomReservationReposit
 
     @Override
     public List<ReserveParkingLotResponseDto> findAllByParkingLotUuidsAndDates(List<String> parkingLotUuids,
-                                                                               LocalDateTime startDateTime,
-                                                                               LocalDateTime endDateTime) {
+                                                                               LocalDateTime entryTime,
+                                                                               LocalDateTime exitTime) {
 
         Criteria criteria = Criteria.where("parkingLotUuid").in(parkingLotUuids)
                 .and("status").in(ReservationStatus.CONFIRMED, ReservationStatus.IN_USE)
-                .and("startDateTime").lt(endDateTime)
-                .and("endDateTime").gt(startDateTime);
+                .and("entryTime").lt(exitTime)
+                .and("startTime").gt(entryTime);
 
         MatchOperation matchOperation = Aggregation.match(criteria);
 
