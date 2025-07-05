@@ -3,7 +3,6 @@ package com.parkmate.parkingreadservice.kafka.consumer.reservation;
 import com.parkmate.parkingreadservice.kafka.constant.KafkaTopics;
 import com.parkmate.parkingreadservice.kafka.dispatcher.EventDispatcher;
 import com.parkmate.parkingreadservice.kafka.event.reservation.ReservationEvent;
-import com.parkmate.parkingreadservice.kafka.eventmanager.ReservationEventManager;
 import com.parkmate.parkingreadservice.kafka.handler.EventHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
