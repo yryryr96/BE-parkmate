@@ -18,7 +18,6 @@ public class ReservationEvent {
     private String parkingLotName;
     private Long parkingSpotId;
     private String parkingSpotName;
-    private String hostUuid;
     private String userUuid;
     private String vehicleNumber;
     private long amount;
@@ -34,7 +33,6 @@ public class ReservationEvent {
                              String parkingLotName,
                              Long parkingSpotId,
                              String parkingSpotName,
-                             String hostUuid,
                              String userUuid,
                              String vehicleNumber,
                              long amount,
@@ -48,7 +46,6 @@ public class ReservationEvent {
         this.parkingLotName = parkingLotName;
         this.parkingSpotId = parkingSpotId;
         this.parkingSpotName = parkingSpotName;
-        this.hostUuid = hostUuid;
         this.userUuid = userUuid;
         this.status = status;
         this.amount = amount;
@@ -58,29 +55,9 @@ public class ReservationEvent {
         this.timestamp = timestamp;
     }
 
-    public static ReservationEvent from(String hostUuid,
-                                        Reservation reservation) {
+    public static ReservationEvent from(Reservation reservation, ReservationEventType eventType) {
         return ReservationEvent.builder()
-                .eventType(ReservationEventType.CREATED)
-                .reservationCode(reservation.getReservationCode())
-                .parkingLotUuid(reservation.getParkingLotUuid())
-                .parkingLotName(reservation.getParkingLotName())
-                .parkingSpotId(reservation.getParkingSpotId())
-                .parkingSpotName(reservation.getParkingSpotName())
-                .hostUuid(hostUuid)
-                .userUuid(reservation.getUserUuid())
-                .status(reservation.getStatus())
-                .vehicleNumber(reservation.getVehicleNumber())
-                .amount(reservation.getAmount())
-                .entryTime(reservation.getEntryTime())
-                .exitTime(reservation.getExitTime())
-                .timestamp(reservation.getCreatedAt())
-                .build();
-    }
-
-    public static ReservationEvent from(Reservation reservation) {
-        return ReservationEvent.builder()
-                .eventType(ReservationEventType.UPDATED)
+                .eventType(eventType)
                 .reservationCode(reservation.getReservationCode())
                 .parkingLotUuid(reservation.getParkingLotUuid())
                 .parkingLotName(reservation.getParkingLotName())

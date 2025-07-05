@@ -9,6 +9,7 @@ import com.parkmate.reservationservice.reservation.dto.request.*;
 import com.parkmate.reservationservice.reservation.dto.response.PreReserveResponseDto;
 import com.parkmate.reservationservice.reservation.dto.response.ReservationResponseDto;
 import com.parkmate.reservationservice.reservation.event.reservation.ReservationEvent;
+import com.parkmate.reservationservice.reservation.event.reservation.ReservationEventType;
 import com.parkmate.reservationservice.reservation.infrastructure.client.ParkingServiceClient;
 import com.parkmate.reservationservice.reservation.infrastructure.client.request.ParkingSpotRequest;
 import com.parkmate.reservationservice.reservation.infrastructure.client.response.ParkingLotAndSpotResponse;
@@ -63,7 +64,7 @@ public class ReservationServiceImpl implements ReservationService {
                 preReserveRequestDto.toEntity(parkingLot.getParkingLotName(), availableSpot)
         );
 
-        eventPublisher.publishEvent(ReservationEvent.from(parkingLot.getHostUuid(), savedReservation));
+        eventPublisher.publishEvent(ReservationEvent.from(savedReservation, ReservationEventType.CREATED));
         return PreReserveResponseDto.from(savedReservation);
     }
 
@@ -75,37 +76,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
 
         Reservation confirmedReservation = reservation.confirm();
-        eventPublisher.publishEvent(ReservationEvent.from(confirmedReservation));
-
-    }
-
-    @Transactional
-    @Override
-    public void reserve(ReservationCreateRequestDto reservationCreateRequestDto) {
-
-        ParkingLotAndSpotResponse parkingLot = fetchPotentialParkingSpots(
-                reservationCreateRequestDto.getEntryTime(),
-                reservationCreateRequestDto.getExitTime(),
-                reservationCreateRequestDto.getParkingLotUuid(),
-                reservationCreateRequestDto.getParkingSpotType()
-        );
-
-        Set<Long> unAvailableParkingSpotIds = getReservedParkingSpotIds(
-                parkingLot.getParkingLotUuid(),
-                reservationCreateRequestDto.getEntryTime(),
-                reservationCreateRequestDto.getExitTime()
-        );
-
-        ParkingSpot availableSpot = parkingLot.getParkingSpots().stream()
-                .filter(parkingSpot -> !unAvailableParkingSpotIds.contains(parkingSpot.getId()))
-                .findFirst()
-                .orElseThrow(() -> new BaseException(ResponseStatus.PARKING_LOT_NOT_AVAILABLE));
-
-        Reservation reservation = reservationCreateRequestDto.toEntity(parkingLot.getParkingLotName(), availableSpot);
-
-        Reservation savedReservation = reservationRepository.save(reservation);
-
-        eventPublisher.publishEvent(ReservationEvent.from(parkingLot.getHostUuid(), savedReservation));
+        eventPublisher.publishEvent(ReservationEvent.from(confirmedReservation, ReservationEventType.CONFIRMED));
     }
 
     @Transactional
