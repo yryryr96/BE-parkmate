@@ -95,25 +95,6 @@ public class ReservationConfirmedEventProcessor implements EventProcessor<Reserv
 
                     return notifications;
                 });
-//
-//        return usernameFuture.thenApplyAsync(userNameResponse -> {
-//
-//            String userName;
-//            if (userNameResponse == null || userNameResponse.getData() == null) {
-//                log.warn("User name response is null or data is missing for UUID {}", userUuid);
-//                userName = "회원";
-//            } else {
-//                userName = userNameResponse.getData().getName();
-//            }
-//
-//            String content = getContent(event, userName);
-//            LocalDateTime sendAt = LocalDateTime.now().plusSeconds(LAZY_TIME_SECONDS);
-//
-//            Notification userNotification = createUserNotification(event, content, sendAt);
-//            Notification hostNotification = createHostNotification(hostUuid, event, content, sendAt);
-//
-//            return List.of(userNotification, hostNotification);
-//        });
     }
 
     /**
