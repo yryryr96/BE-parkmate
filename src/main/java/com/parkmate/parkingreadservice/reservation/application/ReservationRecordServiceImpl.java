@@ -1,6 +1,9 @@
 package com.parkmate.parkingreadservice.reservation.application;
 
-import com.parkmate.parkingreadservice.kafka.event.ReservationCreateEvent;
+import com.parkmate.parkingreadservice.common.exception.BaseException;
+import com.parkmate.parkingreadservice.common.exception.ResponseStatus;
+import com.parkmate.parkingreadservice.kafka.event.reservation.ReservationEvent;
+import com.parkmate.parkingreadservice.reservation.domain.ReservationRecord;
 import com.parkmate.parkingreadservice.reservation.dto.response.ReserveParkingLotResponseDto;
 import com.parkmate.parkingreadservice.reservation.infrastructure.ReservationRecordRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +21,28 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
 
     @Async
     @Override
-    public void create(ReservationCreateEvent reservationCreateEvent) {
-        reservationRecordRepository.save(reservationCreateEvent.toRecord());
+    public void create(ReservationEvent event) {
+
+        reservationRecordRepository.findByReservationCode(event.getReservationCode()).ifPresentOrElse(
+                reservationRecord -> {
+                    reservationRecord = event.toRecord(reservationRecord.getId());
+                    reservationRecordRepository.save(reservationRecord);
+                },
+                () -> {
+                    reservationRecordRepository.save(event.toRecord());
+                }
+        );
+    }
+
+    @Async
+    @Override
+    public void update(ReservationEvent event) {
+
+        ReservationRecord reservation = reservationRecordRepository.findByReservationCode(event.getReservationCode())
+                .orElseThrow(() -> new BaseException(ResponseStatus.RESOURCE_NOT_FOUND));
+
+        reservation = event.toRecord(reservation.getId());
+        reservationRecordRepository.save(reservation);
     }
 
     @Override

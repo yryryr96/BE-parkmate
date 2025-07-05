@@ -1,4 +1,4 @@
-package com.parkmate.parkingreadservice.parkinglotread.application.handler;
+package com.parkmate.parkingreadservice.kafka.handler;
 
 public interface EventHandler<T> {
 

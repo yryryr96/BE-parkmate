@@ -1,6 +1,6 @@
 package com.parkmate.parkingreadservice.parkingoperation.application;
 
-import com.parkmate.parkingreadservice.kafka.event.OperationCreateEvent;
+import com.parkmate.parkingreadservice.kafka.event.parkinglot.OperationCreateEvent;
 
 import java.time.LocalDateTime;
 import java.util.List;

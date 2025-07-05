@@ -1,4 +1,4 @@
-package com.parkmate.parkingreadservice.kafka.event;
+package com.parkmate.parkingreadservice.kafka.event.parkinglot;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
