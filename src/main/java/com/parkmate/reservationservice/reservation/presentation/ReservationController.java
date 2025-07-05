@@ -40,20 +40,6 @@ public class ReservationController {
     }
 
     @Operation(
-            summary = "예약 생성",
-            description = "사용자가 주차 공간을 예약합니다. 예약 시 주차 공간의 가용성을 확인하고, 예약이 성공하면 예약 정보를 반환합니다." +
-                          "Header에 X-User-UUID를 포함해야 합니다.",
-            tags = {"RESERVATION-SERVICE"}
-    )
-    @PostMapping
-    public ApiResponse<String> reserve(@RequestHeader(USER_UUID_HEADER) String userUuid,
-                                       @RequestBody ReservationCreateRequestVo reservationCreateRequestVo) {
-
-        reservationService.reserve(ReservationCreateRequestDto.of(userUuid, reservationCreateRequestVo));
-        return ApiResponse.created("예약이 완료되었습니다.");
-    }
-
-    @Operation(
             summary = "예약 수정",
             description = "사용자가 예약을 수정합니다. 수정 시 예약 코드와 함께 변경할 정보를 포함해야 합니다." +
                           "Header에 X-User-UUID를 포함해야 합니다.",
