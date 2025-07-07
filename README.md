@@ -1,95 +1,111 @@
-# Parkmate Reservation Service
+# Parkmate 예약 서비스
 
-## 📖 프로젝트 개요
+Parkmate 프로젝트의 주차 예약 기능을 담당하는 마이크로서비스입니다.
 
-Parkmate Reservation Service는 주차장 예약 기능을 제공하는 마이크로서비스입니다. 사용자는 이 서비스를 통해 주차 공간을 예약, 수정, 취소 및 조회할 수 있습니다.
-
-## ✨ 주요 기능
-
-- **주차 공간 예약:** 사용자는 원하는 시간대에 주차 공간을 예약할 수 있습니다.
-- **예약 관리:** 예약 내역을 수정하거나 취소할 수 있습니다.
-- **예약 조회:** 자신의 예약 목록과 상세 내역을 확인할 수 있습니다.
-- **내부 API 제공:** 다른 서비스에서 예약 정보를 사용할 수 있도록 내부 API를 제공합니다.
-
-## 🛠️ 기술 스택
+## 1. 기술 스택
 
 - **언어:** Java 17
-- **프레임워크:** Spring Boot 3.4.3
-- **데이터베이스:** MySQL, JPA(Hibernate), QueryDSL
-- **메시징 큐:** Kafka
-- **서비스 디스커버리:** Eureka
-- **API 통신:** OpenFeign
-- **API 문서화:** Swagger (Springdoc)
+- **프레임워크:** Spring Boot 3.4.3, Spring Cloud 2024.0.1
+- **데이터베이스:**
+  - **JPA (MySQL):** 예약, 결제 등 핵심 도메인 데이터 관리
+  - **QueryDSL:** 동적 쿼리 생성을 통한 복잡한 조회 기능 구현
+- **메시징 큐:** Apache Kafka
+- **서비스 디스커버리:** Netflix Eureka
+- **선언적 HTTP 클라이언트:** OpenFeign
+- **API 문서:** Swagger (SpringDoc OpenAPI)
+- **빌드 도구:** Gradle
 
-## 🚀 실행 방법
+## 2. 아키텍처
 
-### 1. Docker Compose 사용
+본 서비스는 MSA(Microservice Architecture)를 따르며, 내부적으로는 계층형 아키텍처(Presentation, Application, Domain, Infrastructure)를 적용하여 각 모듈의 독립성과 응집도를 높였습니다.
 
-프로젝트 루트 디렉토리에서 아래 명령어를 실행하여 서비스를 시작할 수 있습니다.
+- **패키지 구조:**
+  - `common`: 공통적으로 사용되는 유틸리티 및 예외 처리 클래스
+  - `kafka`: Kafka 메시지 발행 및 구독 관련 로직
+  - `reservation`: 예약 도메인 관련 핵심 로직 (엔티티, 레포지토리, 서비스, 컨트롤러)
+- **Eureka:** 서비스 디스커버리 서버에 자신을 등록하여 다른 서비스가 검색할 수 있도록 합니다.
+- **OpenFeign:** 다른 마이크로서비스와 선언적으로 HTTP 통신을 수행합니다.
+- **Kafka:** 예약 생성, 취소 등의 도메인 이벤트를 발행하여 다른 서비스와 비동기적으로 데이터를 교환합니다.
 
-```bash
-docker-compose -f docker-compose-reservation.yml up -d
-```
+## 3. 주요 기능
 
-### 2. 직접 실행
+- 주차장 예약 생성, 조회, 수정, 취소
+- 예약 가능 시간 조회
+- 사용자의 예약 내역 조회
 
-#### 사전 요구사항
+## 4. 실행 방법
 
-- Java 17
-- Gradle
-
-#### 빌드
+### 빌드
 
 ```bash
 ./gradlew build
 ```
 
-#### 실행
+### 실행
 
 ```bash
 java -jar build/libs/parkmate-reservation-service-0.0.1-SNAPSHOT.jar
 ```
 
-## 📝 API 문서
+## 5. API 문서
 
-서비스가 실행되면 아래 주소에서 API 문서를 확인할 수 있습니다.
+애플리케이션 실행 후, 아래 URL을 통해 API 문서를 확인할 수 있습니다.
 
 - [http://localhost:8200/swagger-ui.html](http://localhost:8200/swagger-ui.html)
 
-## 🏛️ 아키텍처
+## 6. YML 설정
 
-- **MSA (Microservice Architecture):** 예약 기능은 독립적인 마이크로서비스로 구현되어 다른 서비스와 분리되어 운영됩니다.
-- **Event-Driven Architecture:** Kafka를 사용하여 예약 생성 및 상태 변경과 같은 이벤트를 비동기적으로 처리합니다.
-    - `ReservationProducer`: 예약 생성 이벤트를 Kafka 토픽으로 발행합니다.
-    - `UserParkingHistoryConsumer`: 주차장 입출차 이력 이벤트를 구독하여 예약 상태를 변경합니다.
-- **API Gateway (예상):** 외부 요청은 API Gateway를 통해 라우팅될 것으로 예상됩니다. (현재 프로젝트에는 포함되지 않음)
-- **Service Discovery:** Eureka를 사용하여 서비스를 등록하고 다른 서비스를 찾습니다.
-- **Internal/External API:**
-    - `ReservationController`: 외부 사용자(클라이언트)를 위한 API를 제공합니다.
-    - `InternalReservationController`: 다른 마이크로서비스(예: 주차장 서비스)와의 통신을 위한 내부 API를 제공합니다.
+```yaml
+server:
+  port: 8200
 
-## 📁 프로젝트 구조
+spring:
+  application:
+    name: reservation-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/reservation_db?useSSL=false&allowPublicKeyRetrieval=true
+    username: <username>
+    password: <password>
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
+  kafka:
+    bootstrap-servers: localhost:10000,localhost:10001,localhost:10002
+
+eureka:
+  instance:
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
 ```
-.
-├── build.gradle                # 프로젝트 의존성 및 빌드 설정
-├── docker-compose-reservation.yml # Docker Compose 설정 파일
-├── Dockerfile                    # Docker 이미지 생성 파일
-└── src
-    ├── main
-    │   ├── java
-    │   │   └── com/parkmate/reservationservice
-    │   │       ├── ReservationserviceApplication.java # Spring Boot 애플리케이션 시작점
-    │   │       ├── common                # 공통 모듈 (설정, 예외 처리 등)
-    │   │       ├── kafka                 # Kafka 관련 클래스 (Producer, Consumer, Event)
-    │   │       └── reservation           # 예약 도메인
-    │   │           ├── application       # 서비스 로직 (ReservationService)
-    │   │           ├── domain            # 도메인 모델 (Reservation, ReservationStatus)
-    │   │           ├── dto               # 데이터 전송 객체
-    │   │           ├── infrastructure    # 외부 시스템 연동 (Repository, Feign Client)
-    │   │           └── presentation      # API 컨트롤러 (ReservationController)
-    │   └── resources
-    │       └── application.yml       # 애플리케이션 설정 (외부 주입)
-    └── test
-        └── ...
+
+## 7. Docker Compose 실행
+
+`docker-compose-reservation.yml` 파일을 사용하여 Docker 컨테이너로 서비스를 실행할 수 있습니다.
+
+```bash
+docker-compose -f docker-compose-reservation.yml up -d
 ```
+
+**사전 조건:**
+
+- Docker 및 Docker Compose가 설치되어 있어야 합니다.
+- `/home/ubuntu/config/reservation/application.yml` 경로에 설정 파일이 존재해야 합니다.
+- `/home/ubuntu/env/.env.reservation` 경로에 환경 변수 파일이 존재해야 합니다.
+- `backend` Docker 네트워크가 생성되어 있어야 합니다.
