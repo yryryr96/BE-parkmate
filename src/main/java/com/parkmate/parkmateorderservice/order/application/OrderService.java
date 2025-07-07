@@ -22,4 +22,7 @@ public interface OrderService {
     OrderResponseDto getOrder(OrderGetRequestDto orderGetRequestDto);
 
     CursorPage<OrderResponseDto> getOrders(OrdersGetRequestDto ordersGetRequestDto);
+
+    OrderResponseDto getOrderByProductCode(String userUuid,
+                                           String productCode);
 }

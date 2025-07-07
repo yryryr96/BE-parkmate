@@ -82,4 +82,14 @@ public class OrderController {
                         .map(OrderResponseDto::toVo)
         );
     }
+
+    @GetMapping("/product/{productCode}")
+    public ApiResponse<OrderResponseVo> getOrderByProductCode(@RequestHeader(USER_UUID_HEADER) String userUuid,
+                                                              @PathVariable String productCode) {
+
+        return ApiResponse.ok(
+                "상품 코드로 주문 내역 조회에 성공했습니다.",
+                orderService.getOrderByProductCode(userUuid, productCode).toVo()
+        );
+    }
 }
