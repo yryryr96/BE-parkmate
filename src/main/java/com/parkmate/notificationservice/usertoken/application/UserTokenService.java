@@ -2,6 +2,8 @@ package com.parkmate.notificationservice.usertoken.application;
 
 import com.parkmate.notificationservice.usertoken.domain.UserToken;
 import com.parkmate.notificationservice.usertoken.dto.request.UserTokenSaveRequestDto;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -11,5 +13,7 @@ public interface UserTokenService {
 
     List<UserToken> getTokenByUserUuid(String userUuid);
 
-    void deleteTokens(List<String> tokensToDelete);
+    @Modifying
+    @Query("DELETE FROM UserToken ut WHERE ut.token IN :tokens")
+    void deleteTokens(List<String> tokens);
 }
