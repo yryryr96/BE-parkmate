@@ -13,7 +13,5 @@ public interface UserTokenService {
 
     List<UserToken> getTokenByUserUuid(String userUuid);
 
-    @Modifying
-    @Query("DELETE FROM UserToken ut WHERE ut.token IN :tokens")
     void deleteTokens(List<String> tokens);
 }
