@@ -83,6 +83,14 @@ public class OrderController {
         );
     }
 
+    @Operation(
+            summary = "상품 코드로 주문 내역 조회",
+            description = """
+                    사용자의 상품 코드로 주문 내역을 조회합니다. X-User-UUID 헤더를 통해 사용자 UUID를 전달해야 합니다.
+                    상품 코드를 통해 주문을 조회합니다.
+                    """,
+            tags = {"ORDER-SERVICE"}
+    )
     @GetMapping("/product/{productCode}")
     public ApiResponse<OrderResponseVo> getOrderByProductCode(@RequestHeader(USER_UUID_HEADER) String userUuid,
                                                               @PathVariable String productCode) {
