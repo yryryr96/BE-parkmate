@@ -81,4 +81,15 @@ public class OrderServiceImpl implements OrderService {
         CursorPage<Order> orders = orderRepository.getOrders(ordersGetRequestDto);
         return orders.map(OrderResponseDto::from);
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public OrderResponseDto getOrderByProductCode(String userUuid,
+                                                  String productCode) {
+
+        Order order = orderRepository.findByProductCodeAndUserUuid(productCode, userUuid)
+                .orElseThrow(() -> new BaseException(RESOURCE_NOT_FOUND));
+
+        return OrderResponseDto.from(order);
+    }
 }
