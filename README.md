@@ -88,25 +88,20 @@ spring:
       host: localhost
       port: 6379
   datasource:
-    url: jdbc:mysql://localhost:3306/parking_db?useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/<schema>?useSSL=false&allowPublicKeyRetrieval=true
     username: <username>
     password: <password>
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto:  <option>
     show-sql: true
     properties:
       hibernate:
         format_sql: true
   kafka:
-    bootstrap-servers: localhost:10000,localhost:10001,localhost:10002
-    producer:
-      acks: all
-      retries: 3
-      batch-size: 16384
-      linger-ms: 1
-      buffer-memory: 33554432
+    bootstrap-servers: <bootstrap-servers>
+    producer: <proudcer settings...>
 
 eureka:
   instance:
