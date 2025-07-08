@@ -13,6 +13,16 @@ Parkmate 프로젝트의 주문 및 결제 관련 기능을 담당하는 마이�
 -   **결제 연동**: `parkmate-payment-service`와 연동하여 실제 결제를 처리하고, 결제 결과를 반영합니다.
 -   **이벤트 기반 통신**: Kafka를 통해 다른 서비스와 비동기적으로 통신하여 시스템의 유연성과 확장성을 확보합니다.
 
+### 주문 처리 흐름
+
+Parkmate 주문 서비스의 핵심 주문 처리 흐름은 다음과 같습니다:
+
+1.  **예약 생성**: 사용자가 주차 공간을 예약합니다.
+2.  **주문 생성**: 예약 정보를 기반으로 주문이 생성됩니다.
+3.  **결제 완료**: 사용자가 결제를 완료합니다.
+4.  **주문 상태 변경**: 결제 완료에 따라 주문 상태가 업데이트됩니다.
+5.  **주문 완료 이벤트 발행**: 최종적으로 주문 완료 이벤트가 발행되어 다른 관련 서비스에 알립니다.
+
 ### 아키텍처 특징
 
 -   **마이크로서비스 아키텍처**: 독립적인 배포 및 확장이 가능한 서비스 단위로 구성됩니다.
@@ -35,9 +45,8 @@ Parkmate 프로젝트의 주문 및 결제 관련 기능을 담당하는 마이�
 본 서비스는 주문 및 결제 관련 기능을 위한 다양한 API를 제공합니다. 주요 API는 다음과 같습니다:
 
 -   **주차 예약 생성**: `POST /api/v1/orders`
--   **주문 상세 조회**: `GET /api/v1/orders/{orderId}`
--   **사용자 주문 목록 조회**: `GET /api/v1/users/{userId}/orders`
--   **주문 취소**: `POST /api/v1/orders/{orderId}/cancel`
+-   **주문 내역 조회**: `POST /api/v1/orders/`
+-   **주문 상세 조회**: `GET /api/v1/orders/{orderCode}`
 
 자세한 API 명세는 Swagger UI (`/swagger-ui.html`)를 통해 확인할 수 있습니다.
 
@@ -66,31 +75,22 @@ spring:
   application:
     name: parkmate-order-service
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/parkmate_order_db}
+    url: ${DATABASE_URL}
     username: ${DATABASE_USERNAME:user}
     password: ${DATABASE_PASSWORD:password}
   jpa:
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
 server:
-  port: ${SERVER_PORT:8083}
+  port: <port>
 eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_DEFAULT_ZONE:http://localhost:8761/eureka/}
 ```
-
-**보안 고려사항:**
-
-민감한 정보(예: 데이터베이스 URI, 사용자 이름, 비밀번호 등)는 `application.yml` 파일에 직접 노출하는 대신, 환경 변수나 외부 설정 관리 시스템(예: Spring Cloud Config, HashiCorp Vault)을 통해 관리하는 것이 좋습니다. 위 예시에서는 환경 변수를 사용하는 방식을 보여줍니다. 실제 운영 환경에서는 더욱 강력한 보안 조치를 적용해야 합니다.
 
 ## 5. Docker Compose 실행
 
