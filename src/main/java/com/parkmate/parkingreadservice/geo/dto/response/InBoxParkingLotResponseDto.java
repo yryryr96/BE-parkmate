@@ -22,6 +22,10 @@ public class InBoxParkingLotResponseDto {
     private double longitude;
     private double distance;
     private int availableSpotCount;
+    private int likeCount;
+    private int dislikeCount;
+    private double rating;
+    private long reviewCount;
 
     @Builder
     private InBoxParkingLotResponseDto(String parkingLotUuid,
@@ -32,7 +36,11 @@ public class InBoxParkingLotResponseDto {
                                        double latitude,
                                        double longitude,
                                        double distance,
-                                       int availableSpotCount) {
+                                       int availableSpotCount,
+                                       int likeCount,
+                                       int dislikeCount,
+                                       double rating,
+                                       long reviewCount) {
         this.parkingLotUuid = parkingLotUuid;
         this.name = name;
         this.address = address;
@@ -42,6 +50,10 @@ public class InBoxParkingLotResponseDto {
         this.longitude = longitude;
         this.distance = distance;
         this.availableSpotCount = availableSpotCount;
+        this.likeCount = likeCount;
+        this.dislikeCount = dislikeCount;
+        this.rating = rating;
+        this.reviewCount = reviewCount;
     }
 
     public static InBoxParkingLotResponseDto of(ParkingLotReadResponseDto parkingLotReadResponseDto,
@@ -58,6 +70,10 @@ public class InBoxParkingLotResponseDto {
                 .longitude(longitude)
                 .distance(distance)
                 .availableSpotCount(parkingLotReadResponseDto.getCapacity())
+                .likeCount(parkingLotReadResponseDto.getLikeCount())
+                .dislikeCount(parkingLotReadResponseDto.getDislikeCount())
+                .rating(parkingLotReadResponseDto.getRating())
+                .reviewCount(parkingLotReadResponseDto.getReviewCount())
                 .build();
     }
 
@@ -72,6 +88,10 @@ public class InBoxParkingLotResponseDto {
                 .longitude(longitude)
                 .distance(distance)
                 .availableSpotCount(availableSpotCount)
+                .likeCount(likeCount)
+                .dislikeCount(dislikeCount)
+                .rating(rating)
+                .reviewCount(reviewCount)
                 .build();
     }
 }

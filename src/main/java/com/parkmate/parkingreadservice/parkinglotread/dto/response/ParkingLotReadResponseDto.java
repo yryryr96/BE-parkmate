@@ -33,6 +33,8 @@ public class ParkingLotReadResponseDto {
     private List<ParkingLotOption> options;
     private int likeCount;
     private int dislikeCount;
+    private double rating;
+    private int reviewCount;
 
     @Builder
     private ParkingLotReadResponseDto(String parkingLotUuid,
@@ -52,7 +54,9 @@ public class ParkingLotReadResponseDto {
                                       List<Image> imageUrls,
                                       List<ParkingLotOption> options,
                                       int likeCount,
-                                      int dislikeCount) {
+                                      int dislikeCount,
+                                      double rating,
+                                      int reviewCount) {
         this.parkingLotUuid = parkingLotUuid;
         this.hostUuid = hostUuid;
         this.thumbnailUrl = thumbnailUrl;
@@ -71,6 +75,8 @@ public class ParkingLotReadResponseDto {
         this.options = options;
         this.likeCount = likeCount;
         this.dislikeCount = dislikeCount;
+        this.rating = rating;
+        this.reviewCount = reviewCount;
     }
 
     public static ParkingLotReadResponseDto from(ParkingLotRead parkingLotRead) {
@@ -93,6 +99,8 @@ public class ParkingLotReadResponseDto {
                 .options(parkingLotRead.getOptions())
                 .likeCount(parkingLotRead.getLikeCount())
                 .dislikeCount(parkingLotRead.getDislikeCount())
+                .rating(parkingLotRead.getRating())
+                .reviewCount(parkingLotRead.getReviewCount())
                 .build();
     }
 
@@ -115,6 +123,8 @@ public class ParkingLotReadResponseDto {
                 .options(options)
                 .likeCount(likeCount)
                 .dislikeCount(dislikeCount)
+                .rating(rating)
+                .reviewCount(reviewCount)
                 .build();
     }
 
@@ -136,6 +146,8 @@ public class ParkingLotReadResponseDto {
                 .options(this.options)
                 .likeCount(this.likeCount)
                 .dislikeCount(this.dislikeCount)
+                .rating(this.rating)
+                .reviewCount(this.reviewCount)
                 .build();
     }
 }

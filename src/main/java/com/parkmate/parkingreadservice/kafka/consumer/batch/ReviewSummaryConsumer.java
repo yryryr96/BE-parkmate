@@ -21,9 +21,9 @@ public class ReviewSummaryConsumer {
             topics = KafkaTopics.REVIEW_SUMMARY_UPDATED,
             containerFactory = "reviewSummaryUpdateKafkaListener"
     )
-    public void consumeReviewSummaryUpdate(List<ReviewSummaryUpdateEvent> events) {
+    public void consume(List<ReviewSummaryUpdateEvent> events) {
 
         log.info("Received ReviewSummaryUpdateEvent size : {}", events.size());
-        parkingLotReadService.bulkUpdateRating(events);
+        parkingLotReadService.bulkUpdateReviewInfo(events);
     }
 }

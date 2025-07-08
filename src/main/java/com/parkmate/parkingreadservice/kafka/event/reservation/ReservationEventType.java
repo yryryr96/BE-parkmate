@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum ReservationEventType {
 
     CREATED("예약 생성"),
+    CONFIRMED("예약 확정"),
     UPDATED("예약 수정")
     ;
 

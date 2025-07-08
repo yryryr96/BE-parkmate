@@ -30,6 +30,8 @@ public class ParkingLotReadResponseVo {
     private List<ParkingLotOption> options;
     private int likeCount;
     private int dislikeCount;
+    private double rating;
+    private int reviewCount;
 
     @Builder
     private ParkingLotReadResponseVo(String parkingLotUuid,
@@ -48,7 +50,9 @@ public class ParkingLotReadResponseVo {
                                      List<Image> imageUrls,
                                      List<ParkingLotOption> options,
                                      int likeCount,
-                                     int dislikeCount) {
+                                     int dislikeCount,
+                                     double rating,
+                                     int reviewCount) {
         this.parkingLotUuid = parkingLotUuid;
         this.hostUuid = hostUuid;
         this.thumbnailUrl = thumbnailUrl;
@@ -66,5 +70,7 @@ public class ParkingLotReadResponseVo {
         this.options = options;
         this.likeCount = likeCount;
         this.dislikeCount = dislikeCount;
+        this.rating = rating;
+        this.reviewCount = reviewCount;
     }
 }
