@@ -110,3 +110,55 @@ eureka:
 ```bash
 docker-compose -f docker-compose-parking-read.yml up -d
 ```
+
+## 6. 프로젝트 구조
+
+본 프로젝트는 Spring Boot 애플리케이션의 표준 구조를 따르며, 도메인 기반으로 패키지가 구성되어 있습니다.
+
+```
+src/
+ ├───main/
+ │   ├───java/
+ │   │   └───com/
+ │   │       └───parkmate/
+ │   │           └───parkingreadservice/
+ │   │               ├───ParkingreadserviceApplication.java # 메인 애플리케이션 진입점
+ │   │               ├───common/              # 공통 유틸리티, 설정, 예외 처리 등
+ │   │               │   ├───config/          # Spring 설정 (Mongo, Redis, Swagger)
+ │   │               │   ├───converter/       # 데이터 변환기
+ │   │               │   ├───exception/       # 커스텀 예외 및 핸들러
+ │   │               │   ├───response/        # API 응답 관련 클래스
+ │   │               │   └───utils/           # Redis 유틸리티
+ │   │               ├───facade/              # 여러 서비스의 조정을 담당하는 파사드 계층
+ │   │               ├───geo/                 # 지리 공간 데이터 처리 관련 기능
+ │   │               │   ├───application/     # 서비스 로직 (GeoService)
+ │   │               │   ├───dto/             # 요청/응답 DTO
+ │   │               │   └───vo/              # Value Object
+ │   │               ├───kafka/               # Kafka 메시징 관련 기능
+ │   │               │   ├───config/          # Kafka 설정
+ │   │               │   ├───constant/        # Kafka 상수 (토픽, 그룹)
+ │   │               │   ├───consumer/        # Kafka 컨슈머 (이벤트 소비)
+ │   │               │   ├───dispatcher/      # 이벤트 디스패처
+ │   │               │   ├───event/           # 도메인 이벤트 정의
+ │   │               │   ├───eventmanager/    # 이벤트 관리자
+ │   │               │   └───handler/         # 이벤트 핸들러
+ │   │               ├───parkinglotread/      # 주차장 정보 조회 도메인
+ │   │               │   ├───application/     # 서비스 로직 (ParkingLotReadService)
+ │   │               │   ├───domain/          # 도메인 모델 (ParkingLotRead, Image, ParkingLotOption)
+ │   │               │   ├───dto/             # 요청/응답 DTO
+ │   │               │   ├───infrastructure/  # 데이터 접근 계층 (Repository)
+ │   │               │   ├───presentation/    # REST API 컨트롤러 (ParkingLotReadController)
+ │   │               │   └───vo/              # Value Object
+ │   │               ├───parkingoperation/    # 주차 운영 정보 조회 도메인
+ │   │               │   ├───application/     # 서비스 로직
+ │   │               │   ├───domain/          # 도메인 모델
+ │   │               │   ├───dto/             # 요청/응답 DTO
+ │   │               │   └───infrastructure/  # 데이터 접근 계층
+ │   │               ├───reservation/         # 예약 정보 조회 도메인
+ │   │               │   ├───application/     # 서비스 로직
+ │   │               │   ├───domain/          # 도메인 모델
+ │   │               │   ├───dto/             # 요청/응답 DTO
+ │   │               │   └───infrastructure/  # 데이터 접근 계층
+ │   │               └───scheduler/           # 스케줄러 (GeoParkingLotSchedule)
+     └───resources/             # 애플리케이션 설정 파일 (application.yml 등)
+```
