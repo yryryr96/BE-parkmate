@@ -37,7 +37,35 @@ Parkmate 프로젝트의 주차장 관련 기능을 담당하는 마이크로서
 - 주차장 반응(좋아요/싫어요) 관리
 - 주차장 운영 정보 관리
 
-## 4. 코드 구조 및 유지보수
+## 4. 프로젝트 구조
+
+```
+src/main/java/com/parkmate/parkingservice
+├───common/                 # 공통 유틸리티, 설정, 예외 처리 등
+├───facade/                 # 퍼사드 패턴 구현 (내부/외부 서비스 호출 추상화)
+│   ├───internal/           # 내부 서비스 호출 관련 퍼사드
+│   ├───parkinglot/         # 주차장 관련 퍼사드
+│   └───parkingspot/        # 주차면 관련 퍼사드
+├───feign/                  # OpenFeign 클라이언트 (다른 마이크로서비스 통신)
+├───kafka/                  # Kafka 관련 설정, 이벤트, 프로듀서
+├───parkinglot/             # 주차장 도메인 관련 모듈
+│   ├───application/        # 서비스 계층 (비즈니스 로직)
+│   ├───domain/             # 도메인 모델 (엔티티, VO 등)
+│   ├───dto/                # 데이터 전송 객체 (요청/응답)
+│   ├───infrastructure/     # 영속성 계층 (리포지토리)
+│   ├───presentation/       # 프레젠테이션 계층 (컨트롤러)
+│   └───vo/                 # 값 객체
+├───parkinglotimagemapping/ # 주차장 이미지 매핑 도메인 관련 모듈
+├───parkinglotoption/       # 주차장 옵션 도메인 관련 모듈
+├───parkinglotoptionmapping/# 주차장 옵션 매핑 도메인 관련 모듈
+├───parkinglotreactions/    # 주차장 반응 도메인 관련 모듈
+├───parkingoperation/       # 주차 운영 도메인 관련 모듈
+├───parkingspot/            # 주차면 도메인 관련 모듈
+├───parkingspotsequence/    # 주차면 시퀀스 도메인 관련 모듈
+└───ParkingServiceApplication.java # 메인 애플리케이션 클래스
+```
+
+## 5. 코드 구조 및 유지보수
 
 본 프로젝트는 코드의 유지보수성, 유연성 및 테스트 용이성을 극대화하기 위해 다음과 같은 구조적 특징을 가집니다:
 
