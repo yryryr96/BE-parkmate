@@ -15,18 +15,21 @@ public class ParkingLotReadSimpleResponseDto {
     private String name;
     private String address;
     private double rating;
+    private int reviewCount;
 
     @Builder
     private ParkingLotReadSimpleResponseDto(String parkingLotUuid,
-                                           String thumbnailUrl,
-                                           String name,
-                                           String address,
-                                            double rating) {
+                                            String thumbnailUrl,
+                                            String name,
+                                            String address,
+                                            double rating,
+                                            int reviewCount) {
         this.parkingLotUuid = parkingLotUuid;
         this.thumbnailUrl = thumbnailUrl;
         this.name = name;
         this.address = address;
         this.rating = rating;
+        this.reviewCount = reviewCount;
     }
 
     public static ParkingLotReadSimpleResponseDto from(ParkingLotRead parkingLotRead) {
@@ -36,6 +39,7 @@ public class ParkingLotReadSimpleResponseDto {
                 .name(parkingLotRead.getName())
                 .address(parkingLotRead.getAddress())
                 .rating(parkingLotRead.getRating())
+                .reviewCount(parkingLotRead.getReviewCount())
                 .build();
     }
 
@@ -46,6 +50,7 @@ public class ParkingLotReadSimpleResponseDto {
                 .name(name)
                 .address(address)
                 .rating(rating)
+                .reviewCount(reviewCount)
                 .build();
     }
 }

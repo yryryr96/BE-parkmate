@@ -29,7 +29,7 @@ public interface ParkingLotReadService {
 
     ParkingLotReadSimpleResponseDto getParkingLotReadSimpleByParkingLotUuid(String parkingLotUuid);
 
-    void bulkUpdateRating(List<ReviewSummaryUpdateEvent> events);
+    void bulkUpdateReviewInfo(List<ReviewSummaryUpdateEvent> events);
 
     CursorPage<ParkingLotSearchResponseDto> search(ParkingLotSearchRequestDto parkingLotSearchRequestDto);
 }

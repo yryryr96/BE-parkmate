@@ -20,6 +20,11 @@ public class InBoxParkingLotResponseVo {
     private double longitude;
     private double distance;
     private int availableSpotCount;
+    private int likeCount;
+    private int dislikeCount;
+    private double rating;
+    private long reviewCount;
+
 
     @Builder
     private InBoxParkingLotResponseVo(String parkingLotUuid,
@@ -30,7 +35,11 @@ public class InBoxParkingLotResponseVo {
                                       double longitude,
                                       double latitude,
                                       double distance,
-                                      int availableSpotCount) {
+                                      int availableSpotCount,
+                                      int likeCount,
+                                      int dislikeCount,
+                                      double rating,
+                                      long reviewCount) {
         this.parkingLotUuid = parkingLotUuid;
         this.name = name;
         this.address = address;
@@ -40,5 +49,9 @@ public class InBoxParkingLotResponseVo {
         this.latitude = latitude;
         this.distance = distance;
         this.availableSpotCount = availableSpotCount;
+        this.likeCount = likeCount;
+        this.dislikeCount = dislikeCount;
+        this.rating = rating;
+        this.reviewCount = reviewCount;
     }
 }

@@ -38,6 +38,7 @@ public class ParkingLotRead {
     private List<ParkingLotOption> options;
     private int likeCount = 0;
     private int dislikeCount = 0;
+    private int reviewCount = 0;
     private double rating = 0.0;
 
     @Builder
@@ -59,6 +60,7 @@ public class ParkingLotRead {
                            List<ParkingLotOption> options,
                            int likeCount,
                            int dislikeCount,
+                           int reviewCount,
                            double rating) {
         this.parkingLotUuid = parkingLotUuid;
         this.hostUuid = hostUuid;
@@ -78,6 +80,7 @@ public class ParkingLotRead {
         this.options = options;
         this.likeCount = likeCount;
         this.dislikeCount = dislikeCount;
+        this.reviewCount = reviewCount;
         this.rating = rating;
     }
 }

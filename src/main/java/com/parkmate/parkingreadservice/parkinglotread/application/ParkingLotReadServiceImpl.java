@@ -76,8 +76,8 @@ public class ParkingLotReadServiceImpl implements ParkingLotReadService {
     }
 
     @Override
-    public void bulkUpdateRating(List<ReviewSummaryUpdateEvent> events) {
-        parkingLotReadRepository.bulkUpdateRating(events);
+    public void bulkUpdateReviewInfo(List<ReviewSummaryUpdateEvent> events) {
+        parkingLotReadRepository.bulkUpdateReviewInfo(events);
     }
 
     @Override

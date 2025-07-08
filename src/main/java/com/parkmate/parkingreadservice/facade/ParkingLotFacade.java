@@ -228,8 +228,7 @@ public class ParkingLotFacade {
         return parkingLots.stream()
                 .map(parkingLot -> {
                     GeoSearchResult geoInfo = geoInfoMap.get(parkingLot.getParkingLotUuid());
-                    return new EnrichedParkingLot(parkingLot,
-                            geoInfo);
+                    return new EnrichedParkingLot(parkingLot, geoInfo);
                 })
                 .toList();
     }

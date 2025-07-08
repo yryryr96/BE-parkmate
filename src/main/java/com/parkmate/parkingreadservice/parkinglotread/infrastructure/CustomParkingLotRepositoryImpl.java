@@ -147,7 +147,7 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
     }
 
     @Override
-    public void bulkUpdateRating(List<ReviewSummaryUpdateEvent> events) {
+    public void bulkUpdateReviewInfo(List<ReviewSummaryUpdateEvent> events) {
 
         if (events == null || events.isEmpty()) {
             return;
@@ -163,6 +163,7 @@ public class CustomParkingLotRepositoryImpl implements CustomParkingLotRepositor
 
             Update update = new Update();
             update.set("rating", event.getAverageRating());
+            update.set("reviewCount", event.getTotalReview());
             bulkOperations.updateOne(query, update);
         }
 

@@ -11,4 +11,5 @@ public class ReviewSummaryUpdateEvent {
 
     private String parkingLotUuid;
     private double averageRating;
+    private int totalReview;
 }
