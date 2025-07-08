@@ -33,7 +33,16 @@ Parkmate 프로젝트의 주차 예약 기능을 담당하는 마이크로서비
 - 예약 가능 시간 조회
 - 사용자의 예약 내역 조회
 
-## 4. 실행 방법
+## 4. 성능 최적화 및 개선 사항
+
+본 서비스는 사용자에게 빠르고 효율적인 예약 경험을 제공하기 위해 다음과 같은 성능 최적화 및 개선을 적용했습니다.
+
+-   **시간 복잡도 개선 (Map 활용)**: 기존에 중첩된 `for` 루프(이중 `for` 문)를 사용하여 발생할 수 있는 시간 복잡도 문제를 해결하기 위해, `Map` 자료구조를 적극적으로 활용하여 데이터 조회 및 처리를 최적화했습니다. 이를 통해 대량의 데이터 처리 시 발생하는 성능 저하를 방지하고, 로직의 효율성을 크게 향상시켰습니다.
+
+-   **커서 기반 페이지네이션 도입**: `offset` 기반 페이지네이션의 한계점(예: 대량의 데이터 조회 시 성능 저하, 데이터 중복 또는 누락 가능성)을 극복하기 위해 커서 기반 페이지네이션을 도입했습니다. 이는 마지막으로 조회된 항목의 커서(예: ID 또는 타임스탬프)를 사용하여 다음 페이지를 조회하는 방식으로, 대규모 데이터셋에서도 일관되고 효율적인 페이지네이션을 가능하게 합니다.
+
+
+## 5. 실행 방법
 
 ### 빌드
 
@@ -47,13 +56,13 @@ Parkmate 프로젝트의 주차 예약 기능을 담당하는 마이크로서비
 java -jar build/libs/parkmate-reservation-service-0.0.1-SNAPSHOT.jar
 ```
 
-## 5. API 문서
+## 6. API 문서
 
 애플리케이션 실행 후, 아래 URL을 통해 API 문서를 확인할 수 있습니다.
 
 - [http://localhost:8200/swagger-ui.html](http://localhost:8200/swagger-ui.html)
 
-## 6. YML 설정
+## 7. YML 설정
 
 ```yaml
 server:
@@ -63,7 +72,7 @@ spring:
   application:
     name: reservation-service
   datasource:
-    url: jdbc:mysql://localhost:3306/reservation_db?useSSL=false&allowPublicKeyRetrieval=true
+    url: {DATABASE_URL}
     username: <username>
     password: <password>
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -76,7 +85,7 @@ spring:
         format_sql: true
 
   kafka:
-    bootstrap-servers: localhost:10000,localhost:10001,localhost:10002
+    bootstrap-servers: {BOOTSTRAP_SERVERS}
 
 eureka:
   instance:
@@ -95,7 +104,7 @@ springdoc:
     path: /v3/api-docs
 ```
 
-## 7. Docker Compose 실행
+## 8. Docker Compose 실행
 
 `docker-compose-reservation.yml` 파일을 사용하여 Docker 컨테이너로 서비스를 실행할 수 있습니다.
 
