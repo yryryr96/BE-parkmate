@@ -46,49 +46,49 @@ src/
      │           └── reservationservice/
      │               ├── ReservationserviceApplication.java  # Spring Boot 애플리케이션 메인 클래스
      │               ├── common/                     # 공통 모듈
-     │               │   ├── config/                 # 공통 설정 (JPA, Swagger)
-     │               │   ├── entity/                 # 공통 엔티티 (BaseEntity)
+     │               │   ├── config/                 # 공통 설정
+     │               │   ├── entity/                 # 공통 엔티티
      │               │   ├── exception/              # 공통 예외 및 예외 핸들러
-     │               │   └── response/               # 공통 응답 객체 (ApiResponse, CursorPage, ResponseStatus)
+     │               │   └── response/               # 공통 응답 객체
      │               ├── kafka/                      # Kafka 모듈
      │               │   ├── config/                 # Kafka 컨슈머/프로듀서 설정
-     │               │   │   ├── consume/            # 컨슈머 설정 (Common, Order, UserParkingHistory)
-     │               │   │   └── produce/            # 프로듀서 설정 (KafkaProduceConfig)
-     │               │   ├── constant/               # Kafka 관련 상수 (KafkaConsumerGroups, KafkaTopics)
-     │               │   ├── consumer/               # Kafka 메시지 컨슈머 (OrderConsumer, UserParkingHistoryConsumer)
-     │               │   └── producer/               # Kafka 메시지 프로듀서 (ReservationProducer)
+     │               │   │   ├── consume/            # 컨슈머 설정
+     │               │   │   └── produce/            # 프로듀서 설정
+     │               │   ├── constant/               # Kafka 관련 상수
+     │               │   ├── consumer/               # Kafka 메시지 컨슈머
+     │               │   └── producer/               # Kafka 메시지 프로듀서
      │               └── reservation/                # 예약 도메인 모듈
      │                   ├── application/            # 애플리케이션 계층
      │                   │   ├── ReservationService.java     # 예약 서비스 인터페이스
      │                   │   ├── ReservationServiceImpl.java # 예약 서비스 구현체
-     │                   │   ├── dispatcher/         # 이벤트 디스패처 (EventDispatcher)
+     │                   │   ├── dispatcher/         # 이벤트 디스패처
      │                   │   └── handler/            # 이벤트 핸들러
      │                   │       ├── EventHandler.java       # 이벤트 핸들러 인터페이스
-     │                   │       ├── order/          # 주문 관련 이벤트 핸들러 (OrderCancelEventHandler, OrderCompleteEventHandler)
-     │                   │       └── userparkinghistory/ # 사용자 주차 이력 관련 이벤트 핸들러 (EntryHistoryEventHandler, ExitHistoryEventHandler)
+     │                   │       ├── order/          # 주문 관련 이벤트 핸들러
+     │                   │       └── userparkinghistory/ # 사용자 주차 이력 관련 이벤트 핸들러
      │                   ├── domain/                 # 도메인 계층
      │                   │   ├── Reservation.java    # 예약 엔티티
      │                   │   └── ReservationStatus.java # 예약 상태 Enum
      │                   ├── dto/                    # 데이터 전송 객체 (DTO)
-     │                   │   ├── request/            # 요청 DTO (PreReserveRequestDto, ReservationCancelRequestDto 등)
-     │                   │   └── response/           # 응답 DTO (PreReserveResponseDto, ReservationResponseDto 등)
+     │                   │   ├── request/            # 요청 DTO
+     │                   │   └── response/           # 응답 DTO
      │                   ├── event/                  # 도메인 이벤트 정의
-     │                   │   ├── order/              # 주문 이벤트 (OrderEvent, OrderEventType)
-     │                   │   ├── reservation/        # 예약 이벤트 (ReservationEvent, ReservationEventType)
-     │                   │   └── userparkinghistory/ # 사용자 주차 이력 이벤트 (HistoryType, UserParkingHistoryEvent)
-     │                   ├── generator/              # 예약 코드 생성 유틸리티 (ReservationCodeGenerator)
+     │                   │   ├── order/              # 주문 이벤트
+     │                   │   ├── reservation/        # 예약 이벤트
+     │                   │   └── userparkinghistory/ # 사용자 주차 이력 이벤트
+     │                   ├── generator/              # 예약 코드 생성 유틸리티
      │                   ├── infrastructure/         # 인프라 계층
-     │                   │   ├── client/             # 외부 서비스 클라이언트 (ParkingServiceClient)
+     │                   │   ├── client/             # 외부 서비스 클라이언트
      │                   │   │   ├── request/        # 클라이언트 요청 DTO
      │                   │   │   └── response/       # 클라이언트 응답 DTO
-     │                   │   └── repository/         # JPA 리포지토리 (ReservationRepository, ReservationRepositoryCustom 등)
+     │                   │   └── repository/         # JPA 리포지토리
      │                   ├── presentation/           # 표현 계층
      │                   │   ├── InternalReservationController.java # 내부용 REST API 컨트롤러
      │                   │   └── ReservationController.java       # 외부용 REST API 컨트롤러
      │                   └── vo/                     # 값 객체 (Value Object)
      │                       ├── ParkingSpot.java    # 주차 공간 VO
-     │                       ├── request/            # 요청 VO (PreReserveRequestVo, ReservationCancelRequestVo 등)
-     │                       └── response/           # 응답 VO (PreReserveResponseVo, ReservationResponseVo 등)
+     │                       ├── request/            # 요청 VO
+     │                       └── response/           # 응답 VO
      └── resources/  # 애플리케이션 리소스 (application.yml 등)
 
 ```
