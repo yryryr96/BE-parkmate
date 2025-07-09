@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "reservation-service", url = "localhost:8200")
+@FeignClient(name = "reservation-service")
 public interface ReservationClient {
 
     String USER_UUID_HEADER = "X-User-UUID";
