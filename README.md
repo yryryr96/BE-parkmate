@@ -34,7 +34,7 @@ Parkmate 주문 서비스의 핵심 주문 처리 흐름은 다음과 같습니�
 -   **언어:** Java 17
 -   **프레임워크:** Spring Boot 3.4.3, Spring Cloud 2024.0.1
 -   **데이터베이스:**
-    -   **PostgreSQL (또는 MongoDB):** 주문 정보 저장을 위한 주 데이터 저장소 (프로젝트 설정에 따라 변경될 수 있습니다.)
+    -   **MySQL :** 주문 정보 저장을 위한 주 데이터 저장소
 -   **메시징 큐:** Apache Kafka
 -   **서비스 디스커버리:** Netflix Eureka
 -   **API 문서:** Swagger (SpringDoc OpenAPI)
