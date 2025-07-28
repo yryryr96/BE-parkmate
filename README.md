@@ -3,7 +3,7 @@
 ParkMate는 운전자에게 실시간 주차 공간 정보를 제공하고, 주차장 소유주에게는 유휴 공간을 효과적으로 활용할 수 있는 기회를 제공하는 MSA(Microservice Architecture) 기반 주차장 중개 플랫폼입니다.
 <br></br>
 
-# 📷 접속 QR
+# 📷 접속 QR (배포 중단)
 <img src="./images/QR.png">
 <br></br>
 
