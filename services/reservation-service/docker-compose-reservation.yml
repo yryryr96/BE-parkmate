@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  reservation:
+    container_name: reservation-service
+    image: 090188239653.dkr.ecr.ap-northeast-2.amazonaws.com/reservation-service
+    volumes:
+      - /home/ubuntu/config/reservation/application.yml:/config/reservation/application.yml
+    environment:
+      - SPRING_CONFIG_LOCATION=file:/config/reservation/application.yml
+    ports:
+      - "8200:8200"
+    env_file:
+      - /home/ubuntu/env/.env.reservation
+    networks:
+      - backend
+
+networks:
+  backend:
+    external: true
