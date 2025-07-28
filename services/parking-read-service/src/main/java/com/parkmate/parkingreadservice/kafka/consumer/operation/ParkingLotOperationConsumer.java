@@ -1,0 +1,25 @@
+package com.parkmate.parkingreadservice.kafka.consumer.operation;
+
+import com.parkmate.parkingreadservice.kafka.constant.KafkaTopics;
+import com.parkmate.parkingreadservice.kafka.event.parkinglot.OperationCreateEvent;
+import com.parkmate.parkingreadservice.kafka.eventmanager.OperationEventManager;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Component;
+
+@Component
+@Slf4j
+@RequiredArgsConstructor
+public class ParkingLotOperationConsumer {
+
+    private final OperationEventManager eventManager;
+
+    @KafkaListener(
+            topics = KafkaTopics.PARKING_LOT_OPERATION_CREATED,
+            containerFactory = "parkingLotOperationCreatedListener"
+    )
+    public void consumeOperationCreatedEvent(OperationCreateEvent event) {
+        eventManager.handleOperationCreatedEvent(event);
+    }
+}
